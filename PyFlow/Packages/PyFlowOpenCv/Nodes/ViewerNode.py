@@ -2,7 +2,6 @@ from PyFlow.Core import NodeBase
 from PyFlow.Core.NodeBase import NodePinsSuggestionsHelper
 from PyFlow.Core.Common import *
 
-import cv2
 class ViewerNode(NodeBase):
     def __init__(self, name):
         super(ViewerNode, self).__init__(name)

@@ -1,18 +1,3 @@
-## Copyright 2015-2019 Ilgar Lunin, Pedro Cabrera
-
-## Licensed under the Apache License, Version 2.0 (the "License");
-## you may not use this file except in compliance with the License.
-## You may obtain a copy of the License at
-
-##     http://www.apache.org/licenses/LICENSE-2.0
-
-## Unless required by applicable law or agreed to in writing, software
-## distributed under the License is distributed on an "AS IS" BASIS,
-## WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-## See the License for the specific language governing permissions and
-## limitations under the License.
-
-
 from Qt import QtGui,QtCore
 from PyFlow.UI import RESOURCES_DIR
 from PyFlow.UI.Canvas.UINodeBase import UINodeBase
@@ -40,6 +25,9 @@ class UIOpenCvBaseNode(UINodeBase):
         self.actionViewImage = self._menu.addAction("ViewImage")
         self.actionViewImage.triggered.connect(self.viewImage)
         self.actionViewImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/ojo.svg", ViewImageNodeActionButton))
+        self.actionRefreshImage = self._menu.addAction("RefreshImage")
+        self.actionRefreshImage.triggered.connect(self.refreshImage)
+        self.actionRefreshImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/reload.svg", NodeActionButtonBase))        
         self.displayImage = False
         self.resizable = True
         self.Imagelabel = QLabel("noImage")
@@ -78,17 +66,20 @@ class UIOpenCvBaseNode(UINodeBase):
                 img = pin.getData()
                 self.setNumpyArray(img.image) 
 
-    def viewImage(self):
-        self.displayImage = not self.displayImage
+    def refreshImage(self):
         if self.displayImage and not self.collapsed :
-            self.Imagelabel.setVisible(True)
             pin = self._rawNode.getPinByName("img")
             if pin:
                 self._rawNode.processNode()
                 img = pin.getData()
                 self.setNumpyArray(img.image)
+            self.Imagelabel.setVisible(True)
         else:
             self.Imagelabel.setVisible(False)
+
+    def viewImage(self):
+        self.displayImage = not self.displayImage
+        self.refreshImage()
         self.updateSize()
 
     def createQimagefromNumpyArray(self,img):
