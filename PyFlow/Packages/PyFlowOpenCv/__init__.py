@@ -17,6 +17,7 @@ from PyFlow.Packages.PyFlowOpenCv.Tools.ImageViewerTool import ImageViewerTool
 
 # Factories
 from PyFlow.Packages.PyFlowOpenCv.Factories.PinInputWidgetFactory import getInputWidget
+from PyFlow.Packages.PyFlowOpenCv.Factories.UINodeFactory import createUINode
 
 _FOO_LIBS = {OpenCvLib.__name__: OpenCvLib(PACKAGE_NAME),}
 _NODES = {}
@@ -61,9 +62,9 @@ class PyFlowOpenCv(IPackage):
 	#def UIPinsFactory():
 	#	return createUIPin
 
-	#@staticmethod
-	#def UINodesFactory():
-	#	return createUINode
+	@staticmethod
+	def UINodesFactory():
+		return createUINode
 
 	@staticmethod
 	def PinsInputWidgetFactory():

@@ -7,7 +7,7 @@ class ViewerNode(NodeBase):
     def __init__(self, name):
         super(ViewerNode, self).__init__(name)
         self.inExec = self.createInputPin(DEFAULT_IN_EXEC_NAME, 'ExecPin', None, self.compute)
-        self.inp = self.createInputPin('inp', 'ImagePin')
+        self.inp = self.createInputPin('img', 'ImagePin')
 
     @staticmethod
     def pinTypeHints():
