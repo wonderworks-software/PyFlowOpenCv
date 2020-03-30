@@ -5,7 +5,7 @@ from PyFlow.UI.Canvas.NodeActionButton import NodeActionButtonBase
 from PyFlow.UI.Canvas.UICommon import *
 from Qt.QtWidgets import QLabel
 import os
-
+from PyFlow.Packages.PyFlowOpenCv.UI.pc_ImageCanvasWidget import toQImage
 class ViewImageNodeActionButton(NodeActionButtonBase):
     """docstring for ViewImageNodeActionButton."""
     def __init__(self, svgFilePath, action, uiNode):
@@ -82,12 +82,8 @@ class UIOpenCvBaseNode(UINodeBase):
         self.refreshImage()
         self.updateSize()
 
-    def createQimagefromNumpyArray(self,img):
-        i = QtGui.QImage( img, img.shape[ 1 ], img.shape[ 0 ],img.shape[ 1 ] * img.shape[ 2 ],QtGui.QImage.Format_RGB888 ) 
-        return  i
-
     def setNumpyArray(self,image):
-        image = self.createQimagefromNumpyArray(image)
+        image = toQImage(image)
         self.pixmap = QtGui.QPixmap.fromImage(image,QtCore.Qt.ThresholdAlphaDither)
         self.updateSize()
 

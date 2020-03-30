@@ -1,4 +1,30 @@
 from Qt import QtCore, QtGui,QtWidgets
+import numpy as np
+
+class NotImplementedException:
+    pass
+
+gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
+
+def toQImage(im, copy=False):
+    if im is None:
+        return QtGui.QImage()
+
+    if im.dtype == np.uint8:
+        if len(im.shape) == 2:
+            qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_Indexed8)
+            qim.setColorTable(gray_color_table)
+            return qim.copy() if copy else qim
+
+        elif len(im.shape) == 3:
+            if im.shape[2] == 3:
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_RGB888);
+                return qim.copy() if copy else qim
+            elif im.shape[2] == 4:
+                qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_ARGB32);
+                return qim.copy() if copy else qim
+
+    raise NotImplementedException
 
 class pc_ImageCanvas(QtWidgets.QGraphicsView):
 	photoClicked = QtCore.Signal(QtCore.QPoint)
@@ -47,7 +73,7 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
 	    return  i
 
 	def setNumpyArray(self,image):
-		image = self.createQimagefromNumpyArray(image)
+		image = toQImage(image)#self.createQimagefromNumpyArray(image)
 		pixmap = QtGui.QPixmap.fromImage(image,QtCore.Qt.ThresholdAlphaDither)
 		self.setPhoto(pixmap)
 
