@@ -1,3 +1,5 @@
+import cv2
+
 from PyFlow.Core import NodeBase
 from PyFlow.Core.NodeBase import NodePinsSuggestionsHelper
 from PyFlow.Core.Common import *
@@ -30,4 +32,7 @@ class ViewerNode(NodeBase):
     def compute(self, *args, **kwargs):
         inputData = self.inp.getData()
         instance = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
-        instance.viewer.setNumpyArray(inputData.image)       
+        if len(inputData.image.shape)==2:
+            instance.viewer.setNumpyArray(cv2.cvtColor(inputData.image, cv2.COLOR_GRAY2BGR))
+        else:
+            instance.viewer.setNumpyArray(inputData.image)

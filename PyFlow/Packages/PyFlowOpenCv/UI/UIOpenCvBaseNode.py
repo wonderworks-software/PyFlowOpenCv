@@ -1,3 +1,4 @@
+import cv2
 from Qt import QtGui,QtCore
 from PyFlow.UI import RESOURCES_DIR
 from PyFlow.UI.Canvas.UINodeBase import UINodeBase
@@ -64,7 +65,10 @@ class UIOpenCvBaseNode(UINodeBase):
             pin = self._rawNode.getPinByName("img")
             if pin:
                 img = pin.getData()
-                self.setNumpyArray(img.image) 
+                if len(img.image.shape) == 2:
+                    self.setNumpyArray(cv2.cvtColor(img.image, cv2.COLOR_GRAY2BGR))
+                else:
+                    self.setNumpyArray(img.image)
 
     def refreshImage(self):
         if self.displayImage and not self.collapsed :
@@ -72,7 +76,10 @@ class UIOpenCvBaseNode(UINodeBase):
             if pin:
                 self._rawNode.processNode()
                 img = pin.getData()
-                self.setNumpyArray(img.image)
+                if len(img.image.shape) == 2:
+                    self.setNumpyArray(cv2.cvtColor(img.image, cv2.COLOR_GRAY2BGR))
+                else:
+                    self.setNumpyArray(img.image)
             self.Imagelabel.setVisible(True)
         else:
             self.Imagelabel.setVisible(False)
@@ -83,7 +90,7 @@ class UIOpenCvBaseNode(UINodeBase):
         self.updateSize()
 
     def createQimagefromNumpyArray(self,img):
-        i = QtGui.QImage( img, img.shape[ 1 ], img.shape[ 0 ],img.shape[ 1 ] * img.shape[ 2 ],QtGui.QImage.Format_RGB888 ) 
+        i = QtGui.QImage( img, img.shape[ 1 ], img.shape[ 0 ],img.shape[ 1 ] * img.shape[ 2 ],QtGui.QImage.Format_RGB888 )
         return  i
 
     def setNumpyArray(self,image):
