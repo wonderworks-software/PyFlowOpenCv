@@ -97,17 +97,17 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
-    def readImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=(REF, ('ImagePin', 0))):
+    def cv_ReadImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         image = cv2.imread(path)
         image = image[:, :, :3]
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        img(image)
+        img(image)           
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
-    def flipImage(input=('ImagePin', 0), mode=('IntPin', 0), img=(REF, ('ImagePin', 0))):
+    def cv_FlipImage(input=('ImagePin', 0), mode=('IntPin', 0), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         image = input.image
         img(cv2.flip(image, mode))
@@ -251,7 +251,7 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
-    def adapt_thres(input=('ImagePin', 0), _mean=(REF, ('ImagePin|Process', 0)),
+    def adapt_thres(input=('ImagePin', 0), _mean=(REF, ('ImagePin', 0)),
                     _thresh=(REF, ('ImagePin', 0)), _gaussian=(REF, ('ImagePin', 0))):
         """filter a BGR color range from image"""
         image = input.image
@@ -267,11 +267,10 @@ class OpenCvLib(FunctionLibraryBase):
         _mean(mean)
         _gaussian(gaussian)
 
-
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
-    def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin|Process', 0)),_sure_bg=(REF, ('ImagePin', 0)),
+    def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin', 0)),_sure_bg=(REF, ('ImagePin', 0)),
                     img=(REF, ('ImagePin', 0))):
         """filter a BGR color range from image"""
         image = input.image
@@ -297,7 +296,6 @@ class OpenCvLib(FunctionLibraryBase):
         _thres(thresh)
         _sure_bg(sure_fg)
 
-
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     def bit_and(input=('ImagePin', 0),mask=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _mask=(REF, ('ImagePin', 0))):
@@ -305,9 +303,6 @@ class OpenCvLib(FunctionLibraryBase):
         ret, mask = cv2.threshold(mask.image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
         img(cv2.bitwise_and(input.image, input.image, mask=mask))
         _mask(mask)
-
-
-
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})

@@ -8,7 +8,7 @@ from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import ImagePin
 
 # Function based nodes
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import OpenCvLib
-
+from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvImageFilteringLib import OpenCvImageFilteringLib
 # Class based nodes
 from PyFlow.Packages.PyFlowOpenCv.Nodes.ViewerNode import ViewerNode
 
@@ -19,7 +19,9 @@ from PyFlow.Packages.PyFlowOpenCv.Tools.ImageViewerTool import ImageViewerTool
 from PyFlow.Packages.PyFlowOpenCv.Factories.PinInputWidgetFactory import getInputWidget
 from PyFlow.Packages.PyFlowOpenCv.Factories.UINodeFactory import createUINode
 
-_FOO_LIBS = {OpenCvLib.__name__: OpenCvLib(PACKAGE_NAME),}
+_FOO_LIBS = {OpenCvLib.__name__: OpenCvLib(PACKAGE_NAME),
+			OpenCvImageFilteringLib.__name__: OpenCvImageFilteringLib(PACKAGE_NAME),
+			}
 _NODES = {}
 _PINS = {}
 _TOOLS = OrderedDict()
