@@ -97,7 +97,7 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'cv', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
-    def readImage(path=('StringPin', ""), img=(REF, ('ImagePin', 0))):
+    def readImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         image = cv2.imread(path)
         image = image[:, :, :3]
