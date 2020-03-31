@@ -32,7 +32,4 @@ class ViewerNode(NodeBase):
     def compute(self, *args, **kwargs):
         inputData = self.inp.getData()
         instance = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
-        if len(inputData.image.shape)==2:
-            instance.viewer.setNumpyArray(cv2.cvtColor(inputData.image, cv2.COLOR_GRAY2BGR))
-        else:
-            instance.viewer.setNumpyArray(inputData.image)
+        instance.viewer.setNumpyArray(inputData.image)

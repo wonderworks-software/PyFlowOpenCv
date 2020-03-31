@@ -72,10 +72,6 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
                     self.scale(factor / unity.width(), factor / unity.height())
             self._zoom = 0
 
-    def createQimagefromNumpyArray(self, img):
-        i = QtGui.QImage(img, img.shape[1], img.shape[0], img.shape[1] * img.shape[2], QtGui.QImage.Format_RGB888)
-        return i
-
     def setNumpyArray(self, image):
         image = toQImage(image)  # self.createQimagefromNumpyArray(image)
         pixmap = QtGui.QPixmap.fromImage(image, QtCore.Qt.ThresholdAlphaDither)
