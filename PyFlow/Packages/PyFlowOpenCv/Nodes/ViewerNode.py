@@ -19,7 +19,7 @@ class ViewerNode(NodeBase):
 
     @staticmethod
     def category():
-        return 'cv'
+        return 'OpenCv|Viewers'
 
     @staticmethod
     def keywords():
