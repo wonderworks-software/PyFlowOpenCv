@@ -73,7 +73,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
     # Blurs An image
     def cv_GetStructuringElement(shape=('IntPin',0), xsize=('IntPin',10), ysize=('IntPin',10), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
-        shapes = [cv.MORPH_RECT,cv.MORPH_CROSS,cv.MORPH_ELLIPSE]
+        shapes = [cv2.MORPH_RECT,cv2.MORPH_CROSS,cv2.MORPH_ELLIPSE]
         image = cv2.getStructuringElement(shapes[min(max(0,shape),2)], (xsize,ysize))
         img(image)
 
@@ -112,8 +112,8 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'ImageFiltering', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Blurs An image
-    def cv_GaussianBlur(input=('ImagePin', 0), Xradius=('IntPin',5), Yradius=('IntPin',5), 
-                        sigmaX=('IntPin',0), sigmaY=('IntPin',0), img=(REF, ('ImagePin', 0))):
+    def cv_GaussianBlur(input=('ImagePin', 0), xradius=('IntPin',5), yradius=('IntPin',5), 
+                        sigmaX=('FloatPin',0), sigmaY=('FloatPin',0), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
         image = cv2.GaussianBlur(input.image, (max(0,xradius+(xradius-1)),max(0,yradius+(yradius-1))),sigmaX,sigmaY)
         img(image) 
@@ -125,7 +125,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
                     ksize =('IntPin',1), scale =('FloatPin',1.0), 
     				delta =('FloatPin',0), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
-        image = cv2.Laplacian(input.image, ddepth,ksize,scale,delta)
+        image = cv2.Laplacian(input.image, ddepth=ddepth,ksize=max(0,ksize+(ksize-1)),scale=scale,delta=delta)
         img(image) 
 
     @staticmethod
@@ -155,7 +155,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'ImageFiltering', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Blurs An image
-    def cv_PyrMeanShiftFiltering(input=('ImagePin', 0), sp=('FloatPin',120), sr=('FloatPin',120),
+    def cv_PyrMeanShiftFiltering(input=('ImagePin', 0), sp=('FloatPin',1.5), sr=('FloatPin',1.5),
                                  maxLevel =('IntPin',1), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
         image = cv2.pyrMeanShiftFiltering(input.image, sp, sr, maxLevel)
@@ -192,7 +192,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
         """ Blurs An image."""
         if ksize == 0:
             ksize = cv2.FILTER_SCHARR        
-        image = cv2.Sobel(input.image, ddepth, dx, dy, ksize, scale, delta)
+        image = cv2.Sobel(input.image, ddepth, dx, dy, ksize= ksize, scale=scale, delta=delta)
         img(image)
 
     @staticmethod
