@@ -233,10 +233,8 @@ class OpenCvLib(FunctionLibraryBase):
                                      mean=(104.00698793, 116.66876762, 122.67891434),
                                      swapRB=False, crop=False)
         # set the blob as the input to the network and perform a forward pass to compute the edges
-        protoPath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "PyFlow", "Packages", "PyFlowOpenCv",
-                                 "res", "deploy.prototxt")
-        modelPath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "PyFlow", "Packages", "PyFlowOpenCv",
-                                 "res", "hed_pretrained_bsds.caffemodel")
+        protoPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "deploy.prototxt")
+        modelPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "hed_pretrained_bsds.caffemodel")
         net = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
         # register our new layer with the model
         cv2.dnn_registerLayer("Crop", CropLayer)
