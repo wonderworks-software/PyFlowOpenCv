@@ -25,7 +25,7 @@ class UIOpenCvBaseNode(UINodeBase):
         self.actionViewImage = self._menu.addAction("ViewImage")
         self.actionViewImage.triggered.connect(self.viewImage)
         self.actionViewImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/ojo.svg", ViewImageNodeActionButton))
-        self.actionRefreshImage = self._menu.addAction("RefreshImage")
+        self.actionRefreshImage = self._menu.addAction("RefreshCurrentNode")
         self.actionRefreshImage.triggered.connect(self.refreshImage)
         self.actionRefreshImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/reload.svg", NodeActionButtonBase))        
         self.displayImage = False

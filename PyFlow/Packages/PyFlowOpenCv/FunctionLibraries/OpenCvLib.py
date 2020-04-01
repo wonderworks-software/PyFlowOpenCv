@@ -95,7 +95,7 @@ class OpenCvLib(FunctionLibraryBase):
         super(OpenCvLib, self).__init__(packageName)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def cv_ReadImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
@@ -105,7 +105,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(image)           
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def cv_FlipImage(input=('ImagePin', 0), mode=('IntPin', 0), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
@@ -113,7 +113,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(cv2.flip(image, mode))
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def auto_canny(input=('ImagePin', 0), sigma=('FloatPin', 0.33), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
@@ -124,7 +124,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(cv2.Canny(image, lower, upper))
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def shape_detector(input=('ImagePin', 0), thres1=('IntPin', 20), thres2=('IntPin', 255),
                        img=(REF, ('ImagePin', 0)), _thresh=(REF, ('ImagePin', 0))):
@@ -162,7 +162,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(image)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def color_filter(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _thresh=(REF, ('ImagePin', 0))):
         """filter a BGR color range from image"""
@@ -187,7 +187,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(output)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def HED(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _canny=(REF, ('ImagePin', 0))):
         """Holistically-Nested Edge Detection"""
@@ -247,7 +247,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(hed)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def adapt_thres(input=('ImagePin', 0), _mean=(REF, ('ImagePin', 0)),
                     _thresh=(REF, ('ImagePin', 0)), _gaussian=(REF, ('ImagePin', 0))):
@@ -266,7 +266,7 @@ class OpenCvLib(FunctionLibraryBase):
         _gaussian(gaussian)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin', 0)),_sure_bg=(REF, ('ImagePin', 0)),
                     img=(REF, ('ImagePin', 0))):
@@ -295,7 +295,7 @@ class OpenCvLib(FunctionLibraryBase):
         _sure_bg(sure_fg)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     def bit_and(input=('ImagePin', 0),mask=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _mask=(REF, ('ImagePin', 0))):
         """Takes an image and mask and applied logic and operation"""
         ret, mask = cv2.threshold(mask.image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
@@ -303,7 +303,7 @@ class OpenCvLib(FunctionLibraryBase):
         _mask(mask)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
     def detectLines(input=('ImagePin', 0),
                     low_threshold=('IntPin', 50),
                     high_threshold=('IntPin', 150),
