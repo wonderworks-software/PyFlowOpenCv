@@ -12,6 +12,12 @@ from PyFlow.Core import (
 )
 from PyFlow.Core.Common import *
 
+def clamp(value,minV,maxV):
+    return min(max(minV,value),maxV)
+
+def oddify(value):
+    return max(0,value+(value-1))
+
 class OpenCvImageFilteringLib(FunctionLibraryBase):
     '''doc string for OpenCvImageFilteringLib'''
 
@@ -71,10 +77,11 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'ImageFiltering', NodeMeta.KEYWORDS: []})
     # Blurs An image
-    def cv_GetStructuringElement(shape=('IntPin',0), xsize=('IntPin',10), ysize=('IntPin',10), img=(REF, ('ImagePin', 0))):
+    def cv_GetStructuringElement(shape=('IntPin',0), xsize=('IntPin',10), ysize=('IntPin',10), 
+                                xcenter=('IntPin',10), ycenter=('IntPin',10),img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
         shapes = [cv2.MORPH_RECT,cv2.MORPH_CROSS,cv2.MORPH_ELLIPSE]
-        image = cv2.getStructuringElement(shapes[min(max(0,shape),2)], (xsize,ysize))
+        image = cv2.getStructuringElement(shapes[clamp(shape,0,2)], (xsize,ysize),(clamp(xcenter,0,xsize),clamp(ycenter,0,ysize)))
         img(image)
 
     @staticmethod
@@ -82,7 +89,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
     # Blurs An image
     def cv_GetGaussianKernel(ksize=('IntPin',1), sigma=('FloatPin',-1), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
-        image = cv2.getGaussianKernel(max(0,ksize+(ksize-1)),sigma )
+        image = cv2.getGaussianKernel(oddify(ksize),sigma )
         img(image)
 
     @staticmethod
@@ -115,7 +122,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
     def cv_GaussianBlur(input=('ImagePin', 0), xradius=('IntPin',5), yradius=('IntPin',5), 
                         sigmaX=('FloatPin',0), sigmaY=('FloatPin',0), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
-        image = cv2.GaussianBlur(input.image, (max(0,xradius+(xradius-1)),max(0,yradius+(yradius-1))),sigmaX,sigmaY)
+        image = cv2.GaussianBlur(input.image, (oddify(xradius),oddify(yradius)),sigmaX,sigmaY)
         img(image) 
 
     @staticmethod
@@ -125,7 +132,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
                     ksize =('IntPin',1), scale =('FloatPin',1.0), 
     				delta =('FloatPin',0), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
-        image = cv2.Laplacian(input.image, ddepth=ddepth,ksize=max(0,ksize+(ksize-1)),scale=scale,delta=delta)
+        image = cv2.Laplacian(input.image, ddepth=ddepth,ksize=oddify(ksize),scale=scale,delta=delta)
         img(image) 
 
     @staticmethod
@@ -133,7 +140,7 @@ class OpenCvImageFilteringLib(FunctionLibraryBase):
     # Blurs An image
     def cv_MedianBlur(input=('ImagePin', 0), radius=('IntPin',5), img=(REF, ('ImagePin', 0))):
         """ Blurs An image."""
-        image = cv2.medianBlur(input.image, max(0,radius+(radius-1)))
+        image = cv2.medianBlur(input.image, oddify(radius))
         img(image)
 
     @staticmethod
