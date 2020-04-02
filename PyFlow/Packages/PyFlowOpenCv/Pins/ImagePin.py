@@ -29,6 +29,49 @@ class NoneDecoder(json.JSONDecoder):
     def object_hook(self, vec3Dict):
         return MyImage()
 
+class VideoPin(PinBase):
+    """doc string for ImagePin"""
+
+    def __init__(self, name, parent, direction, **kwargs):
+        super(VideoPin, self).__init__(name, parent, direction, **kwargs)
+        self.setDefaultValue(cv2.VideoCapture())
+        self.disableOptions(PinOptions.Storable)
+
+    @staticmethod
+    def jsonEncoderClass():
+        return NoneEncoder
+
+    @staticmethod
+    def jsonDecoderClass():
+        return NoneDecoder
+
+    @staticmethod
+    def IsValuePin():
+        return True
+
+    @staticmethod
+    def supportedDataTypes():
+        return ('VideoPin',)
+
+    @staticmethod
+    def pinDataTypeHint():
+        return 'VideoPin', cv2.VideoCapture()
+
+    @staticmethod
+    def color():
+        return (220, 50, 50, 255)
+
+    @staticmethod
+    def internalDataStructure():
+        return cv2.VideoCapture
+
+    @staticmethod
+    def processData(data):
+        if data.__class__.__name__== "VideoCapture":
+            return data
+        else:
+            raise Exception("non Valid VideoCapture")
+        #return VideoPin.internalDataStructure()(data)
 
 class ImagePin(PinBase):
     """doc string for ImagePin"""

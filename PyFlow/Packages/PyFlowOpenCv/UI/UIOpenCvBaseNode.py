@@ -23,12 +23,19 @@ class ViewImageNodeActionButton(NodeActionButtonBase):
 class UIOpenCvBaseNode(UINodeBase):
     def __init__(self, raw_node):
         super(UIOpenCvBaseNode, self).__init__(raw_node)
-        self.actionViewImage = self._menu.addAction("ViewImage")
-        self.actionViewImage.triggered.connect(self.viewImage)
-        self.actionViewImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/ojo.svg", ViewImageNodeActionButton))
-        self.actionRefreshImage = self._menu.addAction("RefreshCurrentNode")
-        self.actionRefreshImage.triggered.connect(self.refreshImage)
-        self.actionRefreshImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/reload.svg", NodeActionButtonBase))        
+        self.imagePin = self._rawNode.getPinByName("img")
+        if not self.imagePin:
+            for pin in self._rawNode.outputs.values():
+                if pin.dataType == "ImagePin":
+                    self.imagePin = pin
+                    break
+        if  self.imagePin:       
+            self.actionViewImage = self._menu.addAction("ViewImage")
+            self.actionViewImage.triggered.connect(self.viewImage)
+            self.actionViewImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/ojo.svg", ViewImageNodeActionButton))
+            self.actionRefreshImage = self._menu.addAction("RefreshCurrentNode")
+            self.actionRefreshImage.triggered.connect(self.refreshImage)
+            self.actionRefreshImage.setData(NodeActionButtonInfo(os.path.dirname(__file__)+"/resources/reload.svg", NodeActionButtonBase))        
         self.displayImage = False
         self.resizable = True
         self.Imagelabel = QLabel("noImage")
@@ -62,17 +69,15 @@ class UIOpenCvBaseNode(UINodeBase):
 
     def updateImage(self,*args, **kwargs):
         if self.displayImage and not self.collapsed :
-            pin = self._rawNode.getPinByName("img")
-            if pin:
-                img = pin.getData()
+            if self.imagePin:
+                img = self.imagePin.getData()
                 self.setNumpyArray(img.image) 
 
     def refreshImage(self):
         if self.displayImage and not self.collapsed :
-            pin = self._rawNode.getPinByName("img")
-            if pin:
+            if self.imagePin:
                 self._rawNode.processNode()
-                img = pin.getData()
+                img = self.imagePin.getData()
                 self.setNumpyArray(img.image)
             self.Imagelabel.setVisible(True)
         else:

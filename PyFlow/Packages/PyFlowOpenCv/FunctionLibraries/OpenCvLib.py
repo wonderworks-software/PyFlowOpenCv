@@ -99,7 +99,47 @@ class OpenCvLib(FunctionLibraryBase):
     # Return a random frame of x,y
     def cv_ReadImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
-        img(cv2.imread(path,cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH | cv2.IMREAD_UNCHANGED))  
+        img(cv2.imread(path,cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH | cv2.IMREAD_UNCHANGED)) 
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, nodeType=NodeTypes.Callable, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_WriteImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=('ImagePin', 0)):
+        """Return a frame of the loaded image."""
+        cv2.imwrite(path,img.image)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_ReadVideo(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), video=(REF, ('VideoPin', 0))):
+        """Return a frame of the loaded image."""
+        video(cv2.VideoCapture(path))
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=('BoolPin', False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    # Return a random frame of x,y
+    def cv_ReadNextFrame(video=('VideoPin', ""), img=(REF, ('ImagePin', 0))):
+        """Return a frame of the loaded image."""
+        ret,frame = video.read()
+        img(frame)  
+        return ret
+        
+    @staticmethod
+    @IMPLEMENT_NODE(returns=('BoolPin',False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_ReadVideoFrame(video=('VideoPin', 0,), frame=('IntPin', 0), img=(REF, ('ImagePin', 0))):
+        """Return a frame of the loaded image."""
+        video.set(1,frame)
+        ret, frame = video.read()
+        img(frame)
+        return ret
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_VideoisOpened(img=('ImagePin', 0), open = ('BoolPin',False)):
+        """Return a frame of the loaded image."""
+        open(img.image.isOpened())  
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Converters', NodeMeta.KEYWORDS: []})

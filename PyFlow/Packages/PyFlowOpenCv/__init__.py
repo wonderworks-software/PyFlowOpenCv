@@ -5,6 +5,7 @@ from PyFlow.UI.UIInterfaces import IPackage
 
 # Pins
 from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import ImagePin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import VideoPin
 
 # Function based nodes
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import OpenCvLib
@@ -32,6 +33,7 @@ _EXPORTERS = OrderedDict()
 _NODES[ViewerNode.__name__] = ViewerNode
 
 _PINS[ImagePin.__name__] = ImagePin
+_PINS[VideoPin.__name__] = VideoPin
 
 _TOOLS[ImageViewerTool.__name__] = ImageViewerTool
 
