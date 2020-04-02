@@ -6,6 +6,7 @@ from PyFlow.UI.Canvas.UICommon import *
 from Qt.QtWidgets import QLabel
 import os
 from PyFlow.Packages.PyFlowOpenCv.UI.pc_ImageCanvasWidget import toQImage
+import cv2
 class ViewImageNodeActionButton(NodeActionButtonBase):
     """docstring for ViewImageNodeActionButton."""
     def __init__(self, svgFilePath, action, uiNode):
@@ -83,6 +84,8 @@ class UIOpenCvBaseNode(UINodeBase):
         self.updateSize()
 
     def setNumpyArray(self,image):
+        if image.__class__.__name__ == "UMat":
+            image = cv2.UMat.get(image)        
         image = toQImage(image)
         self.pixmap = QtGui.QPixmap.fromImage(image,QtCore.Qt.ThresholdAlphaDither)
         self.updateSize()

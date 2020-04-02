@@ -99,18 +99,48 @@ class OpenCvLib(FunctionLibraryBase):
     # Return a random frame of x,y
     def cv_ReadImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
-        image = cv2.imread(path)
-        image = image[:, :, :3]
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        img(image)           
+        img(cv2.imread(path,cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH | cv2.IMREAD_UNCHANGED))  
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Converters', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_BGR2RGB(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+        img(cv2.cvtColor(input.image, cv2.COLOR_BGR2RGB))
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpenCl', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_convertToGPU(img=('ImagePin', 0), gpuImg=(REF, ('ImagePin', 0))):
+        gpuImg(cv2.UMat(img.image))
+
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpenCl', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_convertToCPU(gpuImg=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+        if gpuImg.image.__class__.__name__ == "UMat":
+            img(cv2.UMat.get(gpuImg.image))
+        else:
+            img(gpuImg)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
+    def cv_HDR_AutoGamma(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+        image = np.clip( np.power( input.image, 1.0/2.2 ), 0, 1 )
+        img(np.uint8( image * 255 ))
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
+    def cv_ConvertScaleAbs(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+        img(cv2.convertScaleAbs(input.image))   
+
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def cv_FlipImage(input=('ImagePin', 0), mode=('IntPin', 0), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
-        image = input.image
-        img(cv2.flip(image, mode))
+        img(cv2.flip(input.image, mode))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})

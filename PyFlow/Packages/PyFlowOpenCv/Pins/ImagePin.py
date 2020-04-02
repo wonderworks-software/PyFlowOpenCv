@@ -2,13 +2,16 @@ from PyFlow.Core import PinBase
 from PyFlow.Core.Common import *
 import numpy as np
 import json
-
+import cv2
 
 class MyImage():
     def __init__(self, image=None):
         if isinstance(image, MyImage):
-            self.image = image.image.copy()
-        elif isinstance(image, np.ndarray):
+            if image.image.__class__.__name__ == "UMat":
+                self.image = cv2.UMat(image.image)
+            else:
+                self.image = image.image.copy()
+        elif isinstance(image, np.ndarray) or image.__class__.__name__ == "UMat":
             self.image = image
         else:
             self.image = np.zeros((2, 2, 3), np.uint8)

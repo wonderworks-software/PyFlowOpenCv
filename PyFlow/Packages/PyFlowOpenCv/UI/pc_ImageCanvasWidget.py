@@ -12,9 +12,9 @@ gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
 def toQImage(im, copy=False):
     if im is None:
         return QtGui.QImage()
-    
-    if im.dtype != np.uint8:
-    	im = cv2.convertScaleAbs(im)
+        
+    #if im.dtype != np.uint8:
+    #	im = cv2.convertScaleAbs(im)
 
     if len(im.shape) == 2:
         qim = QtGui.QImage(im.data, im.shape[1], im.shape[0], im.strides[0], QtGui.QImage.Format_Indexed8)
@@ -76,6 +76,8 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
             self._zoom = 0
 
     def setNumpyArray(self, image):
+        if image.__class__.__name__ == "UMat":
+            image = cv2.UMat.get(image)
         image = toQImage(image)  # self.createQimagefromNumpyArray(image)
         pixmap = QtGui.QPixmap.fromImage(image, QtCore.Qt.ThresholdAlphaDither)
         self.setPhoto(pixmap)
