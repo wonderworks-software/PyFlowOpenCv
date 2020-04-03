@@ -101,5 +101,11 @@ class UIOpenCvBaseNode(UINodeBase):
 
     def updateSize(self):
         if not self.pixmap.isNull():
-            scaledPixmap = self.pixmap.scaledToWidth(self.customLayout.geometry().width())
+            scaledPixmap = self.pixmap.scaledToWidth(self.customLayout.geometry().width() )
+            self.Imagelabel.setMaximumWidth(self.customLayout.geometry().width())
             self.Imagelabel.setPixmap(scaledPixmap)
+
+    def updateNodeShape(self):
+        super(UIOpenCvBaseNode, self).updateNodeShape()
+        self.updateSize()
+        self.update()
