@@ -130,16 +130,16 @@ class OpenCvLib(FunctionLibraryBase):
     def cv_ReadVideoFrame(video=('VideoPin', 0,), frame=('IntPin', 0), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         video.set(1,frame)
-        ret, frame = video.read()
-        img(frame)
+        ret, im = video.read()
+        img(im)
         return ret
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=('BoolPin',False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
-    def cv_VideoisOpened(img=('ImagePin', 0), open = ('BoolPin',False)):
+    def cv_VideoisOpened(video=('VideoPin', 0)):
         """Return a frame of the loaded image."""
-        open(img.image.isOpened())  
+        return video.isOpened()
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Converters', NodeMeta.KEYWORDS: []})
