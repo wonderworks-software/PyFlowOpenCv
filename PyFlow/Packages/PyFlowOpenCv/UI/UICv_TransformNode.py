@@ -9,8 +9,10 @@ class TransformItem(QtWidgets.QGraphicsWidget):
     _MANIP_MODE_MOVE = 1
     _MANIP_MODE_ROT = 2
     centerChanged = QtCore.Signal(QtCore.QPointF)
+    xCenterChanged = QtCore.Signal(int)
+    yCenterChanged = QtCore.Signal(int)
     rotationChanged = QtCore.Signal(float)
-
+    rotationUpdated = QtCore.Signal(float)
     def __init__(self,parent=None):
         super(TransformItem, self).__init__(parent=parent)
         self.setFlag(QtWidgets.QGraphicsWidget.ItemIsMovable)
@@ -73,7 +75,7 @@ class TransformItem(QtWidgets.QGraphicsWidget):
             currVector = self.mapToScene(event.pos()) - self.mapToScene(self._lastRect)
             angl = self.getAngle(prevVector,currVector)
             self.setRotation(self.angle + angl)
-            self.rotationChanged.emit(self.angle + angl)
+            self.rotationChanged.emit(-(self.angle + angl))
             #print angl
         self.updateCursor(event.pos().x())
 
@@ -83,8 +85,8 @@ class TransformItem(QtWidgets.QGraphicsWidget):
     def setY(self,Pos):
         self.setPos(self.pos().x(),Pos-50)
 
-    def rotate(self,angle):
-        if not self._manipulationMode == self._MANIP_MODE_ROT:
+    def rotate(self,angle,override=False):
+        if not self._manipulationMode == self._MANIP_MODE_ROT or override:
             self.angle = -angle
             self.setRotation(-angle)
 
@@ -127,43 +129,72 @@ class UICv_TransformNode(UIOpenCvBaseNode):
         self.item = TransformItem()
         self.item.rotationChanged.connect(self.setAngle)
         self.item.centerChanged.connect(self.setCenter)
-        self.angleWidg = None
-        self.xCenterWidg = None
-        self.yCenterWidg = None
+
+        self.anglePin.dataBeenSet.connect(self.updateWidgetRotation)
+        self.xCenterPin.dataBeenSet.connect(self.updateWidgetXposition)
+        self.yCenterPin.dataBeenSet.connect(self.updateWidgetYposition)
+
+        self.openProperties = []
+
+    def updateWidgetRotation(self,pin):
+        self.item.rotate(pin.getData())
+    def updateWidgetXposition(self,pin):
+        self.item.setX(pin.getData())
+    def updateWidgetYposition(self,pin):
+        self.item.setY(pin.getData())
 
     def setAngle(self,angle):
-        self.anglePin.setData(-angle)
-        if self.angleWidg:
-            self.angleWidg.setWidgetValue(-angle)
+        if len(self.anglePin.affected_by) == 0:
+            self.anglePin.setData(angle)
+            self.item.rotationUpdated.emit(angle)
+        else:
+            self.item.rotate(self.anglePin.getData(),True)
+            self.item.rotationUpdated.emit(self.anglePin.getData())
 
     def setCenter(self,center):
-        self.xCenterPin.setData(center.x())
-        self.yCenterPin.setData(center.y())
-        if self.xCenterWidg:
-            self.xCenterWidg.setWidgetValue(int(center.x()))
-        if self.yCenterWidg:
-            self.yCenterWidg.setWidgetValue(int(center.y()))
+        if len(self.xCenterPin.affected_by) == 0:
+            self.xCenterPin.setData(int(center.x()))
+            self.item.xCenterChanged.emit(int(center.x()))         
+        else:
+            self.item.setX(self.xCenterPin.getData())
+            self.item.xCenterChanged.emit(self.xCenterPin.getData())
+        if len(self.yCenterPin.affected_by) == 0:
+            self.yCenterPin.setData(int(center.y()))
+            self.item.yCenterChanged.emit(int(center.y()))   
+        else:
+            self.item.setY(self.yCenterPin.getData())
+            self.item.yCenterChanged.emit(self.yCenterPin.getData())
 
     def createInputWidgets(self, inputsCategory, inGroup=None, pins=True):
-        inputsCategory.destroyed.connect(self.removeItemFromViewer)
+        
+        inputsCategory.destroyed.connect(lambda x=None: self.removeItemFromViewer(inputsCategory))
+        self.openProperties.append(inputsCategory)
         preIndex = inputsCategory.Layout.count()
         if pins:
             super(UICv_TransformNode, self).createInputWidgets(inputsCategory, inGroup)        
 
         instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
-        if self.item not in instance.viewer._scene.items():
+        if self.item.scene() == None:
             instance.viewer._scene.addItem(self.item)
 
-        self.angleWidg = inputsCategory.getWidgetByName("angle")
-        self.xCenterWidg = inputsCategory.getWidgetByName("xCenter")
-        self.yCenterWidg = inputsCategory.getWidgetByName("yCenter")
-        self.angleWidg.sb.valueChanged.connect(self.item.rotate)
-        self.xCenterWidg.sb.valueChanged.connect(self.item.setX)
-        self.yCenterWidg.sb.valueChanged.connect(self.item.setY)
+        angleWidg = inputsCategory.getWidgetByName("angle")
+        xCenterWidg = inputsCategory.getWidgetByName("xCenter")
+        yCenterWidg = inputsCategory.getWidgetByName("yCenter")
+
+        self.item.rotationUpdated.connect(angleWidg.setWidgetValue)
+        self.item.xCenterChanged.connect(xCenterWidg.setWidgetValue)
+        self.item.yCenterChanged.connect(yCenterWidg.setWidgetValue)
+        #self.angleWidg.sb.valueChanged.connect(self.item.rotate)
+        #self.xCenterWidg.sb.valueChanged.connect(self.item.setX)
+        #self.yCenterWidg.sb.valueChanged.connect(self.item.setY)
 
         self.item.rotate(self.anglePin.getData())
-        self.item.setPos(self.xCenterPin.getData()-50,self.yCenterPin.getData()-50)
+        self.item.setX(self.xCenterPin.getData())
+        self.item.setY(self.yCenterPin.getData())
 
-    def removeItemFromViewer(self):
-        instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
-        instance.viewer._scene.removeItem(self.item)
+    def removeItemFromViewer(self,obj):
+        if obj in self.openProperties:
+            self.openProperties.remove(obj)
+        if len(self.openProperties)==0 and self.item.scene():
+            instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
+            instance.viewer._scene.removeItem(self.item)
