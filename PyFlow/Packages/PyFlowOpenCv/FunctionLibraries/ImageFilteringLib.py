@@ -1,9 +1,3 @@
-import os
-from collections import OrderedDict
-
-import imutils as imutils
-import numpy as np
-from scipy.spatial import distance as dist
 import cv2
 
 from PyFlow.Core import (
@@ -18,11 +12,11 @@ def clamp(value,minV,maxV):
 def oddify(value):
     return max(0,value+(value-1))
 
-class OpenCvImageFilteringLib(FunctionLibraryBase):
-    '''doc string for OpenCvImageFilteringLib'''
+class ImageFilteringLib(FunctionLibraryBase):
+    '''doc string for ImageFilteringLib'''
 
     def __init__(self, packageName):
-        super(OpenCvImageFilteringLib, self).__init__(packageName)
+        super(ImageFilteringLib, self).__init__(packageName)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'ImageFiltering', NodeMeta.KEYWORDS: []})

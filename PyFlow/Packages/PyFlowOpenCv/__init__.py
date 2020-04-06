@@ -9,7 +9,9 @@ from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import VideoPin
 
 # Function based nodes
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import OpenCvLib
-from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvImageFilteringLib import OpenCvImageFilteringLib
+from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.ImageFilteringLib import ImageFilteringLib
+from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.GeometricImageTransformationsLib import GeometricImageTransformationsLib
+
 # Class based nodes
 from PyFlow.Packages.PyFlowOpenCv.Nodes.ViewerNode import ViewerNode
 
@@ -21,7 +23,8 @@ from PyFlow.Packages.PyFlowOpenCv.Factories.PinInputWidgetFactory import getInpu
 from PyFlow.Packages.PyFlowOpenCv.Factories.UINodeFactory import createUINode
 
 _FOO_LIBS = {OpenCvLib.__name__: OpenCvLib(PACKAGE_NAME),
-			OpenCvImageFilteringLib.__name__: OpenCvImageFilteringLib(PACKAGE_NAME),
+			ImageFilteringLib.__name__: ImageFilteringLib(PACKAGE_NAME),
+			GeometricImageTransformationsLib.__name__: GeometricImageTransformationsLib(PACKAGE_NAME),
 			}
 _NODES = {}
 _PINS = {}
