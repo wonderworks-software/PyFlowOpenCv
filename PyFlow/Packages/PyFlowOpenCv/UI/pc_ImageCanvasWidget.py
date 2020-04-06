@@ -144,6 +144,7 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         self.update()
 
     def wheelEvent(self, event):
+        self.fit = False
         (xfo, invRes) = self.transform().inverted()
         topLeft = xfo.map(self.rect().topLeft())
         bottomRight = xfo.map(self.rect().bottomRight())
