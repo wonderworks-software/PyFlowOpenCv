@@ -39,6 +39,28 @@ MANIP_MODE_PAN = 2
 MANIP_MODE_MOVE = 3
 MANIP_MODE_ZOOM = 4
 MANIP_MODE_COPY = 5
+
+class BG_Widget(QtWidgets.QGraphicsWidget):
+    def __init__(self,parent=None):
+        super(BG_Widget, self).__init__(parent=parent)
+        self.rect = QtCore.QRectF(0,0,100,100)
+        self.pen =  QtGui.QPen(QtCore.Qt.white,1)
+        self.setFlag(QtWidgets.QGraphicsWidget.ItemSendsGeometryChanges)
+       
+    def setRect(self,rect):
+        self.rect = QtCore.QRectF(rect.marginsAdded(QtCore.QMargins(.5,.5,.5,.5)))
+
+    def boundingRect(self):
+        return self.rect.marginsAdded(QtCore.QMargins(20,20,20,20))
+
+    def paint(self, painter, option, widget):
+        painter.setPen(self.pen)
+        rect = self.rect
+        painter.drawRect(rect)
+        painter.drawText(0,0, "%ix%i"%(int(rect.width()),int(rect.height())))
+        self.update()
+        self.adjustSize()
+
 class pc_ImageCanvas(QtWidgets.QGraphicsView):
 
     photoClicked = QtCore.Signal(QtCore.QPoint)
@@ -51,9 +73,10 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         self.fit = True
         self._photo.setShapeMode(QtWidgets.QGraphicsPixmapItem.MaskShape)
         self._scene.addItem(self._photo)
-
+        self._bgWidget = BG_Widget()
         self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setScene(self._scene)
+        self._scene.addItem(self._bgWidget)
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
@@ -128,6 +151,8 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         if pixmap and not pixmap.isNull():
             self._empty = False
             self._photo.setPixmap(pixmap)
+            self._bgWidget.setRect(self._photo.boundingRect().toRect())
+
             if self.fit:
                 self.fitInView(True)
         else:
@@ -257,10 +282,14 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         if key == QtCore.Qt.Key_F:
             self.fit = True
             self.fitInView(True)
-        if key in range(49, 58):
+        elif key in range(49, 58):
             self.fit = False
             self.fitInView(False, max(0, key - 48))
-
+        elif key == QtCore.Qt.Key_O:
+            if self._bgWidget.scene():
+                self._scene.removeItem(self._bgWidget)
+            else:
+                self._scene.addItem(self._bgWidget)
     def clear2(self):
         self.setPhoto(None)
 # self.clear()
