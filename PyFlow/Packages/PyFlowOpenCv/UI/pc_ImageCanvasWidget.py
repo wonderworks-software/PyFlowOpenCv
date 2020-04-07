@@ -42,22 +42,31 @@ MANIP_MODE_COPY = 5
 
 class BG_Widget(QtWidgets.QGraphicsWidget):
     def __init__(self,parent=None):
-        super(BG_Widget, self).__init__(parent=parent)
+        super(BG_Widget, self).__init__()
+        self.viewer = parent
         self.rect = QtCore.QRectF(0,0,100,100)
+        self.FullRect = QtCore.QRectF(0,0,100,100)
         self.pen =  QtGui.QPen(QtCore.Qt.white,1)
         self.setFlag(QtWidgets.QGraphicsWidget.ItemSendsGeometryChanges)
-       
+        self.setFlag(QtWidgets.QGraphicsWidget.ItemIgnoresTransformations)
+
     def setRect(self,rect):
-        self.rect = QtCore.QRectF(rect.marginsAdded(QtCore.QMargins(.5,.5,.5,.5)))
+        self.FullRect = QtCore.QRectF(rect.marginsAdded(QtCore.QMargins(.5,.5,.5,.5)))
+        self.rect= QtCore.QRectF(self.FullRect)
+        self.rect.setWidth(self.FullRect.width()*self.viewer.currentViewScale())
+        self.rect.setHeight(self.FullRect.height()*self.viewer.currentViewScale())
 
     def boundingRect(self):
+        self.rect.setWidth(self.FullRect.width()*self.viewer.currentViewScale())
+        self.rect.setHeight(self.FullRect.height()*self.viewer.currentViewScale())
         return self.rect.marginsAdded(QtCore.QMargins(20,20,20,20))
 
     def paint(self, painter, option, widget):
         painter.setPen(self.pen)
-        rect = self.rect
-        painter.drawRect(rect)
-        painter.drawText(0,0, "%ix%i"%(int(rect.width()),int(rect.height())))
+        self.rect.setWidth(self.FullRect.width()*self.viewer.currentViewScale())
+        self.rect.setHeight(self.FullRect.height()*self.viewer.currentViewScale())
+        painter.drawRect(self.rect)
+        painter.drawText(0,0, "%ix%i"%(int(self.FullRect.width()),int(self.FullRect.height())))
         self.update()
         self.adjustSize()
 
@@ -73,7 +82,7 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         self.fit = True
         self._photo.setShapeMode(QtWidgets.QGraphicsPixmapItem.MaskShape)
         self._scene.addItem(self._photo)
-        self._bgWidget = BG_Widget()
+        self._bgWidget = BG_Widget(self)
         self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setScene(self._scene)
         self._scene.addItem(self._bgWidget)
