@@ -30,7 +30,8 @@ class ViewerNode(NodeBase):
         return "Description in rst format."
 
     def compute(self, *args, **kwargs):
+        inputData = self.inp.getData()
         if self.inp.dirty:
-            inputData = self.inp.getData()
             instance = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
             instance.viewer.setNumpyArray(inputData.image)
+            self.inp.setClean()
