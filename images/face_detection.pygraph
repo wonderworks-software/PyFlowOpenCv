@@ -1,0 +1,745 @@
+{
+    "category": "", 
+    "name": "root", 
+    "vars": [], 
+    "isRoot": true, 
+    "activeGraph": "root", 
+    "depth": 1, 
+    "nodes": [
+        {
+            "inputs": [
+                {
+                    "direction": 0, 
+                    "dataType": "StringPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "path", 
+                        "wires": {}, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "cv_ReadVideo_path", 
+                    "structure": 0, 
+                    "uuid": "0aa4eada-0c46-4f85-97ab-ce5a8f1ae4cd", 
+                    "alwaysDict": false, 
+                    "name": "path", 
+                    "package": "PyFlowBase", 
+                    "linkedTo": [], 
+                    "value": "\"C:/working/gitroot/beh/pyflowopencv/images/face_detection.mp4\"", 
+                    "options": [
+                        256
+                    ]
+                }
+            ], 
+            "owningGraphName": "root", 
+            "outputs": [
+                {
+                    "direction": 1, 
+                    "dataType": "VideoPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "video", 
+                        "wires": {
+                            "1": {
+                                "vOffset": "0.0", 
+                                "sourceName": "cv_ReadVideo_video", 
+                                "destinationUUID": "91e2a54a-5694-4a75-bfa6-93c9c03ccb0f", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "6a331b17-6eaa-4f87-b00c-e1fb10d15ac1", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "5700f906-c557-479b-8e8b-0d213f83315d", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "cv_ReadNextFrame_video", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "cv_ReadVideo_video", 
+                    "structure": 0, 
+                    "uuid": "6a331b17-6eaa-4f87-b00c-e1fb10d15ac1", 
+                    "alwaysDict": false, 
+                    "name": "video", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "c3a4164b-2a27-45d0-84b7-1a78d84d0f4d", 
+                            "inPinId": 1, 
+                            "lhsNodeName": "cv_ReadVideo", 
+                            "outPinId": 1, 
+                            "rhsNodeUid": "146f3bc6-4c1f-4b31-8387-af2cd80cd42a", 
+                            "rhsNodeName": "cv_ReadNextFrame"
+                        }
+                    ], 
+                    "value": null, 
+                    "options": []
+                }
+            ], 
+            "meta": {
+                "var": {}, 
+                "label": "cv_ReadVideo"
+            }, 
+            "uuid": "c3a4164b-2a27-45d0-84b7-1a78d84d0f4d", 
+            "name": "cv_ReadVideo", 
+            "lib": "OpenCvLib", 
+            "package": "PyFlowOpenCv", 
+            "wrapper": {
+                "groups": {
+                    "input": {}, 
+                    "output": {}
+                }, 
+                "exposeInputsToCompound": false, 
+                "collapsed": false, 
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">cv_ReadVideo</p></body></html>", 
+                "resize": {
+                    "h": 57.0, 
+                    "w": 91.0
+                }
+            }, 
+            "y": -130.07956860510006, 
+            "x": -495.9262440435068, 
+            "type": "cv_ReadVideo"
+        }, 
+        {
+            "inputs": [
+                {
+                    "direction": 0, 
+                    "dataType": "ImagePin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "input", 
+                        "wires": {
+                            "1": {
+                                "vOffset": "0.0", 
+                                "sourceName": "cv_ReadNextFrame_img", 
+                                "destinationUUID": "a6bf96b6-a76c-40e9-a1f6-bb89ced87ad3", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "c623fabf-5b4a-4dc9-b666-ab940ff71cfa", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "a5e13dd9-3408-499a-bb35-078ae0ee4052", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "face_detection_input", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "face_detection_input", 
+                    "structure": 0, 
+                    "uuid": "a6bf96b6-a76c-40e9-a1f6-bb89ced87ad3", 
+                    "alwaysDict": false, 
+                    "name": "input", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "146f3bc6-4c1f-4b31-8387-af2cd80cd42a", 
+                            "inPinId": 1, 
+                            "lhsNodeName": "cv_ReadNextFrame", 
+                            "outPinId": 2, 
+                            "rhsNodeUid": "2bbdc977-8da8-478c-8c9a-7c060988361b", 
+                            "rhsNodeName": "face_detection"
+                        }
+                    ], 
+                    "value": null, 
+                    "options": []
+                }
+            ], 
+            "owningGraphName": "root", 
+            "outputs": [
+                {
+                    "direction": 1, 
+                    "dataType": "GraphElementPin", 
+                    "pinIndex": 2, 
+                    "wrapper": {
+                        "displayName": "rects", 
+                        "wires": {
+                            "3": {
+                                "vOffset": "0.0", 
+                                "sourceName": "face_detection_rects", 
+                                "destinationUUID": "366f355e-f5ae-4392-89fc-ec5048318492", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "a33a2704-55b0-458b-90fc-0d65290efd96", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "cb4438a9-d933-44d8-a79c-df6fdeb72a91", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "ViewerNode_data", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "face_detection_rects", 
+                    "structure": 0, 
+                    "uuid": "a33a2704-55b0-458b-90fc-0d65290efd96", 
+                    "alwaysDict": false, 
+                    "name": "rects", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "2bbdc977-8da8-478c-8c9a-7c060988361b", 
+                            "inPinId": 3, 
+                            "lhsNodeName": "face_detection", 
+                            "outPinId": 2, 
+                            "rhsNodeUid": "c2f48aa8-1c1c-4ac3-9cc6-708e29bd0d01", 
+                            "rhsNodeName": "ViewerNode"
+                        }
+                    ], 
+                    "value": null, 
+                    "options": []
+                }, 
+                {
+                    "direction": 1, 
+                    "dataType": "ImagePin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "img", 
+                        "wires": {}, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "face_detection_img", 
+                    "structure": 0, 
+                    "uuid": "7b6b43a6-9303-4b0b-b637-f078b46ff42b", 
+                    "alwaysDict": false, 
+                    "name": "img", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [], 
+                    "value": null, 
+                    "options": []
+                }
+            ], 
+            "meta": {
+                "var": {}, 
+                "label": "face_detection"
+            }, 
+            "uuid": "2bbdc977-8da8-478c-8c9a-7c060988361b", 
+            "name": "face_detection", 
+            "lib": "OpenCvLib", 
+            "package": "PyFlowOpenCv", 
+            "wrapper": {
+                "groups": {
+                    "input": {}, 
+                    "output": {}
+                }, 
+                "exposeInputsToCompound": false, 
+                "collapsed": false, 
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">face_detection</p></body></html>", 
+                "resize": {
+                    "h": 74.0, 
+                    "w": 116.0
+                }
+            }, 
+            "y": 30.10670500780155, 
+            "x": -165.58687754290844, 
+            "type": "face_detection"
+        }, 
+        {
+            "inputs": [
+                {
+                    "direction": 0, 
+                    "dataType": "VideoPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "video", 
+                        "wires": {
+                            "1": {
+                                "vOffset": "0.0", 
+                                "sourceName": "cv_ReadVideo_video", 
+                                "destinationUUID": "91e2a54a-5694-4a75-bfa6-93c9c03ccb0f", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "6a331b17-6eaa-4f87-b00c-e1fb10d15ac1", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "5700f906-c557-479b-8e8b-0d213f83315d", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "cv_ReadNextFrame_video", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "cv_ReadNextFrame_video", 
+                    "structure": 0, 
+                    "uuid": "91e2a54a-5694-4a75-bfa6-93c9c03ccb0f", 
+                    "alwaysDict": false, 
+                    "name": "video", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "c3a4164b-2a27-45d0-84b7-1a78d84d0f4d", 
+                            "inPinId": 1, 
+                            "lhsNodeName": "cv_ReadVideo", 
+                            "outPinId": 1, 
+                            "rhsNodeUid": "146f3bc6-4c1f-4b31-8387-af2cd80cd42a", 
+                            "rhsNodeName": "cv_ReadNextFrame"
+                        }
+                    ], 
+                    "value": null, 
+                    "options": []
+                }
+            ], 
+            "owningGraphName": "root", 
+            "outputs": [
+                {
+                    "direction": 1, 
+                    "dataType": "BoolPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "out", 
+                        "wires": {}, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "cv_ReadNextFrame_out", 
+                    "structure": 0, 
+                    "uuid": "d555e8d5-5f8e-41f7-b60d-0669ba6e4f56", 
+                    "alwaysDict": false, 
+                    "name": "out", 
+                    "package": "PyFlowBase", 
+                    "linkedTo": [], 
+                    "value": "false", 
+                    "options": [
+                        256
+                    ]
+                }, 
+                {
+                    "direction": 1, 
+                    "dataType": "ImagePin", 
+                    "pinIndex": 2, 
+                    "wrapper": {
+                        "displayName": "img", 
+                        "wires": {
+                            "1": {
+                                "vOffset": "0.0", 
+                                "sourceName": "cv_ReadNextFrame_img", 
+                                "destinationUUID": "a6bf96b6-a76c-40e9-a1f6-bb89ced87ad3", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "c623fabf-5b4a-4dc9-b666-ab940ff71cfa", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "a5e13dd9-3408-499a-bb35-078ae0ee4052", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "face_detection_input", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }, 
+                            "2": {
+                                "vOffset": "0.0", 
+                                "sourceName": "cv_ReadNextFrame_img", 
+                                "destinationUUID": "fc178b3c-ab32-4e36-82ba-6f61acd6cc50", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "c623fabf-5b4a-4dc9-b666-ab940ff71cfa", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "a27f4c87-e938-4e33-a463-6f15257afa4b", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "ViewerNode_img", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "cv_ReadNextFrame_img", 
+                    "structure": 0, 
+                    "uuid": "c623fabf-5b4a-4dc9-b666-ab940ff71cfa", 
+                    "alwaysDict": false, 
+                    "name": "img", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "146f3bc6-4c1f-4b31-8387-af2cd80cd42a", 
+                            "inPinId": 1, 
+                            "lhsNodeName": "cv_ReadNextFrame", 
+                            "outPinId": 2, 
+                            "rhsNodeUid": "2bbdc977-8da8-478c-8c9a-7c060988361b", 
+                            "rhsNodeName": "face_detection"
+                        }, 
+                        {
+                            "lhsNodeUid": "146f3bc6-4c1f-4b31-8387-af2cd80cd42a", 
+                            "inPinId": 2, 
+                            "lhsNodeName": "cv_ReadNextFrame", 
+                            "outPinId": 2, 
+                            "rhsNodeUid": "c2f48aa8-1c1c-4ac3-9cc6-708e29bd0d01", 
+                            "rhsNodeName": "ViewerNode"
+                        }
+                    ], 
+                    "value": null, 
+                    "options": []
+                }
+            ], 
+            "meta": {
+                "var": {}, 
+                "label": "cv_ReadNextFrame"
+            }, 
+            "uuid": "146f3bc6-4c1f-4b31-8387-af2cd80cd42a", 
+            "name": "cv_ReadNextFrame", 
+            "lib": "OpenCvLib", 
+            "package": "PyFlowOpenCv", 
+            "wrapper": {
+                "groups": {
+                    "input": {}, 
+                    "output": {}
+                }, 
+                "exposeInputsToCompound": false, 
+                "collapsed": false, 
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">cv_ReadNextFrame</p></body></html>", 
+                "resize": {
+                    "h": 74.0, 
+                    "w": 126.0
+                }
+            }, 
+            "y": -142.6141489696176, 
+            "x": -336.96601416897306, 
+            "type": "cv_ReadNextFrame"
+        }, 
+        {
+            "inputs": [
+                {
+                    "direction": 0, 
+                    "dataType": "BoolPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "enabled", 
+                        "wires": {}, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "tick_enabled", 
+                    "structure": 0, 
+                    "uuid": "4f094ffb-3bf4-4414-8bf0-39df133348cd", 
+                    "alwaysDict": false, 
+                    "name": "enabled", 
+                    "package": "PyFlowBase", 
+                    "linkedTo": [], 
+                    "value": "false", 
+                    "options": [
+                        256
+                    ]
+                }
+            ], 
+            "owningGraphName": "root", 
+            "outputs": [
+                {
+                    "direction": 1, 
+                    "dataType": "FloatPin", 
+                    "pinIndex": 2, 
+                    "wrapper": {
+                        "displayName": "delta", 
+                        "wires": {}, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "tick_delta", 
+                    "structure": 0, 
+                    "uuid": "959246ae-fd38-4efb-8798-74e96a73f4c9", 
+                    "alwaysDict": false, 
+                    "name": "delta", 
+                    "package": "PyFlowBase", 
+                    "linkedTo": [], 
+                    "value": "0.00048489999971934594", 
+                    "options": [
+                        256
+                    ]
+                }, 
+                {
+                    "direction": 1, 
+                    "dataType": "ExecPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "outExec", 
+                        "wires": {
+                            "1": {
+                                "vOffset": "0.0", 
+                                "sourceName": "tick_outExec", 
+                                "destinationUUID": "139799e9-a227-42e7-836d-bfe9e06706d5", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "85c0200c-585d-423c-af57-bb85ba04f702", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "c131c743-5d00-41a4-b7fe-6806865cca17", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "ViewerNode_inExec", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "tick_outExec", 
+                    "structure": 0, 
+                    "uuid": "85c0200c-585d-423c-af57-bb85ba04f702", 
+                    "alwaysDict": false, 
+                    "name": "outExec", 
+                    "package": "PyFlowBase", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "4a3e24ac-7b21-4781-b177-fa5d723bd743", 
+                            "inPinId": 1, 
+                            "lhsNodeName": "tick", 
+                            "outPinId": 1, 
+                            "rhsNodeUid": "c2f48aa8-1c1c-4ac3-9cc6-708e29bd0d01", 
+                            "rhsNodeName": "ViewerNode"
+                        }
+                    ], 
+                    "value": "null", 
+                    "options": [
+                        256
+                    ]
+                }
+            ], 
+            "meta": {
+                "var": {}, 
+                "label": "tick"
+            }, 
+            "uuid": "4a3e24ac-7b21-4781-b177-fa5d723bd743", 
+            "name": "tick", 
+            "lib": null, 
+            "package": "PyFlowBase", 
+            "wrapper": {
+                "exposeInputsToCompound": false, 
+                "collapsed": false, 
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">tick</p></body></html>", 
+                "groups": {
+                    "input": {}, 
+                    "output": {}
+                }
+            }, 
+            "y": -223.5422846829265, 
+            "x": -214.51027318058604, 
+            "type": "tick"
+        }, 
+        {
+            "inputs": [
+                {
+                    "direction": 0, 
+                    "dataType": "GraphElementPin", 
+                    "pinIndex": 3, 
+                    "wrapper": {
+                        "displayName": "data", 
+                        "wires": {
+                            "3": {
+                                "vOffset": "0.0", 
+                                "sourceName": "face_detection_rects", 
+                                "destinationUUID": "366f355e-f5ae-4392-89fc-ec5048318492", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "a33a2704-55b0-458b-90fc-0d65290efd96", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "cb4438a9-d933-44d8-a79c-df6fdeb72a91", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "ViewerNode_data", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": true, 
+                    "fullName": "ViewerNode_data", 
+                    "structure": 1, 
+                    "uuid": "366f355e-f5ae-4392-89fc-ec5048318492", 
+                    "alwaysDict": false, 
+                    "name": "data", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "2bbdc977-8da8-478c-8c9a-7c060988361b", 
+                            "inPinId": 3, 
+                            "lhsNodeName": "face_detection", 
+                            "outPinId": 2, 
+                            "rhsNodeUid": "c2f48aa8-1c1c-4ac3-9cc6-708e29bd0d01", 
+                            "rhsNodeName": "ViewerNode"
+                        }
+                    ], 
+                    "value": "[null]", 
+                    "options": [
+                        8, 
+                        16, 
+                        256
+                    ]
+                }, 
+                {
+                    "direction": 0, 
+                    "dataType": "ImagePin", 
+                    "pinIndex": 2, 
+                    "wrapper": {
+                        "displayName": "img", 
+                        "wires": {
+                            "2": {
+                                "vOffset": "0.0", 
+                                "sourceName": "cv_ReadNextFrame_img", 
+                                "destinationUUID": "fc178b3c-ab32-4e36-82ba-6f61acd6cc50", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "c623fabf-5b4a-4dc9-b666-ab940ff71cfa", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "a27f4c87-e938-4e33-a463-6f15257afa4b", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "ViewerNode_img", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "ViewerNode_img", 
+                    "structure": 0, 
+                    "uuid": "fc178b3c-ab32-4e36-82ba-6f61acd6cc50", 
+                    "alwaysDict": false, 
+                    "name": "img", 
+                    "package": "PyFlowOpenCv", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "146f3bc6-4c1f-4b31-8387-af2cd80cd42a", 
+                            "inPinId": 2, 
+                            "lhsNodeName": "cv_ReadNextFrame", 
+                            "outPinId": 2, 
+                            "rhsNodeUid": "c2f48aa8-1c1c-4ac3-9cc6-708e29bd0d01", 
+                            "rhsNodeName": "ViewerNode"
+                        }
+                    ], 
+                    "value": null, 
+                    "options": []
+                }, 
+                {
+                    "direction": 0, 
+                    "dataType": "ExecPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "inExec", 
+                        "wires": {
+                            "1": {
+                                "vOffset": "0.0", 
+                                "sourceName": "tick_outExec", 
+                                "destinationUUID": "139799e9-a227-42e7-836d-bfe9e06706d5", 
+                                "hOffsetRSShape": "0.0", 
+                                "vOffsetSShape": "0.0", 
+                                "sourceUUID": "85c0200c-585d-423c-af57-bb85ba04f702", 
+                                "hOffsetR": "0.0", 
+                                "uuid": "c131c743-5d00-41a4-b7fe-6806865cca17", 
+                                "snapVToFirst": 1, 
+                                "hOffsetLSShape": "0.0", 
+                                "destinationName": "ViewerNode_inExec", 
+                                "snapVToSecond": 0, 
+                                "hOffsetL": "0.0"
+                            }
+                        }, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "ViewerNode_inExec", 
+                    "structure": 0, 
+                    "uuid": "139799e9-a227-42e7-836d-bfe9e06706d5", 
+                    "alwaysDict": false, 
+                    "name": "inExec", 
+                    "package": "PyFlowBase", 
+                    "linkedTo": [
+                        {
+                            "lhsNodeUid": "4a3e24ac-7b21-4781-b177-fa5d723bd743", 
+                            "inPinId": 1, 
+                            "lhsNodeName": "tick", 
+                            "outPinId": 1, 
+                            "rhsNodeUid": "c2f48aa8-1c1c-4ac3-9cc6-708e29bd0d01", 
+                            "rhsNodeName": "ViewerNode"
+                        }
+                    ], 
+                    "value": "null", 
+                    "options": [
+                        8, 
+                        256
+                    ]
+                }
+            ], 
+            "owningGraphName": "root", 
+            "outputs": [
+                {
+                    "direction": 1, 
+                    "dataType": "ExecPin", 
+                    "pinIndex": 1, 
+                    "wrapper": {
+                        "displayName": "outExec", 
+                        "wires": {}, 
+                        "bLabelHidden": false
+                    }, 
+                    "alwaysSingle": false, 
+                    "alwaysList": false, 
+                    "fullName": "ViewerNode_outExec", 
+                    "structure": 0, 
+                    "uuid": "93271604-22ae-4410-8bd8-f83e4b7c33e7", 
+                    "alwaysDict": false, 
+                    "name": "outExec", 
+                    "package": "PyFlowBase", 
+                    "linkedTo": [], 
+                    "value": "null", 
+                    "options": [
+                        256
+                    ]
+                }
+            ], 
+            "meta": {
+                "var": {}, 
+                "label": "ViewerNode"
+            }, 
+            "uuid": "c2f48aa8-1c1c-4ac3-9cc6-708e29bd0d01", 
+            "name": "ViewerNode", 
+            "lib": null, 
+            "package": "PyFlowOpenCv", 
+            "wrapper": {
+                "groups": {
+                    "input": {}, 
+                    "output": {}
+                }, 
+                "exposeInputsToCompound": false, 
+                "collapsed": false, 
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">ViewerNode</p></body></html>", 
+                "resize": {
+                    "h": 91.0, 
+                    "w": 96.0
+                }
+            }, 
+            "y": -104.60433988858176, 
+            "x": 111.56181623964828, 
+            "type": "ViewerNode"
+        }
+    ], 
+    "parentGraphName": "None", 
+    "fileVersion": "2.0.1"
+}
