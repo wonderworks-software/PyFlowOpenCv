@@ -29,12 +29,27 @@ class NoneDecoder(json.JSONDecoder):
     def object_hook(self, vec3Dict):
         return MyImage()
 
+class VideoInput():
+    def __init__(self, video_capture=None):
+        if isinstance(video_capture, VideoInput):
+            self.video_capture=video_capture.video_capture
+        elif isinstance(video_capture, cv2.VideoCapture):
+            self.video_capture = video_capture
+        else:
+            self.video_capture=None
+    def read(self):
+        if isinstance(self.video_capture, cv2.VideoCapture):
+            return self.video_capture.read()
+        else:
+            return None,None
+
+
 class VideoPin(PinBase):
     """doc string for ImagePin"""
 
     def __init__(self, name, parent, direction, **kwargs):
         super(VideoPin, self).__init__(name, parent, direction, **kwargs)
-        self.setDefaultValue(cv2.VideoCapture())
+        self.setDefaultValue(VideoInput())
         self.disableOptions(PinOptions.Storable)
 
     @staticmethod
@@ -55,7 +70,7 @@ class VideoPin(PinBase):
 
     @staticmethod
     def pinDataTypeHint():
-        return 'VideoPin', cv2.VideoCapture()
+        return 'VideoPin', VideoInput()
 
     @staticmethod
     def color():
@@ -63,15 +78,15 @@ class VideoPin(PinBase):
 
     @staticmethod
     def internalDataStructure():
-        return cv2.VideoCapture
+        return VideoInput
 
     @staticmethod
     def processData(data):
-        if data.__class__.__name__== "VideoCapture":
-            return data
-        else:
-            raise Exception("non Valid VideoCapture")
-        #return VideoPin.internalDataStructure()(data)
+        # if data.__class__.__name__== "VideoCapture":
+        #     return data
+        # else:
+        #     raise Exception("non Valid VideoCapture")
+        return VideoPin.internalDataStructure()(data)
 
 class ImagePin(PinBase):
     """doc string for ImagePin"""
