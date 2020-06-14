@@ -127,7 +127,7 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_WebCam(cam_index=('InnPin', 0), video=(REF, ('VideoPin', 0))):
+    def cv_WebCam(cam_index=('IntPin', 0), video=(REF, ('VideoPin', 0))):
         """Return a frame of the loaded image."""
         video(cv2.VideoCapture(cam_index))
 
@@ -715,6 +715,43 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def BRISK_Feature(input=('ImagePin', 0),
+                      keypoints=(REF, ('KeyPointsPin', 0)),
+                      descriptor=(REF, ('DescriptorPin', 0)),
+                      draw_key_points=(REF, ('GraphElementPin', 0)),
+                      draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+
+        brisk= cv2.BRISK_create()
+        kp, des = brisk.detectAndCompute(input.image, None)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            descriptor(des)
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
+
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def AKAZE_Feature(input=('ImagePin', 0),
+                     keypoints=(REF, ('KeyPointsPin', 0)),
+                     descriptor=(REF, ('DescriptorPin', 0)),
+                     draw_key_points=(REF, ('GraphElementPin', 0)),
+                     draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+
+        akaze= cv2.AKAZE_create()
+        kp, des = akaze.detectAndCompute(input.image, None)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            descriptor(des)
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def BRIEF_Feature(input=('ImagePin', 0),
                      keypoints=(REF, ('KeyPointsPin', 0)),
                      descriptor=(REF, ('DescriptorPin', 0)),
@@ -872,14 +909,14 @@ class OpenCvLib(FunctionLibraryBase):
         cv2.normalize(g_hist, g_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
         cv2.normalize(r_hist, r_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
         for i in range(1, histSize):
-            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(b_hist[i - 1]))),
-                    (bin_w * (i), hist_h - int(round(b_hist[i]))),
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(b_hist[i - 1][0]))),
+                    (bin_w * (i), hist_h - int(round(b_hist[i][0]))),
                     (255, 0, 0), thickness=2)
-            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(g_hist[i - 1]))),
-                    (bin_w * (i), hist_h - int(round(g_hist[i]))),
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(g_hist[i - 1][0]))),
+                    (bin_w * (i), hist_h - int(round(g_hist[i][0]))),
                     (0, 255, 0), thickness=2)
-            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(r_hist[i - 1]))),
-                    (bin_w * (i), hist_h - int(round(r_hist[i]))),
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(r_hist[i - 1][0]))),
+                    (bin_w * (i), hist_h - int(round(r_hist[i][0]))),
                     (0, 0, 255), thickness=2)
 
         img(histImage)
