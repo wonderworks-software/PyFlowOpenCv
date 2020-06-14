@@ -134,6 +134,21 @@ class OpenCvLib(FunctionLibraryBase):
         return ret
 
     @staticmethod
+    @IMPLEMENT_NODE(returns=('BoolPin', False),
+                    meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    # Return a random frame of x,y
+    def cv_ReadNextTwoFrame(video=('VideoPin', ""),
+                            img=(REF, ('ImagePin', 0)),
+                            next_img=(REF, ('ImagePin', 0))
+                            ):
+        """Return a frame of the loaded image."""
+        ret, frame = video.read()
+        ret, next_frame = video.read()
+        img(frame)
+        next_img(next_frame)
+        return ret
+
+    @staticmethod
     @IMPLEMENT_NODE(returns=('BoolPin', False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def cv_ReadVideoFrame(video=('VideoPin', 0,), frame=('IntPin', 0), img=(REF, ('ImagePin', 0))):
@@ -649,3 +664,30 @@ class OpenCvLib(FunctionLibraryBase):
                                   None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         output(img3)
 
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def Dense_optical_flow(
+            prev_image=('ImagePin', 0),
+            image=('ImagePin', 0),
+            output=(REF, ('ImagePin', 0)) ):
+
+        # Create mask
+        # mask = np.zeros(prev_image.image.shape+(3,),dtype=np.float32)
+        mask = np.zeros_like(prev_image.image)
+        # Sets image saturation to maximum
+        mask[..., 1] = 255
+
+        prev_gray = cv2.cvtColor(prev_image.image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(image.image, cv2.COLOR_BGR2GRAY)
+        flow = cv2.calcOpticalFlowFarneback(prev_gray, gray , None, pyr_scale=0.5, levels=5, winsize=11, iterations=5,
+                                            poly_n=5, poly_sigma=1.1, flags=0)
+        # Compute the magnitude and angle of the 2D vectors
+        magnitude, angle = cv2.cartToPolar(flow[..., 0], flow[..., 1])
+        mask[..., 0] = angle * 180 / np.pi / 2
+        # Set image value according to the optical flow magnitude (normalized)
+        mask[..., 2] = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX)
+        # Convert HSV to RGB (BGR) color representation
+        rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
+        # Open a new window and displays the output frame
+        dense_flow = cv2.addWeighted(image.image, 1, rgb, 2, 0)
+        output(dense_flow)
