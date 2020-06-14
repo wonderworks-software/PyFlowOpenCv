@@ -97,45 +97,55 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_ReadImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=(REF, ('ImagePin', 0))):
+    def cv_ReadImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
+                     gray_scale= ( 'BoolPin', False), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
-        img(cv2.imread(path,cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH | cv2.IMREAD_UNCHANGED)) 
+        if gray_scale:
+            img(cv2.imread(path, cv2.IMREAD_GRAYSCALE))
+        else:
+            img(cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH | cv2.IMREAD_UNCHANGED))
+
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, nodeType=NodeTypes.Callable, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, nodeType=NodeTypes.Callable,
+                    meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_WriteImage(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), img=('ImagePin', 0)):
+    def cv_WriteImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
+                      img=('ImagePin', 0)):
         """Return a frame of the loaded image."""
-        cv2.imwrite(path,img.image)
+        cv2.imwrite(path, img.image)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_ReadVideo(path=('StringPin', "",{PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}), video=(REF, ('VideoPin', 0))):
+    def cv_ReadVideo(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
+                     video=(REF, ('VideoPin', 0))):
         """Return a frame of the loaded image."""
         video(cv2.VideoCapture(path))
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=('BoolPin', False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=('BoolPin', False),
+                    meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
     def cv_ReadNextFrame(video=('VideoPin', ""), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
-        ret,frame = video.read()
-        img(frame)  
+        ret, frame = video.read()
+        img(frame)
         return ret
-        
+
     @staticmethod
-    @IMPLEMENT_NODE(returns=('BoolPin',False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=('BoolPin', False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def cv_ReadVideoFrame(video=('VideoPin', 0,), frame=('IntPin', 0), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
-        video.set(1,frame)
+        video.set(1, frame)
         ret, im = video.read()
         img(im)
         return ret
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=('BoolPin',False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
+    @IMPLEMENT_NODE(returns=('BoolPin', False),
+                    meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
     def cv_VideoisOpened(video=('VideoPin', 0)):
         """Return a frame of the loaded image."""
@@ -148,11 +158,15 @@ class OpenCvLib(FunctionLibraryBase):
         img(cv2.cvtColor(input.image, cv2.COLOR_BGR2RGB))
 
     @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Converters', NodeMeta.KEYWORDS: []})
+    def cv_BGR2GRAY(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+        img(cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY))
+
+    @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpenCl', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
     def cv_convertToGPU(img=('ImagePin', 0), gpuImg=(REF, ('ImagePin', 0))):
         gpuImg(cv2.UMat(img.image))
-
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpenCl', NodeMeta.KEYWORDS: []})
@@ -166,14 +180,13 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
     def cv_HDR_AutoGamma(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        image = np.clip( np.power( input.image, 1.0/2.2 ), 0, 1 )
-        img(np.uint8( image * 255 ))
+        image = np.clip(np.power(input.image, 1.0 / 2.2), 0, 1)
+        img(np.uint8(image * 255))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
     def cv_ConvertScaleAbs(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        img(cv2.convertScaleAbs(input.image))   
-
+        img(cv2.convertScaleAbs(input.image))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: []})
@@ -304,7 +317,8 @@ class OpenCvLib(FunctionLibraryBase):
                                      swapRB=False, crop=False)
         # set the blob as the input to the network and perform a forward pass to compute the edges
         protoPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "deploy.prototxt")
-        modelPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "hed_pretrained_bsds.caffemodel")
+        modelPath = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                 "hed_pretrained_bsds.caffemodel")
         net = cv2.dnn.readNetFromCaffe(protoPath, modelPath)
         # register our new layer with the model
         cv2.dnn_registerLayer("Crop", CropLayer)
@@ -338,8 +352,8 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin', 0)),_sure_bg=(REF, ('ImagePin', 0)),
-                    img=(REF, ('ImagePin', 0))):
+    def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin', 0)), _sure_bg=(REF, ('ImagePin', 0)),
+                   img=(REF, ('ImagePin', 0))):
         """filter a BGR color range from image"""
         image = input.image
 
@@ -366,7 +380,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def bit_and(input=('ImagePin', 0),mask=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _mask=(REF, ('ImagePin', 0))):
+    def bit_and(input=('ImagePin', 0), mask=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _mask=(REF, ('ImagePin', 0))):
         """Takes an image and mask and applied logic and operation"""
         ret, mask = cv2.threshold(mask.image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
         img(cv2.bitwise_and(input.image, input.image, mask=mask))
@@ -378,7 +392,7 @@ class OpenCvLib(FunctionLibraryBase):
                     low_threshold=('IntPin', 50),
                     high_threshold=('IntPin', 150),
                     rho=('IntPin', 1),
-                    theta=('FloatPin', np.pi/180),
+                    theta=('FloatPin', np.pi / 180),
                     threshold=('IntPin', 15),
                     min_line_length=('IntPin', 50),
                     max_line_gap=('IntPin', 20),
@@ -387,9 +401,9 @@ class OpenCvLib(FunctionLibraryBase):
         """Detects lines and crossings"""
         import CV_classes.poly_point_isect as bot
 
-        gray = cv2.cvtColor(input.image,cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
         kernel_size = 5
-        blur_gray = cv2.GaussianBlur(gray,(kernel_size, kernel_size),0)
+        blur_gray = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 0)
 
         # low_threshold = 50
         # high_threshold = 150
@@ -405,7 +419,7 @@ class OpenCvLib(FunctionLibraryBase):
         # Run Hough on edge detected image
         # Output "lines" is an array containing endpoints of detected line segments
         lines = cv2.HoughLinesP(edges, rho, theta, threshold, np.array([]),
-                            min_line_length, max_line_gap)
+                                min_line_length, max_line_gap)
         points = []
         for line in lines:
             for x1, y1, x2, y2 in line:
@@ -425,14 +439,106 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
-    def face_detection(input=('ImagePin', 0),
-                       rects=(REF, ('AnyPin', [],
-                                    {PinSpecifires.CONSTRAINT: '1', PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported | PinOptions.AllowAny}))):
+    def face_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                       rects=(REF, ('GraphElementPin', 0)),
+                       scaleFactor=('FloatPin', 1.1),
+                       minNeighbores=('IntPin', 4)
+                       ):
         """Takes an image and mask and applied logic and operation"""
 
-        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_frontalface_default.xml")
+        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "haarcascade_frontalface_default.xml")
         face_cascade = cv2.CascadeClassifier(face_model_path)
         gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
-        rects([(x,y,w,h) for (x, y, w, h) in faces])
+        faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+        img(gray)
+        rects({'rect': [(x, y, w, h) for (x, y, w, h) in faces]})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    def eye_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                      rects=(REF, ('GraphElementPin', 0)),
+                      scaleFactor=('FloatPin', 1.1),
+                      minNeighbores=('IntPin', 4)
+                      ):
+        """Takes an image and mask and applied logic and operation"""
+
+        eye_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_eye.xml")
+        eye_cascade = cv2.CascadeClassifier(eye_model_path)
+        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+        img(gray)
+        rects({'rect': [(x, y, w, h) for (x, y, w, h) in eyes]})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def goodFeatureToTrack(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
+                           draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        corners = cv2.goodFeaturesToTrack(gray, 25, 0.01, 10)
+        if corners is not None:
+            # corners = np.float32(corners)
+            keypoints(corners)
+            draw_points({'point': [(item[0][0], item[0][1]) for item in corners]})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def ORB_Feature_Detector(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
+                             draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+        orb = cv2.ORB_create(nfeatures=2000)
+        kp = orb.detect(input.image)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def ORB_Feature_Extraction(input=('ImagePin', 0), keypoints=('KeyPointsPin', 0),
+                               descriptor=(REF, ('DescriptorPin',0))):
+        """Takes an image and mask and applied logic and operation"""
+        orb = cv2.ORB_create(nfeatures=2000)
+        kp, des = orb.compute(input.image, keypoints.points)
+        descriptor(des)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
+    def CreateBackgroundSubtractorMOG2(background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
+        backSub = cv2.createBackgroundSubtractorMOG2()
+        background_subtrator(backSub)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
+    def BackgroundSubtract(input=('ImagePin', 0), background_subtrator=('BackgroundSubtractorPin', 0),
+                           fgMask=(REF, ('ImagePin', 0))):
+        mask = background_subtrator.bgs.apply(input.image)
+        fgMask(mask)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def KNN_Match(
+            descriptor_1=('DescriptorPin',0),
+            descriptor_2=('DescriptorPin', 0),
+            match=(REF, ('FeatureMatchPin', 0)) ):
+        bf = cv2.BFMatcher()
+        matches = bf.knnMatch(descriptor_1.desc, descriptor_2.desc, 2)
+        good = []
+        for m, n in matches:
+            if m.distance < 0.75 * n.distance:
+                good.append([m])
+        match(good)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def Draw_Match(
+            input_1=('ImagePin', 0), keypoints_1=('KeyPointsPin', 0),
+            input_2=('ImagePin', 0), keypoints_2=('KeyPointsPin', 0),
+            matches= ('FeatureMatchPin',0),
+            output=(REF, ('ImagePin', 0)) ):
+        """Takes an image and mask and applied logic and operation"""
+        img3 = cv2.drawMatchesKnn(input_1.image, keypoints_1.points, input_2.image, keypoints_2.points, matches,
+                                  None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
+        output(img3)
 

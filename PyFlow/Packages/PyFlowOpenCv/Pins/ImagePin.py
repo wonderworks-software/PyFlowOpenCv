@@ -112,3 +112,266 @@ class ImagePin(PinBase):
     @staticmethod
     def processData(data):
         return ImagePin.internalDataStructure()(data)
+
+class GraphElement():
+    def __init__(self, graph=None):
+        if isinstance(graph, GraphElement):
+            self.graph=graph.graph
+        elif isinstance(graph, dict):
+            self.graph = graph
+        else:
+            self.graph={}
+
+    def draw(self, image):
+        if self.graph:
+            for draw_type,draw_list in self.graph.items():
+                if draw_type=='rect':
+                    for (x, y, w, h) in draw_list :
+                        cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+                if draw_type=='point':
+                    for (x, y) in draw_list :
+                        cv2.circle(image, (x, y),5 , (0, 255, 0), -1)
+
+
+class GraphElementPin(PinBase):
+    """doc string for GraphElement"""
+
+    def __init__(self, name, parent, direction, **kwargs):
+        super(GraphElementPin, self).__init__(name, parent, direction, **kwargs)
+        self.setDefaultValue({})
+        self.disableOptions(PinOptions.Storable)
+
+    @staticmethod
+    def jsonEncoderClass():
+        return NoneEncoder
+
+    @staticmethod
+    def jsonDecoderClass():
+        return NoneDecoder
+
+    @staticmethod
+    def IsValuePin():
+        return True
+
+    @staticmethod
+    def supportedDataTypes():
+        return ('GraphElementPin',)
+
+    @staticmethod
+    def pinDataTypeHint():
+        return 'GraphElementPin', {}
+
+    @staticmethod
+    def color():
+        return (200, 200, 50, 255)
+
+    @staticmethod
+    def internalDataStructure():
+        return GraphElement
+
+    @staticmethod
+    def processData(data):
+        return GraphElementPin.internalDataStructure()(data)
+
+class KeyPoints():
+    def __init__(self, key_points=None):
+        if isinstance(key_points, KeyPoints):
+            self.points=np.array(key_points.points)
+        elif type(key_points)==tuple:
+            self.points = key_points[0]
+        elif isinstance(key_points, np.ndarray):
+            self.points = np.array(key_points)
+        else:
+            self.points= None
+
+class KeyPointsPin(PinBase):
+    """doc string for KeyPointsPin"""
+
+    def __init__(self, name, parent, direction, **kwargs):
+        super(KeyPointsPin, self).__init__(name, parent, direction, **kwargs)
+        self.setDefaultValue(KeyPoints())
+        self.disableOptions(PinOptions.Storable)
+
+    @staticmethod
+    def jsonEncoderClass():
+        return NoneEncoder
+
+    @staticmethod
+    def jsonDecoderClass():
+        return NoneDecoder
+
+    @staticmethod
+    def IsValuePin():
+        return True
+
+    @staticmethod
+    def supportedDataTypes():
+        return ('KeyPointsPin',)
+
+    @staticmethod
+    def pinDataTypeHint():
+        return 'KeyPointsPin', KeyPoints()
+
+    @staticmethod
+    def color():
+        return (200, 200, 50, 255)
+
+    @staticmethod
+    def internalDataStructure():
+        return KeyPoints
+
+    @staticmethod
+    def processData(data):
+        return KeyPointsPin.internalDataStructure()(data)
+
+class BackgroundSubtractor():
+    def __init__(self, bgs=None):
+        if isinstance(bgs, BackgroundSubtractor):
+            self.bgs=bgs.bgs
+        elif bgs:
+            self.bgs = bgs
+        else:
+            self.bgs= None
+
+class BackgroundSubtractorPin(PinBase):
+    """doc string for KeyPointsPin"""
+
+    def __init__(self, name, parent, direction, **kwargs):
+        super(BackgroundSubtractorPin, self).__init__(name, parent, direction, **kwargs)
+        self.setDefaultValue(BackgroundSubtractor())
+        self.disableOptions(PinOptions.Storable)
+
+    @staticmethod
+    def jsonEncoderClass():
+        return NoneEncoder
+
+    @staticmethod
+    def jsonDecoderClass():
+        return NoneDecoder
+
+    @staticmethod
+    def IsValuePin():
+        return True
+
+    @staticmethod
+    def supportedDataTypes():
+        return ('BackgroundSubtractorPin',)
+
+    @staticmethod
+    def pinDataTypeHint():
+        return 'BackgroundSubtractorPin', BackgroundSubtractor()
+
+    @staticmethod
+    def color():
+        return (200, 200, 50, 255)
+
+    @staticmethod
+    def internalDataStructure():
+        return BackgroundSubtractor
+
+    @staticmethod
+    def processData(data):
+        return BackgroundSubtractorPin.internalDataStructure()(data)
+
+class Descriptor():
+    def __init__(self, desc=None):
+        if isinstance(desc, Descriptor):
+            self.desc=desc.desc
+        elif isinstance(desc, np.ndarray):
+            self.desc = desc
+        elif desc is not None:
+            self.desc = desc
+        else:
+            self.desc= None
+
+class DescriptorPin(PinBase):
+    """doc string for KeyPointsPin"""
+
+    def __init__(self, name, parent, direction, **kwargs):
+        super(DescriptorPin, self).__init__(name, parent, direction, **kwargs)
+        self.setDefaultValue(Descriptor())
+        self.disableOptions(PinOptions.Storable)
+
+    @staticmethod
+    def jsonEncoderClass():
+        return NoneEncoder
+
+    @staticmethod
+    def jsonDecoderClass():
+        return NoneDecoder
+
+    @staticmethod
+    def IsValuePin():
+        return True
+
+    @staticmethod
+    def supportedDataTypes():
+        return ('DescriptorPin',)
+
+    @staticmethod
+    def pinDataTypeHint():
+        return 'DescriptorPin', Descriptor()
+
+    @staticmethod
+    def color():
+        return (200, 200, 50, 255)
+
+    @staticmethod
+    def internalDataStructure():
+        return Descriptor
+
+    @staticmethod
+    def processData(data):
+        return DescriptorPin.internalDataStructure()(data)
+
+class FeatureMatch():
+    def __init__(self, match=None):
+        if isinstance(match, FeatureMatch):
+            self.match=match.match
+        elif isinstance(match, np.ndarray):
+            self.match = match
+        elif match:
+            self.match = match
+        else:
+            self.match= None
+
+class FeatureMatchPin(PinBase):
+    """doc string for KeyPointsPin"""
+
+    def __init__(self, name, parent, direction, **kwargs):
+        super(FeatureMatchPin, self).__init__(name, parent, direction, **kwargs)
+        self.setDefaultValue(FeatureMatch())
+        self.disableOptions(PinOptions.Storable)
+
+    @staticmethod
+    def jsonEncoderClass():
+        return NoneEncoder
+
+    @staticmethod
+    def jsonDecoderClass():
+        return NoneDecoder
+
+    @staticmethod
+    def IsValuePin():
+        return True
+
+    @staticmethod
+    def supportedDataTypes():
+        return ('FeatureMatchPin',)
+
+    @staticmethod
+    def pinDataTypeHint():
+        return 'FeatureMatchPin', FeatureMatch()
+
+    @staticmethod
+    def color():
+        return (200, 200, 50, 255)
+
+    @staticmethod
+    def internalDataStructure():
+        return FeatureMatch
+
+    @staticmethod
+    def processData(data):
+        return FeatureMatchPin.internalDataStructure()(data)
+

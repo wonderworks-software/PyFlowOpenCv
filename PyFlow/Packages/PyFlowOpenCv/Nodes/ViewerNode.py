@@ -3,19 +3,28 @@ import cv2
 from PyFlow.Core import NodeBase
 from PyFlow.Core.NodeBase import NodePinsSuggestionsHelper
 from PyFlow.Core.Common import *
+from Qt import QtWidgets
 
 class ViewerNode(NodeBase):
     def __init__(self, name):
         super(ViewerNode, self).__init__(name)
         self.inExec = self.createInputPin(DEFAULT_IN_EXEC_NAME, 'ExecPin', None, self.compute)
         self.inp = self.createInputPin('img', 'ImagePin')
-        self.inRect = self.createInputPin('rects', 'AnyPin')
+        self.arrayData = self.createInputPin('data', 'GraphElementPin', structure=StructureType.Array)
+        self.arrayData.enableOptions(PinOptions.AllowMultipleConnections)
+        self.outExec = self.createOutputPin(DEFAULT_OUT_EXEC_NAME, 'ExecPin')
 
     @staticmethod
     def pinTypeHints():
         helper = NodePinsSuggestionsHelper()
+        helper.addInputDataType('ExecPin')
         helper.addInputDataType('ImagePin')
+        helper.addInputDataType('GraphElementPin')
+        helper.addOutputDataType('ExecPin')
+        helper.addInputStruct(StructureType.Multi)
         helper.addInputStruct(StructureType.Single)
+        helper.addInputStruct(StructureType.Array)
+        helper.addOutputStruct(StructureType.Single)
         return helper
 
     @staticmethod
@@ -33,9 +42,10 @@ class ViewerNode(NodeBase):
     def compute(self, *args, **kwargs):
         if self.inp.dirty or self.inRect.dirty:
             inputData = self.inp.getData()
-            inputRect= self.inRect.getData()
             instance = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
-            if inputRect:
-                for (x, y, w, h) in inputRect:
-                    cv2.rectangle(inputData.image, (x, y), (x + w, y + h), (255, 0, 0), 2)
+            yInputPins= sorted(self.arrayData.affected_by, key=lambda pin: pin.owningNode().y)
+            for i in yInputPins:
+                i.getData().draw(inputData.image)
             instance.viewer.setNumpyArray(inputData.image)
+            QtWidgets.QApplication.processEvents()
+        self.outExec.call()
