@@ -422,3 +422,17 @@ class OpenCvLib(FunctionLibraryBase):
                     lines_edges[int(b) + i, int(a) + j] = [0, 255, 0]
 
         cv2.imwrite('line_parking.png', lines_edges)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    def face_detection(input=('ImagePin', 0),
+                       rects=(REF, ('AnyPin', [],
+                                    {PinSpecifires.CONSTRAINT: '1', PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported | PinOptions.AllowAny}))):
+        """Takes an image and mask and applied logic and operation"""
+
+        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_frontalface_default.xml")
+        face_cascade = cv2.CascadeClassifier(face_model_path)
+        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, 1.1, 4)
+        rects([(x,y,w,h) for (x, y, w, h) in faces])
+
