@@ -462,6 +462,46 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    def classifcation_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                           keywords=(REF, ('GraphElementPin', 0)),
+                           ):
+        """Takes an image and mask and applied logic and operation"""
+
+        face_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                             "bvlc_googlenet.prototxt")
+        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "bvlc_googlenet.caffemodel")
+        keywords_path= os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "synset_words.txt")
+
+        words_rows = open(keywords_path).read().strip().split("\n")
+        classes = [r[r.find(" ") + 1:].split(",")[0] for r in words_rows]
+
+
+        image = cv2.resize(input.image, (224, 224))
+        image=image[:,:,:3]
+        (h, w) = image.shape[:2]
+        net = cv2.dnn.readNetFromCaffe(face_model_proto_path,face_model_path)
+        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
+                                     mean=(104.00698793, 116.66876762, 122.67891434),
+                                     swapRB=False, crop=False)
+        net.setInput(blob)
+        preds= net.forward()
+        idxs = np.argsort(preds[0])[::-1][:5]
+
+        # loop over the top-5 predictions and display them
+        words=[]
+        for (i, idx) in enumerate(idxs):
+            # draw the top prediction on the input image
+            if i == 0:
+                text = "Label: {}, {:.2f}%".format(classes[idx],
+                                                   preds[0][idx] * 100)
+                words.append(text)
+                break
+        keywords({'text':words})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
     def face_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                        rects=(REF, ('GraphElementPin', 0)),
                        scaleFactor=('FloatPin', 1.1),
@@ -812,3 +852,34 @@ class OpenCvLib(FunctionLibraryBase):
         # Open a new window and displays the output frame
         dense_flow = cv2.addWeighted(image.image, 1, rgb, 2, 0)
         output(dense_flow)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Histogram', NodeMeta.KEYWORDS: []})
+    def cv_Histogram(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+
+        bgr_planes = cv2.split(input.image)
+        histSize = 256
+        histRange = (0, 256)  # the upper boundary is exclusive
+        accumulate = False
+        b_hist = cv2.calcHist(bgr_planes, [0], None, [histSize], histRange, accumulate=accumulate)
+        g_hist = cv2.calcHist(bgr_planes, [1], None, [histSize], histRange, accumulate=accumulate)
+        r_hist = cv2.calcHist(bgr_planes, [2], None, [histSize], histRange, accumulate=accumulate)
+        hist_w = 512
+        hist_h = 400
+        bin_w = int(round(hist_w / histSize))
+        histImage = np.zeros((hist_h, hist_w, 3), dtype=np.uint8)
+        cv2.normalize(b_hist, b_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
+        cv2.normalize(g_hist, g_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
+        cv2.normalize(r_hist, r_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
+        for i in range(1, histSize):
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(b_hist[i - 1]))),
+                    (bin_w * (i), hist_h - int(round(b_hist[i]))),
+                    (255, 0, 0), thickness=2)
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(g_hist[i - 1]))),
+                    (bin_w * (i), hist_h - int(round(g_hist[i]))),
+                    (0, 255, 0), thickness=2)
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(r_hist[i - 1]))),
+                    (bin_w * (i), hist_h - int(round(r_hist[i]))),
+                    (0, 0, 255), thickness=2)
+
+        img(histImage)

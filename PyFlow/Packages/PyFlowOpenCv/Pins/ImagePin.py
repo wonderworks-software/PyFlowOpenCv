@@ -148,6 +148,9 @@ class GraphElement():
                         cv2.circle(image, (int(x), int(y)),5 , (0, 255, 0), -1)
                 if draw_type=='key_point':
                     image=cv2.drawKeypoints(image, draw_list, image, (255, 255, 0), cv2.DrawMatchesFlags_DRAW_RICH_KEYPOINTS)
+                if draw_type == 'text':
+                    for text in draw_list:
+                        image= cv2.putText(image, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
         return image
 
 
@@ -393,3 +396,54 @@ class FeatureMatchPin(PinBase):
     def processData(data):
         return FeatureMatchPin.internalDataStructure()(data)
 
+# class Histogram():
+#     def __init__(self, histogram=None):
+#         if isinstance(histogram, Histogram):
+#             self.histogram=histogram.histogram
+#         elif isinstance(histogram, np.ndarray):
+#             self.histogram = histogram
+#         elif histogram:
+#             self.histogram = histogram
+#         else:
+#             self.histogram= None
+#
+# class HistogramPin(PinBase):
+#     """doc string for histogram"""
+#
+#     def __init__(self, name, parent, direction, **kwargs):
+#         super(HistogramPin, self).__init__(name, parent, direction, **kwargs)
+#         self.setDefaultValue(Histogram())
+#         self.disableOptions(PinOptions.Storable)
+#
+#     @staticmethod
+#     def jsonEncoderClass():
+#         return NoneEncoder
+#
+#     @staticmethod
+#     def jsonDecoderClass():
+#         return NoneDecoder
+#
+#     @staticmethod
+#     def IsValuePin():
+#         return True
+#
+#     @staticmethod
+#     def supportedDataTypes():
+#         return ('HistogramPin',)
+#
+#     @staticmethod
+#     def pinDataTypeHint():
+#         return 'HistogramPin', Histogram()
+#
+#     @staticmethod
+#     def color():
+#         return (200, 200, 50, 255)
+#
+#     @staticmethod
+#     def internalDataStructure():
+#         return Histogram
+#
+#     @staticmethod
+#     def processData(data):
+#         return HistogramPin.internalDataStructure()(data)
+#
