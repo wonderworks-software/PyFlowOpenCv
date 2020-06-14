@@ -40,12 +40,13 @@ class ViewerNode(NodeBase):
         return "Description in rst format."
 
     def compute(self, *args, **kwargs):
-        if self.inp.dirty or self.inRect.dirty:
+        if self.inp.dirty or self.arrayData.dirty:
             inputData = self.inp.getData()
             instance = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
             yInputPins= sorted(self.arrayData.affected_by, key=lambda pin: pin.owningNode().y)
+            draw_image=inputData.image
             for i in yInputPins:
-                i.getData().draw(inputData.image)
-            instance.viewer.setNumpyArray(inputData.image)
+                draw_image=i.getData().draw(draw_image)
+            instance.viewer.setNumpyArray(draw_image)
             QtWidgets.QApplication.processEvents()
         self.outExec.call()

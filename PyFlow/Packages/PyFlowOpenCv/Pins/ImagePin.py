@@ -130,7 +130,10 @@ class GraphElement():
                         cv2.rectangle(image, (x, y), (x + w, y + h), (255, 0, 0), 2)
                 if draw_type=='point':
                     for (x, y) in draw_list :
-                        cv2.circle(image, (x, y),5 , (0, 255, 0), -1)
+                        cv2.circle(image, (int(x), int(y)),5 , (0, 255, 0), -1)
+                if draw_type=='key_point':
+                    image=cv2.drawKeypoints(image, draw_list, image, (255, 255, 0), cv2.DrawMatchesFlags_DRAW_RICH_KEYPOINTS)
+        return image
 
 
 class GraphElementPin(PinBase):

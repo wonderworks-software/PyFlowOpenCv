@@ -484,7 +484,86 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def SURF_Feature(input=('ImagePin', 0),
+                     keypoints=(REF, ('KeyPointsPin', 0)),
+                     descriptor=(REF, ('DescriptorPin', 0)),
+                     draw_key_points=(REF, ('GraphElementPin', 0)),
+                     draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+
+        surf = cv2.xfeatures2d.SURF_create(400)
+        kp, des = surf.detectAndCompute(input.image, None)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            descriptor(des)
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
+
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def SIFT_Feature(input=('ImagePin', 0),
+                     keypoints=(REF, ('KeyPointsPin', 0)),
+                     descriptor=(REF, ('DescriptorPin', 0)),
+                     draw_key_points=(REF, ('GraphElementPin', 0)),
+                     draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+
+        sift = cv2.xfeatures2d.SIFT_create()
+        kp, des = sift.detectAndCompute(input.image, None)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            descriptor(des)
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def FAST_Feature(input=('ImagePin', 0),
+                     keypoints=(REF, ('KeyPointsPin', 0)),
+                     descriptor=(REF, ('DescriptorPin', 0)),
+                     draw_key_points=(REF, ('GraphElementPin', 0)),
+                     draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+
+        fast= cv2.FastFeatureDetector_create()
+        kp, des = fast.detectAndCompute(input.image, None)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            descriptor(des)
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def BRIEF_Feature(input=('ImagePin', 0),
+                     keypoints=(REF, ('KeyPointsPin', 0)),
+                     descriptor=(REF, ('DescriptorPin', 0)),
+                     draw_key_points=(REF, ('GraphElementPin', 0)),
+                     draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+
+        star = cv2.xfeatures2d.StarDetector_create()
+        # Initiate BRIEF extractor
+        brief = cv2.xfeatures2d.BriefDescriptorExtractor_create()
+        # find the keypoints with STAR
+        kp = star.detect(input.image, None)
+        # compute the descriptors with BRIEF
+        kp, des = brief.compute(input.image, kp)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            descriptor(des)
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def ORB_Feature_Detector(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
+                             draw_key_points=(REF, ('GraphElementPin', 0)),
                              draw_points=(REF, ('GraphElementPin', 0))):
         """Takes an image and mask and applied logic and operation"""
         orb = cv2.ORB_create(nfeatures=2000)
@@ -493,11 +572,13 @@ class OpenCvLib(FunctionLibraryBase):
             # corners = np.float32(corners)
             keypoints((kp,))
             draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def ORB_Feature_Extraction(input=('ImagePin', 0), keypoints=('KeyPointsPin', 0),
-                               descriptor=(REF, ('DescriptorPin',0))):
+                               descriptor=(REF, ('DescriptorPin',0))
+                               ):
         """Takes an image and mask and applied logic and operation"""
         orb = cv2.ORB_create(nfeatures=2000)
         kp, des = orb.compute(input.image, keypoints.points)
@@ -507,6 +588,12 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
     def CreateBackgroundSubtractorMOG2(background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
         backSub = cv2.createBackgroundSubtractorMOG2()
+        background_subtrator(backSub)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
+    def CreateBackgroundSubtractorKNN(background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
+        backSub = cv2.createBackgroundSubtractorKNN()
         background_subtrator(backSub)
 
     @staticmethod
@@ -521,12 +608,32 @@ class OpenCvLib(FunctionLibraryBase):
     def KNN_Match(
             descriptor_1=('DescriptorPin',0),
             descriptor_2=('DescriptorPin', 0),
+            good_ratio=('FloatPin',0.75),
             match=(REF, ('FeatureMatchPin', 0)) ):
         bf = cv2.BFMatcher()
         matches = bf.knnMatch(descriptor_1.desc, descriptor_2.desc, 2)
         good = []
         for m, n in matches:
-            if m.distance < 0.75 * n.distance:
+            if m.distance < good_ratio * n.distance:
+                good.append([m])
+        match(good)
+
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def FLANN_Match(
+            descriptor_1=('DescriptorPin',0),
+            descriptor_2=('DescriptorPin', 0),
+            good_ratio=('FloatPin',0.75),
+            match=(REF, ('FeatureMatchPin', 0)) ):
+        FLANN_INDEX_KDTREE = 0
+        index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
+        search_params = dict(checks=50)  # or pass empty dictionary
+        flann = cv2.FlannBasedMatcher(index_params, search_params)
+        matches = flann.knnMatch(descriptor_1.desc, descriptor_2.desc, 2)
+        good = []
+        for m, n in matches:
+            if m.distance < good_ratio * n.distance:
                 good.append([m])
         match(good)
 
