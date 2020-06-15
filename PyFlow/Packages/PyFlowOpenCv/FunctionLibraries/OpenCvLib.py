@@ -939,3 +939,44 @@ class OpenCvLib(FunctionLibraryBase):
         threshold, cv__threshold = cv2.threshold(input.image, threshold, 255, cv2.THRESH_BINARY)
         img(cv__threshold)
 
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    def gender_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                          keywords=(REF, ('GraphElementPin', 0)),
+                          ):
+        """Takes an image and mask and applied logic and operation"""
+
+        gender_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                             "deploy_gender2.prototxt")
+        gender_caffe_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "gender_net.caffemodel")
+
+        image = cv2.resize(input.image, (227, 227))
+        image=image[:,:,:3]
+        (h, w) = image.shape[:2]
+        net = cv2.dnn.readNetFromCaffe(gender_proto_path,gender_caffe_path)
+        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
+                                     mean=(104.00698793, 116.66876762, 122.67891434),
+                                     swapRB=False, crop=False)
+        net.setInput(blob)
+        preds= net.forward()
+        words=[]
+        text = "M:{:.1f}%, F:{:.1f}%".format(preds[0][0] * 100,preds[0][1] * 100)
+        words.append(text)
+        img(image)
+        keywords({'text':words})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def image_crop(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                       rect=('GraphElementPin', 0)
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+
+        if 'rect' in rect.graph.keys():
+            only_rect=rect.graph['rect']
+            if only_rect:
+                x, y, w, h=only_rect[0]
+                (ih, iw) = input.image.shape[:2]
+                if (x+w)<=iw and (y+h)<ih:
+                    img(input.image[y:(y+h),x:(x+w),:])
