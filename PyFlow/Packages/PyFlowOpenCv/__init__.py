@@ -11,6 +11,7 @@ from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import KeyPointsPin
 from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import BackgroundSubtractorPin
 from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import DescriptorPin
 from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import FeatureMatchPin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import NumpyDataPin
 
 # Function based nodes
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import OpenCvLib
@@ -47,6 +48,7 @@ _PINS[KeyPointsPin.__name__] = KeyPointsPin
 _PINS[BackgroundSubtractorPin.__name__] = BackgroundSubtractorPin
 _PINS[DescriptorPin.__name__] = DescriptorPin
 _PINS[FeatureMatchPin.__name__] = FeatureMatchPin
+_PINS[NumpyDataPin.__name__] = NumpyDataPin
 
 _TOOLS[ImageViewerTool.__name__] = ImageViewerTool
 
