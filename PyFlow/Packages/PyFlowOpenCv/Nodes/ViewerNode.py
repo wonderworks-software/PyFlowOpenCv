@@ -1,5 +1,3 @@
-import cv2
-
 from PyFlow.Core import NodeBase
 from PyFlow.Core.NodeBase import NodePinsSuggestionsHelper
 from PyFlow.Core.Common import *
@@ -48,5 +46,6 @@ class ViewerNode(NodeBase):
             for i in yInputPins:
                 draw_image=i.getData().draw(draw_image)
             instance.viewer.setNumpyArray(draw_image)
+            self.inp.setClean()
             QtWidgets.QApplication.processEvents()
         self.outExec.call()
