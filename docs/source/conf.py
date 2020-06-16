@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'PyFlowOpenCv'
-copyright = '2020, Changbo Yang'
-author = 'Changbo Yang'
+copyright = '2020, Ilgar Lunin, Pedro Cabrera, Changbo Yang'
+author = 'Ilgar Lunin, Pedro Cabrera,  Changbo Yang'
 
 # The full version, including alpha/beta/rc tags
 release = '0.0.1'
