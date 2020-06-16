@@ -138,6 +138,8 @@ class OpenCvLib(FunctionLibraryBase):
     def cv_ReadNextFrame(video=('VideoPin', ""), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         ret, frame = video.read()
+        if not ret:
+            video.video_capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
         img(frame)
         return ret
 
@@ -794,26 +796,34 @@ class OpenCvLib(FunctionLibraryBase):
                                ):
         """Takes an image and mask and applied logic and operation"""
         orb = cv2.ORB_create(nfeatures=2000)
-        kp, des = orb.compute(input.image, keypoints.points)
+        kp, des = orb.compute(input.image, keypoints.data)
         descriptor(des)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
-    def CreateBackgroundSubtractorMOG2(background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
-        backSub = cv2.createBackgroundSubtractorMOG2()
+    def CreateBackgroundSubtractorMOG2(
+            history=('IntPin', 400),
+            threshold=('FloatPin', 16),
+            detectShadow=('BoolPin', True),
+            background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
+        backSub = cv2.createBackgroundSubtractorMOG2(history,threshold,detectShadow)
         background_subtrator(backSub)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
-    def CreateBackgroundSubtractorKNN(background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
-        backSub = cv2.createBackgroundSubtractorKNN()
+    def CreateBackgroundSubtractorKNN(
+            history=('IntPin', 400),
+            threshold=('FloatPin', 16),
+            detectShadow=('BoolPin', True),
+            background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
+        backSub = cv2.createBackgroundSubtractorKNN(history,threshold,detectShadow)
         background_subtrator(backSub)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
     def BackgroundSubtract(input=('ImagePin', 0), background_subtrator=('BackgroundSubtractorPin', 0),
                            fgMask=(REF, ('ImagePin', 0))):
-        mask = background_subtrator.bgs.apply(input.image)
+        mask = background_subtrator.data.apply(input.image)
         fgMask(mask)
 
     @staticmethod
@@ -858,7 +868,7 @@ class OpenCvLib(FunctionLibraryBase):
             matches= ('FeatureMatchPin',0),
             output=(REF, ('ImagePin', 0)) ):
         """Takes an image and mask and applied logic and operation"""
-        img3 = cv2.drawMatchesKnn(input_1.image, keypoints_1.points, input_2.image, keypoints_2.points, matches,
+        img3 = cv2.drawMatchesKnn(input_1.image, keypoints_1.dat, input_2.image, keypoints_2.data, matches,
                                   None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         output(img3)
 
@@ -920,3 +930,53 @@ class OpenCvLib(FunctionLibraryBase):
                     (0, 0, 255), thickness=2)
 
         img(histImage)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def cv_Threahold(input=('ImagePin', 0), threshold=('IntPin', 127), img=(REF, ('ImagePin', 0))):
+        """Return a frame of the loaded image."""
+        threshold, cv__threshold = cv2.threshold(input.image, threshold, 255, cv2.THRESH_BINARY)
+        img(cv__threshold)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    def gender_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                          keywords=(REF, ('GraphElementPin', 0)),
+                          ):
+        """Takes an image and mask and applied logic and operation"""
+
+        gender_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                             "deploy_gender2.prototxt")
+        gender_caffe_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "gender_net.caffemodel")
+
+        image = cv2.resize(input.image, (227, 227))
+        image=image[:,:,:3]
+        (h, w) = image.shape[:2]
+        net = cv2.dnn.readNetFromCaffe(gender_proto_path,gender_caffe_path)
+        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
+                                     mean=(104.00698793, 116.66876762, 122.67891434),
+                                     swapRB=False, crop=False)
+        net.setInput(blob)
+        preds= net.forward()
+        words=[]
+        text = "M:{:.1f}%, F:{:.1f}%".format(preds[0][0] * 100,preds[0][1] * 100)
+        words.append(text)
+        img(image)
+        keywords({'text':words})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def image_crop(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                       rect=('GraphElementPin', 0)
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+
+        if 'rect' in rect.graph.keys():
+            only_rect=rect.graph['rect']
+            if only_rect:
+                x, y, w, h=only_rect[0]
+                (ih, iw) = input.image.shape[:2]
+                if (x+w)<=iw and (y+h)<ih:
+                    img(input.image[y:(y+h),x:(x+w),:])

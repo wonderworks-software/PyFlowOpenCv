@@ -194,16 +194,61 @@ class GraphElementPin(PinBase):
     def processData(data):
         return GraphElementPin.internalDataStructure()(data)
 
-class KeyPoints():
-    def __init__(self, key_points=None):
-        if isinstance(key_points, KeyPoints):
-            self.points=np.array(key_points.points)
-        elif type(key_points)==tuple:
-            self.points = key_points[0]
-        elif isinstance(key_points, np.ndarray):
-            self.points = np.array(key_points)
+
+class NumpyData():
+    def __init__(self, data=None):
+        if isinstance(data, NumpyData):
+            self.data=data.data
+        elif isinstance(data, np.ndarray):
+            self.data= data
+        elif data:
+            self.data= data
         else:
-            self.points= None
+            self.data= None
+
+
+class NumpyDataPin(PinBase):
+    """doc string for NumpyDataPin"""
+
+    def __init__(self, name, parent, direction, **kwargs):
+        super(NumpyDataPin, self).__init__(name, parent, direction, **kwargs)
+        self.setDefaultValue(NumpyData())
+        self.disableOptions(PinOptions.Storable)
+
+    @staticmethod
+    def jsonEncoderClass():
+        return NoneEncoder
+
+    @staticmethod
+    def jsonDecoderClass():
+        return NoneDecoder
+
+    @staticmethod
+    def IsValuePin():
+        return True
+
+    @staticmethod
+    def supportedDataTypes():
+        return ('NumpyDataPin',)
+
+    @staticmethod
+    def pinDataTypeHint():
+        return 'NumpyDataPin', NumpyData()
+
+    @staticmethod
+    def color():
+        return (200, 200, 50, 255)
+
+    @staticmethod
+    def internalDataStructure():
+        return NumpyData
+
+    @staticmethod
+    def processData(data):
+        return NumpyDataPin.internalDataStructure()(data)
+
+class KeyPoints(NumpyData):
+    pass
 
 class KeyPointsPin(PinBase):
     """doc string for KeyPointsPin"""
@@ -245,14 +290,8 @@ class KeyPointsPin(PinBase):
     def processData(data):
         return KeyPointsPin.internalDataStructure()(data)
 
-class BackgroundSubtractor():
-    def __init__(self, bgs=None):
-        if isinstance(bgs, BackgroundSubtractor):
-            self.bgs=bgs.bgs
-        elif bgs:
-            self.bgs = bgs
-        else:
-            self.bgs= None
+class BackgroundSubtractor(NumpyData):
+    pass
 
 class BackgroundSubtractorPin(PinBase):
     """doc string for KeyPointsPin"""
@@ -294,16 +333,8 @@ class BackgroundSubtractorPin(PinBase):
     def processData(data):
         return BackgroundSubtractorPin.internalDataStructure()(data)
 
-class Descriptor():
-    def __init__(self, desc=None):
-        if isinstance(desc, Descriptor):
-            self.desc=desc.desc
-        elif isinstance(desc, np.ndarray):
-            self.desc = desc
-        elif desc is not None:
-            self.desc = desc
-        else:
-            self.desc= None
+class Descriptor(NumpyData):
+    pass
 
 class DescriptorPin(PinBase):
     """doc string for KeyPointsPin"""
@@ -345,16 +376,8 @@ class DescriptorPin(PinBase):
     def processData(data):
         return DescriptorPin.internalDataStructure()(data)
 
-class FeatureMatch():
-    def __init__(self, match=None):
-        if isinstance(match, FeatureMatch):
-            self.match=match.match
-        elif isinstance(match, np.ndarray):
-            self.match = match
-        elif match:
-            self.match = match
-        else:
-            self.match= None
+class FeatureMatch(NumpyData):
+    pass
 
 class FeatureMatchPin(PinBase):
     """doc string for KeyPointsPin"""
@@ -396,54 +419,3 @@ class FeatureMatchPin(PinBase):
     def processData(data):
         return FeatureMatchPin.internalDataStructure()(data)
 
-# class Histogram():
-#     def __init__(self, histogram=None):
-#         if isinstance(histogram, Histogram):
-#             self.histogram=histogram.histogram
-#         elif isinstance(histogram, np.ndarray):
-#             self.histogram = histogram
-#         elif histogram:
-#             self.histogram = histogram
-#         else:
-#             self.histogram= None
-#
-# class HistogramPin(PinBase):
-#     """doc string for histogram"""
-#
-#     def __init__(self, name, parent, direction, **kwargs):
-#         super(HistogramPin, self).__init__(name, parent, direction, **kwargs)
-#         self.setDefaultValue(Histogram())
-#         self.disableOptions(PinOptions.Storable)
-#
-#     @staticmethod
-#     def jsonEncoderClass():
-#         return NoneEncoder
-#
-#     @staticmethod
-#     def jsonDecoderClass():
-#         return NoneDecoder
-#
-#     @staticmethod
-#     def IsValuePin():
-#         return True
-#
-#     @staticmethod
-#     def supportedDataTypes():
-#         return ('HistogramPin',)
-#
-#     @staticmethod
-#     def pinDataTypeHint():
-#         return 'HistogramPin', Histogram()
-#
-#     @staticmethod
-#     def color():
-#         return (200, 200, 50, 255)
-#
-#     @staticmethod
-#     def internalDataStructure():
-#         return Histogram
-#
-#     @staticmethod
-#     def processData(data):
-#         return HistogramPin.internalDataStructure()(data)
-#
