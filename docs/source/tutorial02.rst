@@ -10,3 +10,4 @@ However, this diagram can only display the first frame for you, we still need to
 
 ..  image:: res/read_video_display_tick.gif
 
+**Tips**: You can search the node by its name using the search box on the top of the NodeBox dialog.
