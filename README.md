@@ -11,7 +11,7 @@ After PyFlow installed through pip or setup.py.
 
 Clone or download repository
 ```bash
-    git clone https://github.com/bobosky/PyFlowOpenCv
+    git clone https://github.com/wonderworks-software/PyFlowOpenCv
 ```
 Install requirements for your use case::
 
