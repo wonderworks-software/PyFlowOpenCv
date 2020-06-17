@@ -6,6 +6,12 @@ from PyFlow.UI.UIInterfaces import IPackage
 # Pins
 from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import ImagePin
 from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import VideoPin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import GraphElementPin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import KeyPointsPin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import BackgroundSubtractorPin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import DescriptorPin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import FeatureMatchPin
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import NumpyDataPin
 
 # Function based nodes
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import OpenCvLib
@@ -37,6 +43,12 @@ _NODES[ViewerNode.__name__] = ViewerNode
 
 _PINS[ImagePin.__name__] = ImagePin
 _PINS[VideoPin.__name__] = VideoPin
+_PINS[GraphElementPin.__name__] = GraphElementPin
+_PINS[KeyPointsPin.__name__] = KeyPointsPin
+_PINS[BackgroundSubtractorPin.__name__] = BackgroundSubtractorPin
+_PINS[DescriptorPin.__name__] = DescriptorPin
+_PINS[FeatureMatchPin.__name__] = FeatureMatchPin
+_PINS[NumpyDataPin.__name__] = NumpyDataPin
 
 _TOOLS[ImageViewerTool.__name__] = ImageViewerTool
 
