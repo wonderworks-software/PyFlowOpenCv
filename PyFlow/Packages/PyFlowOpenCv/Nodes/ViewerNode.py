@@ -8,7 +8,7 @@ class ViewerNode(NodeBase):
         super(ViewerNode, self).__init__(name)
         self.inExec = self.createInputPin(DEFAULT_IN_EXEC_NAME, 'ExecPin', None, self.compute)
         self.inp = self.createInputPin('img', 'ImagePin')
-        self.arrayData = self.createInputPin('data', 'GraphElementPin', structure=StructureType.Array)
+        self.arrayData = self.createInputPin('graph', 'GraphElementPin', structure=StructureType.Array)
         self.arrayData.enableOptions(PinOptions.AllowMultipleConnections)
         self.outExec = self.createOutputPin(DEFAULT_OUT_EXEC_NAME, 'ExecPin')
 
