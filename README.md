@@ -1,6 +1,9 @@
 # PyFlowOpenCv
 **PyFlowOpencv** is a visual scripting extension for PyFlow. 
 
+**PyFlowOpencv** enable you learn Computer Vision and OpenCv without writing a single line of code. A quick demo on how **PyFlowOpenCv** works for a face detection.
+
+ ![quickdemo](docs/source/res/quick_demo.gif)
 
 Learning OpenCV is quite challenging for most of the beginners. PyFlowOpenCv make the learning curve of Opencv much smoother. You do not need to write any code, just drag and drop the diagram. 
 
@@ -22,13 +25,11 @@ To run the program in standalone mode, run pyflow.py in the root folder of PyFlo
 
 You can enable the PyFlowOpenCv package by one of the following ways.
 
+- put the addition package path to 'Additional package locations' on preferences dialog.
+ ![addpackage](docs/source/res/add_pyflowopencv_path.png)
 - Copy the PyFlowOpenCv package to .PyFlow/Packages
 - User can add location of package to env variable for PYTHONPATH
 - Paths listed in PYFLOW_PACKAGES_PATHS env variable (; separated string)
-addition package on preferences dialog.
-- To enable the PyFlowOpenCv package, user can add location of package to env variable for PYTHONPATH, or via pyflow editor itself in preferences.
-
- ![addpackage](docs/source/res/add_pyflowopencv_path.png)
 
 If everything works out, you should able to see 'PyFlowOpenCv' in your NodeBox dialog of the GUI.
 

@@ -3,12 +3,14 @@ About this project
 
 **PyFlowOpencv** is a visual scripting extension for PyFlow. 
 
+**PyFlowOpencv** enable you learn Computer vision without writing a line of code. A quick demo on how **PyFlowOpenCv** works for a face detection.
 
+.. image:: res/quick_demo.gif
 
-Aim
+Goal
 ********
 
-Learning OpenCV is quite challenging for most of the beginners. PyFlowOpenCv make the learning curve of Opencv much smoother. You do not need to write any code, just drag and drop the diagram. 
+Learning OpenCV is quite challenging for most of the beginners. PyFlowOpenCv make the learning curve of OpenCv much smoother. You do not need to write any code, just drag and drop the diagram. 
 
 
 Installation
@@ -16,7 +18,12 @@ Installation
 PyFlowOpenCv is not a standalone software, it is a extension package of PyFlow. PyFlow has to be installed first. You can refer to `PyFlow <https://github.com/wonderworks-software/PyFlow>`_  to install PyFlow.
 After PyFlow installed through pip or setup.py.
 
-Clone or download repository::
+The easy way to install PyFlow is::
+
+    pip install git+https://github.com/wonderworks-software/PyFlow.git@master
+
+
+Clone or download repository to a local folder::
 
     git clone https://github.com/bobosky/PyFlowOpenCv
 
@@ -26,7 +33,7 @@ Install requirements for your use case::
 
 To run the program in standalone mode, run pyflow.py in the root folder of PyFlow project. You can also invoke pyflow.exe on windows or pyflow on unix OS. Program is located inside PATH/TO/PYTHON/Scripts.
 
-Youc can enable the PyFlowOpenCv package by this way.
+You ccan enable the PyFlowOpenCv package by this way.
 
 * Copy the PyFlowOpenCv package to .PyFlow/Packages
 * User can add location of package to env variable for PYTHONPATH
