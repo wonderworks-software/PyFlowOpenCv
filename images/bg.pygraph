@@ -69,7 +69,7 @@
                                 "destinationUUID": "91e2a54a-5694-4a75-bfa6-93c9c03ccb0f",
                                 "sourceName": "cv_ReadVideo_video",
                                 "destinationName": "cv_ReadNextFrame_video",
-                                "uuid": "fafca82f-eee0-4dab-9bd0-017d3c77676b",
+                                "uuid": "cf41b7aa-0356-4f5c-9e2e-59f07f8021db",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -100,8 +100,8 @@
                     "output": {}
                 }
             },
-            "x": -516.4015979008368,
-            "y": -131.50312190723423
+            "x": -397.1423158898331,
+            "y": -51.728331913387215
         },
         {
             "package": "PyFlowOpenCv",
@@ -111,52 +111,6 @@
             "name": "BackgroundSubtract",
             "uuid": "7672c74b-9019-4e32-bdff-9704be310325",
             "inputs": [
-                {
-                    "name": "background_subtrator",
-                    "package": "PyFlowOpenCv",
-                    "fullName": "BackgroundSubtract_background_subtrator",
-                    "dataType": "BackgroundSubtractorPin",
-                    "direction": 0,
-                    "value": null,
-                    "uuid": "8fbaff1e-0018-4d07-a0f9-64c796788c46",
-                    "linkedTo": [
-                        {
-                            "lhsNodeName": "CreateBackgroundSubtractorMOG2",
-                            "outPinId": 1,
-                            "rhsNodeName": "BackgroundSubtract",
-                            "inPinId": 2,
-                            "lhsNodeUid": "32b99b35-8cbe-4fd3-ba09-72f2c5b4275a",
-                            "rhsNodeUid": "7672c74b-9019-4e32-bdff-9704be310325"
-                        }
-                    ],
-                    "pinIndex": 2,
-                    "options": [],
-                    "structure": 0,
-                    "alwaysList": false,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "background_subtrator",
-                        "wires": {
-                            "2": {
-                                "sourceUUID": "fcf223ff-7cef-439d-80c8-716370b977f4",
-                                "destinationUUID": "8fbaff1e-0018-4d07-a0f9-64c796788c46",
-                                "sourceName": "CreateBackgroundSubtractorMOG2_background_subtrator",
-                                "destinationName": "BackgroundSubtract_background_subtrator",
-                                "uuid": "7fbbf0d3-9f3d-4f8f-ab5d-c800fa72f401",
-                                "hOffsetL": "0.0",
-                                "hOffsetR": "0.0",
-                                "hOffsetLSShape": "0.0",
-                                "hOffsetRSShape": "0.0",
-                                "vOffset": "0.0",
-                                "vOffsetSShape": "0.0",
-                                "snapVToFirst": 1,
-                                "snapVToSecond": 0
-                            }
-                        }
-                    }
-                },
                 {
                     "name": "input",
                     "package": "PyFlowOpenCv",
@@ -190,7 +144,53 @@
                                 "destinationUUID": "fdb2bbb4-09b3-4f69-a8c0-228e0589ff9e",
                                 "sourceName": "cv_ReadNextFrame_img",
                                 "destinationName": "BackgroundSubtract_input",
-                                "uuid": "f1fc93d6-e3e2-4e97-814c-84237a83ab5e",
+                                "uuid": "35c8d4df-0dff-4dff-9de6-dd84a65d43e7",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "background_subtrator",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "BackgroundSubtract_background_subtrator",
+                    "dataType": "BackgroundSubtractorPin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "8fbaff1e-0018-4d07-a0f9-64c796788c46",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "CreateBackgroundSubtractorMOG2",
+                            "outPinId": 1,
+                            "rhsNodeName": "BackgroundSubtract",
+                            "inPinId": 2,
+                            "lhsNodeUid": "32b99b35-8cbe-4fd3-ba09-72f2c5b4275a",
+                            "rhsNodeUid": "7672c74b-9019-4e32-bdff-9704be310325"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "background_subtrator",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "fcf223ff-7cef-439d-80c8-716370b977f4",
+                                "destinationUUID": "8fbaff1e-0018-4d07-a0f9-64c796788c46",
+                                "sourceName": "CreateBackgroundSubtractorMOG2_background_subtrator",
+                                "destinationName": "BackgroundSubtract_background_subtrator",
+                                "uuid": "aeb773ea-8f62-4bab-b315-a1178b937bc9",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -238,7 +238,7 @@
                                 "destinationUUID": "fc178b3c-ab32-4e36-82ba-6f61acd6cc50",
                                 "sourceName": "BackgroundSubtract_fgMask",
                                 "destinationName": "ViewerNode_img",
-                                "uuid": "49e1f085-1e3d-412d-8cf6-a8835b64c872",
+                                "uuid": "fda0b862-6e57-4935-9cbc-a5f99409225b",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -258,8 +258,8 @@
             },
             "wrapper": {
                 "resize": {
-                    "w": 176.0,
-                    "h": 74.0
+                    "w": 113.73873182097861,
+                    "h": 81.03838969094538
                 },
                 "collapsed": false,
                 "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">BackgroundSubtract</p></body></html>",
@@ -269,8 +269,8 @@
                     "output": {}
                 }
             },
-            "x": 104.89589646497234,
-            "y": 119.68605978288139
+            "x": -86.08011594454021,
+            "y": 79.60962575104986
         },
         {
             "package": "PyFlowOpenCv",
@@ -313,7 +313,7 @@
                                 "destinationUUID": "91e2a54a-5694-4a75-bfa6-93c9c03ccb0f",
                                 "sourceName": "cv_ReadVideo_video",
                                 "destinationName": "cv_ReadNextFrame_video",
-                                "uuid": "fafca82f-eee0-4dab-9bd0-017d3c77676b",
+                                "uuid": "cf41b7aa-0356-4f5c-9e2e-59f07f8021db",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -328,29 +328,6 @@
                 }
             ],
             "outputs": [
-                {
-                    "name": "out",
-                    "package": "PyFlowBase",
-                    "fullName": "cv_ReadNextFrame_out",
-                    "dataType": "BoolPin",
-                    "direction": 1,
-                    "value": "true",
-                    "uuid": "d555e8d5-5f8e-41f7-b60d-0669ba6e4f56",
-                    "linkedTo": [],
-                    "pinIndex": 1,
-                    "options": [
-                        256
-                    ],
-                    "structure": 0,
-                    "alwaysList": false,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "out",
-                        "wires": {}
-                    }
-                },
                 {
                     "name": "img",
                     "package": "PyFlowOpenCv",
@@ -384,7 +361,7 @@
                                 "destinationUUID": "fdb2bbb4-09b3-4f69-a8c0-228e0589ff9e",
                                 "sourceName": "cv_ReadNextFrame_img",
                                 "destinationName": "BackgroundSubtract_input",
-                                "uuid": "f1fc93d6-e3e2-4e97-814c-84237a83ab5e",
+                                "uuid": "35c8d4df-0dff-4dff-9de6-dd84a65d43e7",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -396,6 +373,29 @@
                             }
                         }
                     }
+                },
+                {
+                    "name": "out",
+                    "package": "PyFlowBase",
+                    "fullName": "cv_ReadNextFrame_out",
+                    "dataType": "BoolPin",
+                    "direction": 1,
+                    "value": "true",
+                    "uuid": "d555e8d5-5f8e-41f7-b60d-0669ba6e4f56",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "out",
+                        "wires": {}
+                    }
                 }
             ],
             "meta": {
@@ -404,7 +404,7 @@
             },
             "wrapper": {
                 "resize": {
-                    "w": 281.9263124281176,
+                    "w": 172.04705888410325,
                     "h": 74.0
                 },
                 "collapsed": false,
@@ -415,8 +415,8 @@
                     "output": {}
                 }
             },
-            "x": -339.0829513417276,
-            "y": -141.90850324536606
+            "x": -279.45331033622585,
+            "y": -66.96854900872188
         },
         {
             "package": "PyFlowBase",
@@ -452,6 +452,29 @@
             ],
             "outputs": [
                 {
+                    "name": "delta",
+                    "package": "PyFlowBase",
+                    "fullName": "tick_delta",
+                    "dataType": "FloatPin",
+                    "direction": 1,
+                    "value": "0.015625",
+                    "uuid": "959246ae-fd38-4efb-8798-74e96a73f4c9",
+                    "linkedTo": [],
+                    "pinIndex": 2,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "delta",
+                        "wires": {}
+                    }
+                },
+                {
                     "name": "outExec",
                     "package": "PyFlowBase",
                     "fullName": "tick_outExec",
@@ -486,7 +509,7 @@
                                 "destinationUUID": "139799e9-a227-42e7-836d-bfe9e06706d5",
                                 "sourceName": "tick_outExec",
                                 "destinationName": "ViewerNode_inExec",
-                                "uuid": "5c9b1be8-80d0-4329-942c-71325c9ead06",
+                                "uuid": "a5fcd9d1-1a3d-4e19-8586-8952afe69c41",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -497,29 +520,6 @@
                                 "snapVToSecond": 0
                             }
                         }
-                    }
-                },
-                {
-                    "name": "delta",
-                    "package": "PyFlowBase",
-                    "fullName": "tick_delta",
-                    "dataType": "FloatPin",
-                    "direction": 1,
-                    "value": "0.03125",
-                    "uuid": "959246ae-fd38-4efb-8798-74e96a73f4c9",
-                    "linkedTo": [],
-                    "pinIndex": 2,
-                    "options": [
-                        256
-                    ],
-                    "structure": 0,
-                    "alwaysList": false,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "delta",
-                        "wires": {}
                     }
                 }
             ],
@@ -536,8 +536,8 @@
                     "output": {}
                 }
             },
-            "x": -215.11371651984598,
-            "y": -223.5422846829265
+            "x": -265.87949197047595,
+            "y": -155.0487781225528
         },
         {
             "package": "PyFlowOpenCv",
@@ -547,6 +547,29 @@
             "name": "CreateBackgroundSubtractorMOG2",
             "uuid": "32b99b35-8cbe-4fd3-ba09-72f2c5b4275a",
             "inputs": [
+                {
+                    "name": "threshold",
+                    "package": "PyFlowBase",
+                    "fullName": "CreateBackgroundSubtractorMOG2_threshold",
+                    "dataType": "FloatPin",
+                    "direction": 0,
+                    "value": "16.0",
+                    "uuid": "b6fbd3f6-1141-4bd0-969e-eed066b53804",
+                    "linkedTo": [],
+                    "pinIndex": 2,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "threshold",
+                        "wires": {}
+                    }
+                },
                 {
                     "name": "history",
                     "package": "PyFlowBase",
@@ -592,29 +615,6 @@
                         "displayName": "detectShadow",
                         "wires": {}
                     }
-                },
-                {
-                    "name": "threshold",
-                    "package": "PyFlowBase",
-                    "fullName": "CreateBackgroundSubtractorMOG2_threshold",
-                    "dataType": "FloatPin",
-                    "direction": 0,
-                    "value": "16.0",
-                    "uuid": "b6fbd3f6-1141-4bd0-969e-eed066b53804",
-                    "linkedTo": [],
-                    "pinIndex": 2,
-                    "options": [
-                        256
-                    ],
-                    "structure": 0,
-                    "alwaysList": false,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "threshold",
-                        "wires": {}
-                    }
                 }
             ],
             "outputs": [
@@ -651,7 +651,7 @@
                                 "destinationUUID": "8fbaff1e-0018-4d07-a0f9-64c796788c46",
                                 "sourceName": "CreateBackgroundSubtractorMOG2_background_subtrator",
                                 "destinationName": "BackgroundSubtract_background_subtrator",
-                                "uuid": "7fbbf0d3-9f3d-4f8f-ab5d-c800fa72f401",
+                                "uuid": "aeb773ea-8f62-4bab-b315-a1178b937bc9",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -682,8 +682,8 @@
                     "output": {}
                 }
             },
-            "x": -310.75702626479006,
-            "y": 146.20608656862973
+            "x": -309.9512203052563,
+            "y": 101.88675879427028
         },
         {
             "package": "PyFlowOpenCv",
@@ -726,7 +726,7 @@
                                 "destinationUUID": "fc178b3c-ab32-4e36-82ba-6f61acd6cc50",
                                 "sourceName": "BackgroundSubtract_fgMask",
                                 "destinationName": "ViewerNode_img",
-                                "uuid": "49e1f085-1e3d-412d-8cf6-a8835b64c872",
+                                "uuid": "fda0b862-6e57-4935-9cbc-a5f99409225b",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -775,7 +775,7 @@
                                 "destinationUUID": "139799e9-a227-42e7-836d-bfe9e06706d5",
                                 "sourceName": "tick_outExec",
                                 "destinationName": "ViewerNode_inExec",
-                                "uuid": "5c9b1be8-80d0-4329-942c-71325c9ead06",
+                                "uuid": "a5fcd9d1-1a3d-4e19-8586-8952afe69c41",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -789,19 +789,18 @@
                     }
                 },
                 {
-                    "name": "data",
+                    "name": "graph",
                     "package": "PyFlowOpenCv",
-                    "fullName": "ViewerNode_data",
+                    "fullName": "ViewerNode_graph",
                     "dataType": "GraphElementPin",
                     "direction": 0,
-                    "value": "[null]",
-                    "uuid": "366f355e-f5ae-4392-89fc-ec5048318492",
+                    "value": null,
+                    "uuid": "dc631b52-5967-4178-b3b0-ee2b2ea00da7",
                     "linkedTo": [],
                     "pinIndex": 3,
                     "options": [
-                        8,
-                        16,
-                        256
+                        4,
+                        8
                     ],
                     "structure": 1,
                     "alwaysList": true,
@@ -809,7 +808,7 @@
                     "alwaysDict": false,
                     "wrapper": {
                         "bLabelHidden": false,
-                        "displayName": "data",
+                        "displayName": "graph",
                         "wires": {}
                     }
                 }
@@ -845,7 +844,7 @@
             },
             "wrapper": {
                 "resize": {
-                    "w": 139.22088884241572,
+                    "w": 211.74342520045846,
                     "h": 91.0
                 },
                 "collapsed": false,
@@ -856,8 +855,8 @@
                     "output": {}
                 }
             },
-            "x": 259.00373053300405,
-            "y": -152.23906957802936
+            "x": 100.2599565048438,
+            "y": -62.79460806977667
         }
     ],
     "depth": 1,

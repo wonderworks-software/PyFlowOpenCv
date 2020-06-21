@@ -19,12 +19,11 @@ Welcome to PyFlowOpenCv's documentation!
    tutorial01
    tutorial02
    tutorial03
-
-
-
-.. .. toctree::
-..    :maxdepth: 2
-..    :caption: Contents:
+   tutorial04
+   tutorial05
+   tutorial06
+   tutorial07
+   tutorial08
 
 
 

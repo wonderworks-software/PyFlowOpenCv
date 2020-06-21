@@ -8,7 +8,7 @@ class ViewerNode(NodeBase):
         super(ViewerNode, self).__init__(name)
         self.inExec = self.createInputPin(DEFAULT_IN_EXEC_NAME, 'ExecPin', None, self.compute)
         self.inp = self.createInputPin('img', 'ImagePin')
-        self.arrayData = self.createInputPin('data', 'GraphElementPin', structure=StructureType.Array)
+        self.arrayData = self.createInputPin('graph', 'GraphElementPin', structure=StructureType.Array)
         self.arrayData.enableOptions(PinOptions.AllowMultipleConnections)
         self.outExec = self.createOutputPin(DEFAULT_OUT_EXEC_NAME, 'ExecPin')
 
@@ -46,6 +46,6 @@ class ViewerNode(NodeBase):
             for i in yInputPins:
                 draw_image=i.getData().draw(draw_image)
             instance.viewer.setNumpyArray(draw_image)
-            self.inp.setClean()
+            # self.inp.setClean()
             QtWidgets.QApplication.processEvents()
         self.outExec.call()

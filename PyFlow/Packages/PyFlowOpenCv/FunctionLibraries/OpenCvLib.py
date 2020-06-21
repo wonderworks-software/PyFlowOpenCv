@@ -796,7 +796,7 @@ class OpenCvLib(FunctionLibraryBase):
                                ):
         """Takes an image and mask and applied logic and operation"""
         orb = cv2.ORB_create(nfeatures=2000)
-        kp, des = orb.compute(input.image, keypoints.data)
+        kp, des = orb.compute(input.image, keypoints.data[0])
         descriptor(des)
 
     @staticmethod
@@ -834,7 +834,7 @@ class OpenCvLib(FunctionLibraryBase):
             good_ratio=('FloatPin',0.75),
             match=(REF, ('FeatureMatchPin', 0)) ):
         bf = cv2.BFMatcher()
-        matches = bf.knnMatch(descriptor_1.desc, descriptor_2.desc, 2)
+        matches = bf.knnMatch(descriptor_1.data, descriptor_2.data, 2)
         good = []
         for m, n in matches:
             if m.distance < good_ratio * n.distance:
@@ -853,7 +853,7 @@ class OpenCvLib(FunctionLibraryBase):
         index_params = dict(algorithm=FLANN_INDEX_KDTREE, trees=5)
         search_params = dict(checks=50)  # or pass empty dictionary
         flann = cv2.FlannBasedMatcher(index_params, search_params)
-        matches = flann.knnMatch(descriptor_1.desc, descriptor_2.desc, 2)
+        matches = flann.knnMatch(descriptor_1.data, descriptor_2.data, 2)
         good = []
         for m, n in matches:
             if m.distance < good_ratio * n.distance:
@@ -868,7 +868,7 @@ class OpenCvLib(FunctionLibraryBase):
             matches= ('FeatureMatchPin',0),
             output=(REF, ('ImagePin', 0)) ):
         """Takes an image and mask and applied logic and operation"""
-        img3 = cv2.drawMatchesKnn(input_1.image, keypoints_1.dat, input_2.image, keypoints_2.data, matches,
+        img3 = cv2.drawMatchesKnn(input_1.image, keypoints_1.data[0], input_2.image, keypoints_2.data[0], matches,
                                   None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         output(img3)
 
