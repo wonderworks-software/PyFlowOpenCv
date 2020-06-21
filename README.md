@@ -35,3 +35,19 @@ If everything works out, you should able to see 'PyFlowOpenCv' in your NodeBox d
 
  ![gui](docs/source/res/all_window.png)
 
+
+## Getting Started
+
+We have [documentation](https://pyflowopencv.readthedocs.io/en/latest/)
+
+## Authors
+
+**Pedro Cabrera** - [Pedro Cabrera](https://github.com/pedroCabrera)
+
+**Changbo Yang** - [Changbo Yang](https://github.com/bobosky)
+
+See also the list of [contributors](https://github.com/wonderworks-software/PyFlowOpencv/contributors) who participated in this project.
+
+## Discussion
+
+Join us to our [discord channel](https://discord.gg/SwmkqMj) and ask anything related to project!
