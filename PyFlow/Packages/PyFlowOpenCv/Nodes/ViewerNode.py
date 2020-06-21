@@ -46,6 +46,6 @@ class ViewerNode(NodeBase):
             for i in yInputPins:
                 draw_image=i.getData().draw(draw_image)
             instance.viewer.setNumpyArray(draw_image)
-            self.inp.setClean()
+            # self.inp.setClean()
             QtWidgets.QApplication.processEvents()
         self.outExec.call()

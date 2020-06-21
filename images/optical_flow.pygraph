@@ -47,7 +47,7 @@
                                 "destinationUUID": "9019971e-2f90-4766-b41e-916d472dae10",
                                 "sourceName": "tick_outExec",
                                 "destinationName": "ViewerNode_inExec",
-                                "uuid": "8e51ca09-4537-42d7-a08a-bf2d01c7c3a9",
+                                "uuid": "247aaead-feb3-42f5-a77d-e3cf4be16100",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -58,6 +58,30 @@
                                 "snapVToSecond": 0
                             }
                         }
+                    }
+                },
+                {
+                    "name": "graph",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "ViewerNode_graph",
+                    "dataType": "GraphElementPin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "7b2a84f5-8206-405d-b256-74e8978c0d4d",
+                    "linkedTo": [],
+                    "pinIndex": 3,
+                    "options": [
+                        4,
+                        8
+                    ],
+                    "structure": 1,
+                    "alwaysList": true,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "graph",
+                        "wires": {}
                     }
                 },
                 {
@@ -93,7 +117,7 @@
                                 "destinationUUID": "6fda2dee-cd74-47b9-9fef-75176a826444",
                                 "sourceName": "Dense_optical_flow_output",
                                 "destinationName": "ViewerNode_img",
-                                "uuid": "08674afb-2e7f-404c-bcc9-4cbab79549ef",
+                                "uuid": "433df429-e414-4384-a38b-686285f73c11",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -104,30 +128,6 @@
                                 "snapVToSecond": 0
                             }
                         }
-                    }
-                },
-                {
-                    "name": "data",
-                    "package": "PyFlowOpenCv",
-                    "fullName": "ViewerNode_data",
-                    "dataType": "GraphElementPin",
-                    "direction": 0,
-                    "value": null,
-                    "uuid": "e2b18155-f6f5-46cd-86db-c70916ab4d7c",
-                    "linkedTo": [],
-                    "pinIndex": 3,
-                    "options": [
-                        4,
-                        8
-                    ],
-                    "structure": 1,
-                    "alwaysList": true,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "data",
-                        "wires": {}
                     }
                 }
             ],
@@ -162,7 +162,7 @@
             },
             "wrapper": {
                 "resize": {
-                    "w": 111.0,
+                    "w": 312.7387078492265,
                     "h": 91.0
                 },
                 "collapsed": false,
@@ -173,8 +173,8 @@
                     "output": {}
                 }
             },
-            "x": 273.4861904218151,
-            "y": -190.70152829900806
+            "x": -63.24496134139203,
+            "y": -114.20581008108564
         },
         {
             "package": "PyFlowBase",
@@ -244,7 +244,7 @@
                                 "destinationUUID": "9019971e-2f90-4766-b41e-916d472dae10",
                                 "sourceName": "tick_outExec",
                                 "destinationName": "ViewerNode_inExec",
-                                "uuid": "8e51ca09-4537-42d7-a08a-bf2d01c7c3a9",
+                                "uuid": "247aaead-feb3-42f5-a77d-e3cf4be16100",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -294,8 +294,8 @@
                     "output": {}
                 }
             },
-            "x": -139.82479784366575,
-            "y": -295.6536388140161
+            "x": -218.57039012682108,
+            "y": -155.41148874782525
         },
         {
             "package": "PyFlowOpenCv",
@@ -338,7 +338,7 @@
                                 "destinationUUID": "ce15a1eb-969d-4e81-ab36-5c36b1ed0742",
                                 "sourceName": "cv_ReadVideo_video",
                                 "destinationName": "cv_ReadNextTwoFrame_video",
-                                "uuid": "8824da24-b6ae-4056-b59c-40959d0b2691",
+                                "uuid": "189f4097-be34-400d-a57c-ed4979557f81",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -353,6 +353,29 @@
                 }
             ],
             "outputs": [
+                {
+                    "name": "out",
+                    "package": "PyFlowBase",
+                    "fullName": "cv_ReadNextTwoFrame_out",
+                    "dataType": "BoolPin",
+                    "direction": 1,
+                    "value": "true",
+                    "uuid": "43202b2f-61dd-4117-99f1-8cb9e36a925d",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "out",
+                        "wires": {}
+                    }
+                },
                 {
                     "name": "next_img",
                     "package": "PyFlowOpenCv",
@@ -386,7 +409,7 @@
                                 "destinationUUID": "26f76ad8-51ca-4ec6-b6da-59b55cf3d8ac",
                                 "sourceName": "cv_ReadNextTwoFrame_next_img",
                                 "destinationName": "Dense_optical_flow_image",
-                                "uuid": "22a54f2a-f5a2-495b-9bfc-a83eca77003c",
+                                "uuid": "8b806974-b64e-483d-bd54-64c7e95db4fc",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -397,29 +420,6 @@
                                 "snapVToSecond": 0
                             }
                         }
-                    }
-                },
-                {
-                    "name": "out",
-                    "package": "PyFlowBase",
-                    "fullName": "cv_ReadNextTwoFrame_out",
-                    "dataType": "BoolPin",
-                    "direction": 1,
-                    "value": "true",
-                    "uuid": "43202b2f-61dd-4117-99f1-8cb9e36a925d",
-                    "linkedTo": [],
-                    "pinIndex": 1,
-                    "options": [
-                        256
-                    ],
-                    "structure": 0,
-                    "alwaysList": false,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "out",
-                        "wires": {}
                     }
                 },
                 {
@@ -455,7 +455,7 @@
                                 "destinationUUID": "bceac9e0-3ce4-49fc-9270-d8c89adb9b7b",
                                 "sourceName": "cv_ReadNextTwoFrame_img",
                                 "destinationName": "Dense_optical_flow_prev_image",
-                                "uuid": "673c0be0-6540-4cb7-af82-e68dba638d14",
+                                "uuid": "5a313012-66f9-4335-af3b-bb3ca2a1908c",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -475,7 +475,7 @@
             },
             "wrapper": {
                 "resize": {
-                    "w": 141.0,
+                    "w": 64.5042817820777,
                     "h": 91.0
                 },
                 "collapsed": false,
@@ -486,8 +486,8 @@
                     "output": {}
                 }
             },
-            "x": -324.51837951910704,
-            "y": -69.938898413212
+            "x": -360.5163645628351,
+            "y": -70.6888564349563
         },
         {
             "package": "PyFlowOpenCv",
@@ -497,52 +497,6 @@
             "name": "Dense_optical_flow",
             "uuid": "d3a62396-884e-4357-8967-f86549b817e0",
             "inputs": [
-                {
-                    "name": "image",
-                    "package": "PyFlowOpenCv",
-                    "fullName": "Dense_optical_flow_image",
-                    "dataType": "ImagePin",
-                    "direction": 0,
-                    "value": null,
-                    "uuid": "26f76ad8-51ca-4ec6-b6da-59b55cf3d8ac",
-                    "linkedTo": [
-                        {
-                            "lhsNodeName": "cv_ReadNextTwoFrame",
-                            "outPinId": 3,
-                            "rhsNodeName": "Dense_optical_flow",
-                            "inPinId": 2,
-                            "lhsNodeUid": "145fbf87-4f7d-4c4c-8407-ec6796a862b1",
-                            "rhsNodeUid": "d3a62396-884e-4357-8967-f86549b817e0"
-                        }
-                    ],
-                    "pinIndex": 2,
-                    "options": [],
-                    "structure": 0,
-                    "alwaysList": false,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "image",
-                        "wires": {
-                            "2": {
-                                "sourceUUID": "69bac06b-207e-43d7-9699-b91c203ada63",
-                                "destinationUUID": "26f76ad8-51ca-4ec6-b6da-59b55cf3d8ac",
-                                "sourceName": "cv_ReadNextTwoFrame_next_img",
-                                "destinationName": "Dense_optical_flow_image",
-                                "uuid": "22a54f2a-f5a2-495b-9bfc-a83eca77003c",
-                                "hOffsetL": "0.0",
-                                "hOffsetR": "0.0",
-                                "hOffsetLSShape": "0.0",
-                                "hOffsetRSShape": "0.0",
-                                "vOffset": "0.0",
-                                "vOffsetSShape": "0.0",
-                                "snapVToFirst": 1,
-                                "snapVToSecond": 0
-                            }
-                        }
-                    }
-                },
                 {
                     "name": "prev_image",
                     "package": "PyFlowOpenCv",
@@ -576,7 +530,53 @@
                                 "destinationUUID": "bceac9e0-3ce4-49fc-9270-d8c89adb9b7b",
                                 "sourceName": "cv_ReadNextTwoFrame_img",
                                 "destinationName": "Dense_optical_flow_prev_image",
-                                "uuid": "673c0be0-6540-4cb7-af82-e68dba638d14",
+                                "uuid": "5a313012-66f9-4335-af3b-bb3ca2a1908c",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "image",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "Dense_optical_flow_image",
+                    "dataType": "ImagePin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "26f76ad8-51ca-4ec6-b6da-59b55cf3d8ac",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "cv_ReadNextTwoFrame",
+                            "outPinId": 3,
+                            "rhsNodeName": "Dense_optical_flow",
+                            "inPinId": 2,
+                            "lhsNodeUid": "145fbf87-4f7d-4c4c-8407-ec6796a862b1",
+                            "rhsNodeUid": "d3a62396-884e-4357-8967-f86549b817e0"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "image",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "69bac06b-207e-43d7-9699-b91c203ada63",
+                                "destinationUUID": "26f76ad8-51ca-4ec6-b6da-59b55cf3d8ac",
+                                "sourceName": "cv_ReadNextTwoFrame_next_img",
+                                "destinationName": "Dense_optical_flow_image",
+                                "uuid": "8b806974-b64e-483d-bd54-64c7e95db4fc",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -624,7 +624,7 @@
                                 "destinationUUID": "6fda2dee-cd74-47b9-9fef-75176a826444",
                                 "sourceName": "Dense_optical_flow_output",
                                 "destinationName": "ViewerNode_img",
-                                "uuid": "08674afb-2e7f-404c-bcc9-4cbab79549ef",
+                                "uuid": "433df429-e414-4384-a38b-686285f73c11",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -644,7 +644,7 @@
             },
             "wrapper": {
                 "resize": {
-                    "w": 182.5539979535635,
+                    "w": 67.81042062668004,
                     "h": 74.0
                 },
                 "collapsed": false,
@@ -655,8 +655,8 @@
                     "output": {}
                 }
             },
-            "x": -47.07534056050856,
-            "y": -71.98986166006927
+            "x": -203.81656710507488,
+            "y": -74.9896937470466
         },
         {
             "package": "PyFlowOpenCv",
@@ -724,7 +724,7 @@
                                 "destinationUUID": "ce15a1eb-969d-4e81-ab36-5c36b1ed0742",
                                 "sourceName": "cv_ReadVideo_video",
                                 "destinationName": "cv_ReadNextTwoFrame_video",
-                                "uuid": "8824da24-b6ae-4056-b59c-40959d0b2691",
+                                "uuid": "189f4097-be34-400d-a57c-ed4979557f81",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -755,8 +755,8 @@
                     "output": {}
                 }
             },
-            "x": -495.1204392882126,
-            "y": -174.3634583945967
+            "x": -476.3714887446041,
+            "y": -58.11996502422455
         }
     ],
     "depth": 1,

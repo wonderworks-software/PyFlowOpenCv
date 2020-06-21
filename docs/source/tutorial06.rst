@@ -26,3 +26,7 @@ You can change the two parameters on the fly and see how the parameter changed t
 If you want to detect face from the WebCam, just drag a WebCam node to the diagram instead of the ReadVideo node:
 
 ..  image:: res/use_webcam.png
+
+It is also possible to detect face and eye at the same time.
+
+..  image:: res/face_eye.png

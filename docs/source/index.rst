@@ -23,6 +23,7 @@ Welcome to PyFlowOpenCv's documentation!
    tutorial05
    tutorial06
    tutorial07
+   tutorial08
 
 
 
