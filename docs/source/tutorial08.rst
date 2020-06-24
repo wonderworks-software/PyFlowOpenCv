@@ -12,3 +12,7 @@ OpenCV’s text detector implementation of EAST is quite robust, capable of loca
 
 
 ..  image:: res/text_detection.png
+
+This is an example of text detection on a webcam.
+
+..  image:: res/text_detection_video.gif
