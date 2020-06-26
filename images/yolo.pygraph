@@ -6,19 +6,19 @@
         {
             "package": "PyFlowOpenCv",
             "lib": "OpenCvLib",
-            "type": "cv_ReadImage",
+            "type": "cv_WebCam",
             "owningGraphName": "root",
-            "name": "cv_ReadImage",
-            "uuid": "822e6e12-d8ee-4d17-96a0-e454d2a14c3b",
+            "name": "cv_WebCam",
+            "uuid": "23a2de2d-af6b-4ae3-8b09-67eeb6b67c32",
             "inputs": [
                 {
-                    "name": "path",
+                    "name": "cam_index",
                     "package": "PyFlowBase",
-                    "fullName": "cv_ReadImage_path",
-                    "dataType": "StringPin",
+                    "fullName": "cv_WebCam_cam_index",
+                    "dataType": "IntPin",
                     "direction": 0,
-                    "value": "\"D:/code/PyFlowOpenCv/images/sign.jpg\"",
-                    "uuid": "9ea7f503-8863-47fd-bba7-ea07a6723599",
+                    "value": "0",
+                    "uuid": "cd7037a9-c6f0-42b2-abb6-39c9a9fb7d1b",
                     "linkedTo": [],
                     "pinIndex": 1,
                     "options": [
@@ -30,51 +30,28 @@
                     "alwaysDict": false,
                     "wrapper": {
                         "bLabelHidden": false,
-                        "displayName": "path",
-                        "wires": {}
-                    }
-                },
-                {
-                    "name": "gray_scale",
-                    "package": "PyFlowBase",
-                    "fullName": "cv_ReadImage_gray_scale",
-                    "dataType": "BoolPin",
-                    "direction": 0,
-                    "value": "false",
-                    "uuid": "d9e99973-bc6f-4de9-9fdd-b5d4945c14b0",
-                    "linkedTo": [],
-                    "pinIndex": 2,
-                    "options": [
-                        256
-                    ],
-                    "structure": 0,
-                    "alwaysList": false,
-                    "alwaysSingle": false,
-                    "alwaysDict": false,
-                    "wrapper": {
-                        "bLabelHidden": false,
-                        "displayName": "gray_scale",
+                        "displayName": "cam_index",
                         "wires": {}
                     }
                 }
             ],
             "outputs": [
                 {
-                    "name": "img",
+                    "name": "video",
                     "package": "PyFlowOpenCv",
-                    "fullName": "cv_ReadImage_img",
-                    "dataType": "ImagePin",
+                    "fullName": "cv_WebCam_video",
+                    "dataType": "VideoPin",
                     "direction": 1,
                     "value": null,
-                    "uuid": "fa19a68f-457d-4d37-b7d1-b8fa8d93fdae",
+                    "uuid": "b69bf0d5-f493-4fc0-820d-fa55a6cc81b5",
                     "linkedTo": [
                         {
-                            "lhsNodeName": "cv_ReadImage",
+                            "lhsNodeName": "cv_WebCam",
                             "outPinId": 1,
-                            "rhsNodeName": "yolo_dnn",
+                            "rhsNodeName": "cv_ReadNextFrame",
                             "inPinId": 1,
-                            "lhsNodeUid": "822e6e12-d8ee-4d17-96a0-e454d2a14c3b",
-                            "rhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b"
+                            "lhsNodeUid": "23a2de2d-af6b-4ae3-8b09-67eeb6b67c32",
+                            "rhsNodeUid": "4522ed35-c9da-4cba-82a4-66b297a7738c"
                         }
                     ],
                     "pinIndex": 1,
@@ -85,14 +62,14 @@
                     "alwaysDict": false,
                     "wrapper": {
                         "bLabelHidden": false,
-                        "displayName": "img",
+                        "displayName": "video",
                         "wires": {
                             "1": {
-                                "sourceUUID": "fa19a68f-457d-4d37-b7d1-b8fa8d93fdae",
-                                "destinationUUID": "aaf0650b-042f-4a24-8ac9-dcc2adf21e5a",
-                                "sourceName": "cv_ReadImage_img",
-                                "destinationName": "yolo_dnn_input",
-                                "uuid": "c9b158f7-fb48-43c3-a56c-288f25f1463a",
+                                "sourceUUID": "b69bf0d5-f493-4fc0-820d-fa55a6cc81b5",
+                                "destinationUUID": "595e0e63-60ba-41b3-bbd4-c5ebd4a291bb",
+                                "sourceName": "cv_WebCam_video",
+                                "destinationName": "cv_ReadNextFrame_video",
+                                "uuid": "49cc69fd-fb79-43cb-bd28-29db7874597e",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -108,48 +85,48 @@
             ],
             "meta": {
                 "var": {},
-                "label": "cv_ReadImage"
+                "label": "cv_WebCam"
             },
             "wrapper": {
                 "resize": {
-                    "w": 98.0,
-                    "h": 65.0
+                    "w": 102.0,
+                    "h": 51.0
                 },
                 "collapsed": false,
-                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">cv_ReadImage</p></body></html>",
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">cv_WebCam</p></body></html>",
                 "exposeInputsToCompound": false,
                 "groups": {
                     "input": {},
                     "output": {}
                 }
             },
-            "x": -609.0,
-            "y": -166.0
+            "x": -645.1341148745727,
+            "y": -236.58595056898486
         },
         {
             "package": "PyFlowOpenCv",
             "lib": "OpenCvLib",
-            "type": "yolo_dnn",
+            "type": "cv_ReadNextFrame",
             "owningGraphName": "root",
-            "name": "yolo_dnn",
-            "uuid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
+            "name": "cv_ReadNextFrame",
+            "uuid": "4522ed35-c9da-4cba-82a4-66b297a7738c",
             "inputs": [
                 {
-                    "name": "input",
+                    "name": "video",
                     "package": "PyFlowOpenCv",
-                    "fullName": "yolo_dnn_input",
-                    "dataType": "ImagePin",
+                    "fullName": "cv_ReadNextFrame_video",
+                    "dataType": "VideoPin",
                     "direction": 0,
                     "value": null,
-                    "uuid": "aaf0650b-042f-4a24-8ac9-dcc2adf21e5a",
+                    "uuid": "595e0e63-60ba-41b3-bbd4-c5ebd4a291bb",
                     "linkedTo": [
                         {
-                            "lhsNodeName": "cv_ReadImage",
+                            "lhsNodeName": "cv_WebCam",
                             "outPinId": 1,
-                            "rhsNodeName": "yolo_dnn",
+                            "rhsNodeName": "cv_ReadNextFrame",
                             "inPinId": 1,
-                            "lhsNodeUid": "822e6e12-d8ee-4d17-96a0-e454d2a14c3b",
-                            "rhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b"
+                            "lhsNodeUid": "23a2de2d-af6b-4ae3-8b09-67eeb6b67c32",
+                            "rhsNodeUid": "4522ed35-c9da-4cba-82a4-66b297a7738c"
                         }
                     ],
                     "pinIndex": 1,
@@ -160,14 +137,14 @@
                     "alwaysDict": false,
                     "wrapper": {
                         "bLabelHidden": false,
-                        "displayName": "input",
+                        "displayName": "video",
                         "wires": {
                             "1": {
-                                "sourceUUID": "fa19a68f-457d-4d37-b7d1-b8fa8d93fdae",
-                                "destinationUUID": "aaf0650b-042f-4a24-8ac9-dcc2adf21e5a",
-                                "sourceName": "cv_ReadImage_img",
-                                "destinationName": "yolo_dnn_input",
-                                "uuid": "c9b158f7-fb48-43c3-a56c-288f25f1463a",
+                                "sourceUUID": "b69bf0d5-f493-4fc0-820d-fa55a6cc81b5",
+                                "destinationUUID": "595e0e63-60ba-41b3-bbd4-c5ebd4a291bb",
+                                "sourceName": "cv_WebCam_video",
+                                "destinationName": "cv_ReadNextFrame_video",
+                                "uuid": "49cc69fd-fb79-43cb-bd28-29db7874597e",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -183,21 +160,21 @@
             ],
             "outputs": [
                 {
-                    "name": "keywords",
+                    "name": "img",
                     "package": "PyFlowOpenCv",
-                    "fullName": "yolo_dnn_keywords",
-                    "dataType": "GraphElementPin",
+                    "fullName": "cv_ReadNextFrame_img",
+                    "dataType": "ImagePin",
                     "direction": 1,
                     "value": null,
-                    "uuid": "98d40fb3-8ada-4506-97fc-348144470755",
+                    "uuid": "fd39ba9c-e3dd-41a5-945f-6acda596a68e",
                     "linkedTo": [
                         {
-                            "lhsNodeName": "yolo_dnn",
+                            "lhsNodeName": "cv_ReadNextFrame",
                             "outPinId": 2,
-                            "rhsNodeName": "ViewerNode",
-                            "inPinId": 3,
-                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
-                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
+                            "rhsNodeName": "yolo_dnn",
+                            "inPinId": 1,
+                            "lhsNodeUid": "4522ed35-c9da-4cba-82a4-66b297a7738c",
+                            "rhsNodeUid": "f7a3f496-5f9d-47ea-aaa3-5dad631edaee"
                         }
                     ],
                     "pinIndex": 2,
@@ -208,14 +185,14 @@
                     "alwaysDict": false,
                     "wrapper": {
                         "bLabelHidden": false,
-                        "displayName": "keywords",
+                        "displayName": "img",
                         "wires": {
-                            "3": {
-                                "sourceUUID": "98d40fb3-8ada-4506-97fc-348144470755",
-                                "destinationUUID": "505bca2f-823e-4fd2-8843-d74da35ee27b",
-                                "sourceName": "yolo_dnn_keywords",
-                                "destinationName": "ViewerNode_graph",
-                                "uuid": "3036e6b9-58c9-4d8c-a5b7-51a2510dba1b",
+                            "1": {
+                                "sourceUUID": "fd39ba9c-e3dd-41a5-945f-6acda596a68e",
+                                "destinationUUID": "cc357f3d-3125-4f0b-b3e8-482151395d10",
+                                "sourceName": "cv_ReadNextFrame_img",
+                                "destinationName": "yolo_dnn_input",
+                                "uuid": "c0afc7ca-a2d6-4f58-ae7e-90c6e6ef9bda",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -229,71 +206,48 @@
                     }
                 },
                 {
-                    "name": "img",
-                    "package": "PyFlowOpenCv",
-                    "fullName": "yolo_dnn_img",
-                    "dataType": "ImagePin",
+                    "name": "out",
+                    "package": "PyFlowBase",
+                    "fullName": "cv_ReadNextFrame_out",
+                    "dataType": "BoolPin",
                     "direction": 1,
-                    "value": null,
-                    "uuid": "9576f625-d249-4c13-938a-58ec1226180f",
-                    "linkedTo": [
-                        {
-                            "lhsNodeName": "yolo_dnn",
-                            "outPinId": 1,
-                            "rhsNodeName": "ViewerNode",
-                            "inPinId": 2,
-                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
-                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
-                        }
-                    ],
+                    "value": "true",
+                    "uuid": "8956cdc0-7a76-4153-a96c-8baa14114613",
+                    "linkedTo": [],
                     "pinIndex": 1,
-                    "options": [],
+                    "options": [
+                        256
+                    ],
                     "structure": 0,
                     "alwaysList": false,
                     "alwaysSingle": false,
                     "alwaysDict": false,
                     "wrapper": {
                         "bLabelHidden": false,
-                        "displayName": "img",
-                        "wires": {
-                            "2": {
-                                "sourceUUID": "9576f625-d249-4c13-938a-58ec1226180f",
-                                "destinationUUID": "81477e2e-a16c-490e-8fcf-371ed26f13cc",
-                                "sourceName": "yolo_dnn_img",
-                                "destinationName": "ViewerNode_img",
-                                "uuid": "834a3d2f-d78d-4178-af9b-597a22132e2c",
-                                "hOffsetL": "0.0",
-                                "hOffsetR": "0.0",
-                                "hOffsetLSShape": "0.0",
-                                "hOffsetRSShape": "0.0",
-                                "vOffset": "0.0",
-                                "vOffsetSShape": "0.0",
-                                "snapVToFirst": 1,
-                                "snapVToSecond": 0
-                            }
-                        }
+                        "displayName": "out",
+                        "wires": {}
                     }
                 }
             ],
             "meta": {
                 "var": {},
-                "label": "yolo_dnn"
+                "label": "cv_ReadNextFrame"
             },
             "wrapper": {
                 "resize": {
-                    "w": 98.0,
+                    "w": 110.0,
                     "h": 65.0
                 },
                 "collapsed": false,
-                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">yolo_dnn</p></body></html>",
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">cv_ReadNextFrame</p></body></html>",
                 "exposeInputsToCompound": false,
                 "groups": {
                     "input": {},
                     "output": {}
                 }
             },
-            "x": -467.0,
-            "y": -167.0
+            "x": -464.93817936049516,
+            "y": -236.95196468785565
         },
         {
             "package": "PyFlowOpenCv",
@@ -301,7 +255,7 @@
             "type": "ViewerNode",
             "owningGraphName": "root",
             "name": "ViewerNode",
-            "uuid": "ce26965c-091a-4362-93bf-19eef809b98e",
+            "uuid": "39058a11-1486-40db-b499-433c67ec0d7d",
             "inputs": [
                 {
                     "name": "inExec",
@@ -310,8 +264,17 @@
                     "dataType": "ExecPin",
                     "direction": 0,
                     "value": "null",
-                    "uuid": "ea763517-232c-4688-8185-2eccb5a5940d",
-                    "linkedTo": [],
+                    "uuid": "9349bb77-4c18-4daf-9323-d21691f1e497",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "tick",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 1,
+                            "lhsNodeUid": "45fc9192-9eed-4a65-bb13-62e70adc8b71",
+                            "rhsNodeUid": "39058a11-1486-40db-b499-433c67ec0d7d"
+                        }
+                    ],
                     "pinIndex": 1,
                     "options": [
                         8,
@@ -324,7 +287,23 @@
                     "wrapper": {
                         "bLabelHidden": false,
                         "displayName": "inExec",
-                        "wires": {}
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "9f46e0a6-5c31-4bb0-bb47-9648b6c57827",
+                                "destinationUUID": "9349bb77-4c18-4daf-9323-d21691f1e497",
+                                "sourceName": "tick_outExec",
+                                "destinationName": "ViewerNode_inExec",
+                                "uuid": "597f67cc-1e52-4f52-8a3a-679179ed954b",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
                     }
                 },
                 {
@@ -334,15 +313,15 @@
                     "dataType": "GraphElementPin",
                     "direction": 0,
                     "value": null,
-                    "uuid": "505bca2f-823e-4fd2-8843-d74da35ee27b",
+                    "uuid": "3dcfca13-bfea-4132-b49e-170865eaf79d",
                     "linkedTo": [
                         {
                             "lhsNodeName": "yolo_dnn",
                             "outPinId": 2,
                             "rhsNodeName": "ViewerNode",
                             "inPinId": 3,
-                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
-                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
+                            "lhsNodeUid": "f7a3f496-5f9d-47ea-aaa3-5dad631edaee",
+                            "rhsNodeUid": "39058a11-1486-40db-b499-433c67ec0d7d"
                         }
                     ],
                     "pinIndex": 3,
@@ -359,11 +338,11 @@
                         "displayName": "graph",
                         "wires": {
                             "3": {
-                                "sourceUUID": "98d40fb3-8ada-4506-97fc-348144470755",
-                                "destinationUUID": "505bca2f-823e-4fd2-8843-d74da35ee27b",
+                                "sourceUUID": "e6ae02d3-2d4f-45dd-a11b-67502b3974b4",
+                                "destinationUUID": "3dcfca13-bfea-4132-b49e-170865eaf79d",
                                 "sourceName": "yolo_dnn_keywords",
                                 "destinationName": "ViewerNode_graph",
-                                "uuid": "3036e6b9-58c9-4d8c-a5b7-51a2510dba1b",
+                                "uuid": "15432742-2e0f-4488-969b-54efd06230f6",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -383,15 +362,15 @@
                     "dataType": "ImagePin",
                     "direction": 0,
                     "value": null,
-                    "uuid": "81477e2e-a16c-490e-8fcf-371ed26f13cc",
+                    "uuid": "fc7dbb2c-405d-4388-9399-5a828009f287",
                     "linkedTo": [
                         {
                             "lhsNodeName": "yolo_dnn",
                             "outPinId": 1,
                             "rhsNodeName": "ViewerNode",
                             "inPinId": 2,
-                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
-                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
+                            "lhsNodeUid": "f7a3f496-5f9d-47ea-aaa3-5dad631edaee",
+                            "rhsNodeUid": "39058a11-1486-40db-b499-433c67ec0d7d"
                         }
                     ],
                     "pinIndex": 2,
@@ -405,11 +384,11 @@
                         "displayName": "img",
                         "wires": {
                             "2": {
-                                "sourceUUID": "9576f625-d249-4c13-938a-58ec1226180f",
-                                "destinationUUID": "81477e2e-a16c-490e-8fcf-371ed26f13cc",
+                                "sourceUUID": "4dde1ba4-a409-412a-97b9-3b08d83e5b3b",
+                                "destinationUUID": "fc7dbb2c-405d-4388-9399-5a828009f287",
                                 "sourceName": "yolo_dnn_img",
                                 "destinationName": "ViewerNode_img",
-                                "uuid": "834a3d2f-d78d-4178-af9b-597a22132e2c",
+                                "uuid": "1669ee00-9f85-414c-9060-f268ed40e0f6",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -431,7 +410,7 @@
                     "dataType": "ExecPin",
                     "direction": 1,
                     "value": "null",
-                    "uuid": "40fe4785-e90c-4611-afb6-291a923ad47c",
+                    "uuid": "43d7dab3-d7a4-4eff-8d4f-e2272ed9f56f",
                     "linkedTo": [],
                     "pinIndex": 1,
                     "options": [
@@ -465,8 +444,298 @@
                     "output": {}
                 }
             },
-            "x": -297.0,
-            "y": -187.0
+            "x": 59.05418616396893,
+            "y": -208.96826696670507
+        },
+        {
+            "package": "PyFlowBase",
+            "lib": null,
+            "type": "tick",
+            "owningGraphName": "root",
+            "name": "tick",
+            "uuid": "45fc9192-9eed-4a65-bb13-62e70adc8b71",
+            "inputs": [
+                {
+                    "name": "enabled",
+                    "package": "PyFlowBase",
+                    "fullName": "tick_enabled",
+                    "dataType": "BoolPin",
+                    "direction": 0,
+                    "value": "false",
+                    "uuid": "c58bdc2e-d6d8-4ef4-a6b1-b1b11ef71d42",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "enabled",
+                        "wires": {}
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "delta",
+                    "package": "PyFlowBase",
+                    "fullName": "tick_delta",
+                    "dataType": "FloatPin",
+                    "direction": 1,
+                    "value": "0.0",
+                    "uuid": "68688205-79de-4800-823f-19d917fa4b17",
+                    "linkedTo": [],
+                    "pinIndex": 2,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "delta",
+                        "wires": {}
+                    }
+                },
+                {
+                    "name": "outExec",
+                    "package": "PyFlowBase",
+                    "fullName": "tick_outExec",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "9f46e0a6-5c31-4bb0-bb47-9648b6c57827",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "tick",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 1,
+                            "lhsNodeUid": "45fc9192-9eed-4a65-bb13-62e70adc8b71",
+                            "rhsNodeUid": "39058a11-1486-40db-b499-433c67ec0d7d"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "outExec",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "9f46e0a6-5c31-4bb0-bb47-9648b6c57827",
+                                "destinationUUID": "9349bb77-4c18-4daf-9323-d21691f1e497",
+                                "sourceName": "tick_outExec",
+                                "destinationName": "ViewerNode_inExec",
+                                "uuid": "597f67cc-1e52-4f52-8a3a-679179ed954b",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "tick"
+            },
+            "wrapper": {
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">tick</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -252.41229945265312,
+            "y": -266.6613808733673
+        },
+        {
+            "package": "PyFlowOpenCv",
+            "lib": "OpenCvLib",
+            "type": "yolo_dnn",
+            "owningGraphName": "root",
+            "name": "yolo_dnn",
+            "uuid": "f7a3f496-5f9d-47ea-aaa3-5dad631edaee",
+            "inputs": [
+                {
+                    "name": "input",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "yolo_dnn_input",
+                    "dataType": "ImagePin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "cc357f3d-3125-4f0b-b3e8-482151395d10",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "cv_ReadNextFrame",
+                            "outPinId": 2,
+                            "rhsNodeName": "yolo_dnn",
+                            "inPinId": 1,
+                            "lhsNodeUid": "4522ed35-c9da-4cba-82a4-66b297a7738c",
+                            "rhsNodeUid": "f7a3f496-5f9d-47ea-aaa3-5dad631edaee"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "input",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "fd39ba9c-e3dd-41a5-945f-6acda596a68e",
+                                "destinationUUID": "cc357f3d-3125-4f0b-b3e8-482151395d10",
+                                "sourceName": "cv_ReadNextFrame_img",
+                                "destinationName": "yolo_dnn_input",
+                                "uuid": "c0afc7ca-a2d6-4f58-ae7e-90c6e6ef9bda",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "img",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "yolo_dnn_img",
+                    "dataType": "ImagePin",
+                    "direction": 1,
+                    "value": null,
+                    "uuid": "4dde1ba4-a409-412a-97b9-3b08d83e5b3b",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "yolo_dnn",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 2,
+                            "lhsNodeUid": "f7a3f496-5f9d-47ea-aaa3-5dad631edaee",
+                            "rhsNodeUid": "39058a11-1486-40db-b499-433c67ec0d7d"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "img",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "4dde1ba4-a409-412a-97b9-3b08d83e5b3b",
+                                "destinationUUID": "fc7dbb2c-405d-4388-9399-5a828009f287",
+                                "sourceName": "yolo_dnn_img",
+                                "destinationName": "ViewerNode_img",
+                                "uuid": "1669ee00-9f85-414c-9060-f268ed40e0f6",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "keywords",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "yolo_dnn_keywords",
+                    "dataType": "GraphElementPin",
+                    "direction": 1,
+                    "value": null,
+                    "uuid": "e6ae02d3-2d4f-45dd-a11b-67502b3974b4",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "yolo_dnn",
+                            "outPinId": 2,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 3,
+                            "lhsNodeUid": "f7a3f496-5f9d-47ea-aaa3-5dad631edaee",
+                            "rhsNodeUid": "39058a11-1486-40db-b499-433c67ec0d7d"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "keywords",
+                        "wires": {
+                            "3": {
+                                "sourceUUID": "e6ae02d3-2d4f-45dd-a11b-67502b3974b4",
+                                "destinationUUID": "3dcfca13-bfea-4132-b49e-170865eaf79d",
+                                "sourceName": "yolo_dnn_keywords",
+                                "destinationName": "ViewerNode_graph",
+                                "uuid": "15432742-2e0f-4488-969b-54efd06230f6",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "yolo_dnn"
+            },
+            "wrapper": {
+                "resize": {
+                    "w": 98.0,
+                    "h": 65.0
+                },
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">yolo_dnn</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -270.7325469935714,
+            "y": -145.5441887972959
         }
     ],
     "depth": 1,

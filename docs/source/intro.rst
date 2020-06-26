@@ -36,10 +36,10 @@ You can enable the PyFlowOpenCv package by this way.
 * Copy the PyFlowOpenCv package to .PyFlow/Packages
 * User can add location of package to env variable for PYTHONPATH
 * Paths listed in PYFLOW_PACKAGES_PATHS env variable (; separated string)
-* addition package on preferences dialog.
+* addition package on preferences dialog. Make sure you add path of PyFlow/Packages under PyFlowOpenCv project to the 'additional package location' edit.
 
 
-.. image:: res/add_pyflowopencv_path.png
+.. image:: res/add_package_path.png
 
 If everything works out, you should able to see 'PyFlowOpenCv' in your NodeBox dialog of the GUI.
 

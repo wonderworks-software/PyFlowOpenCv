@@ -29,3 +29,8 @@ Due to the large size of the yolo model file, we only includes a tiny yolo model
 ..  image:: res/yolo.png
 
 ..  image:: res/yolo_video.gif
+
+You can also use YOLO detector on realtime webcam.
+
+..  image:: res/yolo_video_webcam.gif
+

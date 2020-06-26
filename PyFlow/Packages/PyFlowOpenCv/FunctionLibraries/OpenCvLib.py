@@ -562,19 +562,18 @@ class OpenCvLib(FunctionLibraryBase):
                     boxes.append([x, y, w, h])
         indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
 
-        if len(indices) == 0:
-            return
-
         annotation=[]
-        for i in indices:
-            i = i[0]
-            box = boxes[i]
-            x = box[0]
-            y = box[1]
-            w = box[2]
-            h = box[3]
-            annotation.append({'box':(x,y,w,h), 'class':classes[class_ids[i]],'confidence':confidences[i]})
-        keywords({'detection':annotation})
+        if len(indices) != 0:
+
+            for i in indices:
+                i = i[0]
+                box = boxes[i]
+                x = box[0]
+                y = box[1]
+                w = box[2]
+                h = box[3]
+                annotation.append({'box': (x, y, w, h), 'class': classes[class_ids[i]], 'confidence': confidences[i]})
+        keywords({'detection': annotation})
         img(input.image)
 
     @staticmethod
