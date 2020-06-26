@@ -151,6 +151,33 @@ class GraphElement():
                 if draw_type == 'text':
                     for text in draw_list:
                         image= cv2.putText(image, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)
+                if draw_type == 'detection':
+                    for text in draw_list:
+                        image_height, image_width, _ = image.shape
+                        (x,y,w,h)=text['box']
+                        class_name=text['class']
+                        confidence=text['confidence']
+                        fontSize = max(round(image_height / 1024),1)
+                        label = (str(class_name) + " " + str(round(confidence * 100)) + "%").upper()
+                        color = (255,0,0)
+                        x1 = max(int(x), 0)
+                        y1 = max(int(y), 0)
+                        x2=int(x+w)
+                        y2=int(y+h)
+                        image=cv2.rectangle(image, (x1, y1), (x2, y2), color, 2*fontSize)
+                        image=cv2.rectangle(image, (x1-1, y1-1), (x2-1, y2-1), (255,255,255), 2*fontSize)
+                        (textWidth, textHeight), baseline = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, fontSize,
+                                                                            fontSize)
+                        if y1 - textHeight <= 0:
+                            y1 = y1 + textHeight
+                            # cv2.rectangle(image, (x1, y1), (x1 + textWidth, y1 - textHeight), color, -1)
+                        image=cv2.putText(image, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, fontSize, (0, 0, 0), 2*fontSize)
+                        image=cv2.putText(image, label, (x1-1, y1-1), cv2.FONT_HERSHEY_SIMPLEX, fontSize, (255, 255, 255), 2*fontSize)
+                        # else:
+                        #     # cv2.rectangle(image, (x1, y1), (x1 + textWidth, y1 - textHeight), color, -1)
+                        #     image=cv2.putText(image, label, (x1, y1), cv2.FONT_HERSHEY_SIMPLEX, fontSize, (0, 0, 0), fontSize)
+                        #     image = cv2.putText(image, label, (x1 - 1, y1 - 1), cv2.FONT_HERSHEY_SIMPLEX, fontSize, (255, 255, 255),
+                        #     fontSize)
         return image
 
 

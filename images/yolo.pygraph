@@ -1,0 +1,477 @@
+{
+    "name": "root",
+    "category": "",
+    "vars": [],
+    "nodes": [
+        {
+            "package": "PyFlowOpenCv",
+            "lib": "OpenCvLib",
+            "type": "cv_ReadImage",
+            "owningGraphName": "root",
+            "name": "cv_ReadImage",
+            "uuid": "822e6e12-d8ee-4d17-96a0-e454d2a14c3b",
+            "inputs": [
+                {
+                    "name": "path",
+                    "package": "PyFlowBase",
+                    "fullName": "cv_ReadImage_path",
+                    "dataType": "StringPin",
+                    "direction": 0,
+                    "value": "\"D:/code/PyFlowOpenCv/images/sign.jpg\"",
+                    "uuid": "9ea7f503-8863-47fd-bba7-ea07a6723599",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "path",
+                        "wires": {}
+                    }
+                },
+                {
+                    "name": "gray_scale",
+                    "package": "PyFlowBase",
+                    "fullName": "cv_ReadImage_gray_scale",
+                    "dataType": "BoolPin",
+                    "direction": 0,
+                    "value": "false",
+                    "uuid": "d9e99973-bc6f-4de9-9fdd-b5d4945c14b0",
+                    "linkedTo": [],
+                    "pinIndex": 2,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "gray_scale",
+                        "wires": {}
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "img",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "cv_ReadImage_img",
+                    "dataType": "ImagePin",
+                    "direction": 1,
+                    "value": null,
+                    "uuid": "fa19a68f-457d-4d37-b7d1-b8fa8d93fdae",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "cv_ReadImage",
+                            "outPinId": 1,
+                            "rhsNodeName": "yolo_dnn",
+                            "inPinId": 1,
+                            "lhsNodeUid": "822e6e12-d8ee-4d17-96a0-e454d2a14c3b",
+                            "rhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "img",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "fa19a68f-457d-4d37-b7d1-b8fa8d93fdae",
+                                "destinationUUID": "aaf0650b-042f-4a24-8ac9-dcc2adf21e5a",
+                                "sourceName": "cv_ReadImage_img",
+                                "destinationName": "yolo_dnn_input",
+                                "uuid": "c9b158f7-fb48-43c3-a56c-288f25f1463a",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "cv_ReadImage"
+            },
+            "wrapper": {
+                "resize": {
+                    "w": 98.0,
+                    "h": 65.0
+                },
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">cv_ReadImage</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -609.0,
+            "y": -166.0
+        },
+        {
+            "package": "PyFlowOpenCv",
+            "lib": "OpenCvLib",
+            "type": "yolo_dnn",
+            "owningGraphName": "root",
+            "name": "yolo_dnn",
+            "uuid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
+            "inputs": [
+                {
+                    "name": "input",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "yolo_dnn_input",
+                    "dataType": "ImagePin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "aaf0650b-042f-4a24-8ac9-dcc2adf21e5a",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "cv_ReadImage",
+                            "outPinId": 1,
+                            "rhsNodeName": "yolo_dnn",
+                            "inPinId": 1,
+                            "lhsNodeUid": "822e6e12-d8ee-4d17-96a0-e454d2a14c3b",
+                            "rhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "input",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "fa19a68f-457d-4d37-b7d1-b8fa8d93fdae",
+                                "destinationUUID": "aaf0650b-042f-4a24-8ac9-dcc2adf21e5a",
+                                "sourceName": "cv_ReadImage_img",
+                                "destinationName": "yolo_dnn_input",
+                                "uuid": "c9b158f7-fb48-43c3-a56c-288f25f1463a",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "keywords",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "yolo_dnn_keywords",
+                    "dataType": "GraphElementPin",
+                    "direction": 1,
+                    "value": null,
+                    "uuid": "98d40fb3-8ada-4506-97fc-348144470755",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "yolo_dnn",
+                            "outPinId": 2,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 3,
+                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
+                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "keywords",
+                        "wires": {
+                            "3": {
+                                "sourceUUID": "98d40fb3-8ada-4506-97fc-348144470755",
+                                "destinationUUID": "505bca2f-823e-4fd2-8843-d74da35ee27b",
+                                "sourceName": "yolo_dnn_keywords",
+                                "destinationName": "ViewerNode_graph",
+                                "uuid": "3036e6b9-58c9-4d8c-a5b7-51a2510dba1b",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "img",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "yolo_dnn_img",
+                    "dataType": "ImagePin",
+                    "direction": 1,
+                    "value": null,
+                    "uuid": "9576f625-d249-4c13-938a-58ec1226180f",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "yolo_dnn",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 2,
+                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
+                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "img",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "9576f625-d249-4c13-938a-58ec1226180f",
+                                "destinationUUID": "81477e2e-a16c-490e-8fcf-371ed26f13cc",
+                                "sourceName": "yolo_dnn_img",
+                                "destinationName": "ViewerNode_img",
+                                "uuid": "834a3d2f-d78d-4178-af9b-597a22132e2c",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "yolo_dnn"
+            },
+            "wrapper": {
+                "resize": {
+                    "w": 98.0,
+                    "h": 65.0
+                },
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">yolo_dnn</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -467.0,
+            "y": -167.0
+        },
+        {
+            "package": "PyFlowOpenCv",
+            "lib": null,
+            "type": "ViewerNode",
+            "owningGraphName": "root",
+            "name": "ViewerNode",
+            "uuid": "ce26965c-091a-4362-93bf-19eef809b98e",
+            "inputs": [
+                {
+                    "name": "inExec",
+                    "package": "PyFlowBase",
+                    "fullName": "ViewerNode_inExec",
+                    "dataType": "ExecPin",
+                    "direction": 0,
+                    "value": "null",
+                    "uuid": "ea763517-232c-4688-8185-2eccb5a5940d",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        8,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "inExec",
+                        "wires": {}
+                    }
+                },
+                {
+                    "name": "graph",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "ViewerNode_graph",
+                    "dataType": "GraphElementPin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "505bca2f-823e-4fd2-8843-d74da35ee27b",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "yolo_dnn",
+                            "outPinId": 2,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 3,
+                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
+                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
+                        }
+                    ],
+                    "pinIndex": 3,
+                    "options": [
+                        4,
+                        8
+                    ],
+                    "structure": 1,
+                    "alwaysList": true,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "graph",
+                        "wires": {
+                            "3": {
+                                "sourceUUID": "98d40fb3-8ada-4506-97fc-348144470755",
+                                "destinationUUID": "505bca2f-823e-4fd2-8843-d74da35ee27b",
+                                "sourceName": "yolo_dnn_keywords",
+                                "destinationName": "ViewerNode_graph",
+                                "uuid": "3036e6b9-58c9-4d8c-a5b7-51a2510dba1b",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "img",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "ViewerNode_img",
+                    "dataType": "ImagePin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "81477e2e-a16c-490e-8fcf-371ed26f13cc",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "yolo_dnn",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 2,
+                            "lhsNodeUid": "42c8820a-20ff-4b46-b7b8-8082ed4da79b",
+                            "rhsNodeUid": "ce26965c-091a-4362-93bf-19eef809b98e"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "img",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "9576f625-d249-4c13-938a-58ec1226180f",
+                                "destinationUUID": "81477e2e-a16c-490e-8fcf-371ed26f13cc",
+                                "sourceName": "yolo_dnn_img",
+                                "destinationName": "ViewerNode_img",
+                                "uuid": "834a3d2f-d78d-4178-af9b-597a22132e2c",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "outExec",
+                    "package": "PyFlowBase",
+                    "fullName": "ViewerNode_outExec",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "40fe4785-e90c-4611-afb6-291a923ad47c",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "outExec",
+                        "wires": {}
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "ViewerNode"
+            },
+            "wrapper": {
+                "resize": {
+                    "w": 98.0,
+                    "h": 79.0
+                },
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">ViewerNode</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -297.0,
+            "y": -187.0
+        }
+    ],
+    "depth": 1,
+    "isRoot": true,
+    "parentGraphName": "None",
+    "fileVersion": "2.0.1",
+    "activeGraph": "root"
+}
