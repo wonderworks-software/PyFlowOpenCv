@@ -16,3 +16,16 @@ OpenCV’s text detector implementation of EAST is quite robust, capable of loca
 This is an example of text detection on a webcam.
 
 ..  image:: res/text_detection_video.gif
+
+
+YOLO object detection with OpenCV
+====================================
+
+You only look once (YOLO) is a state-of-the-art, real-time object detection system. On a Pascal Titan X it processes images at 30 FPS and has a mAP of 57.9% on COCO test-dev.
+
+Due to the large size of the yolo model file, we only includes a tiny yolo model with the package. 
+
+
+..  image:: res/yolo.png
+
+..  image:: res/yolo_video.gif

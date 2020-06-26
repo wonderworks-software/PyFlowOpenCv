@@ -3,7 +3,7 @@ About this project
 
 **PyFlow** is a general-purpose Visual Dataflow Programming library. Nodes represent algorithms with certain inputs and outputs. Connections transfer data from the output (source) of the first node to the input (sink) of the second one.
 
-**PyFlowOpencv** is a visual scripting extension for PyFlow for OpenCV. **PyFlowOpencv** enable you learn Computer vision without writing a single line of code. A quick demo on how **PyFlowOpenCv** works for a face detection.
+**PyFlowOpencv** is a visual scripting extension for PyFlow for OpenCV. **PyFlowOpencv** enable you learn Computer vision without writing a single line of code, which is great for rapid prototyping and learning. Plenty of OpenCV functions are available as building blocks in PyFlowOpenCv that can be combined in a graphical user interface with just a few mouse clicks.A quick demo on how **PyFlowOpenCv** works for a face detection.
 
 .. image:: res/quick_demo.gif
 
@@ -65,7 +65,7 @@ See also the list of `contributors <https://github.com/wonderworks-software/PyFl
 Discussion
 ==============
 
-Join us to our `discord channel <https://discord.gg/SwmkqMj>`_ and ask anything related to project!
+Join us to our `discord channel <https://discord.gg/SwmkqMj>`_ and ask anything related to project! Please also let us know if you want more OpenCV features in PyFlowOpenCv.
 
 
 .. Nodes

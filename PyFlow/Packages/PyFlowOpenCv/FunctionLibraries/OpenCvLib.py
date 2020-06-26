@@ -501,6 +501,81 @@ class OpenCvLib(FunctionLibraryBase):
                 words.append(text)
                 break
         keywords({'text':words})
+        img(input.image)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    def yolo_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                          keywords=(REF, ('GraphElementPin', 0)),
+                          ):
+        """Takes an image and mask and applied logic and operation"""
+
+        yolo_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                             "yolov3-tiny.weights")
+        yolo_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "yolov3-tiny.cfg")
+        keywords_path= os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                    "yolov3.txt")
+
+        modelSize = 416
+
+        with open(keywords_path, 'r') as f:
+            classes = [line.strip() for line in f.readlines()]
+
+        (image_height, image_width) = input.image.shape[:2]
+
+        image = cv2.resize(input.image, (modelSize, modelSize))
+        image=image[:,:,:3]
+        (h, w) = image.shape[:2]
+        scale = 0.00392
+        net= cv2.dnn.readNet(yolo_model_proto_path,yolo_model_path)
+        blob = cv2.dnn.blobFromImage(image, scale, (w,h),
+                                     mean=(0,0,0),
+                                     swapRB=True, crop=False)
+        net.setInput(blob)
+        layer_names = net.getLayerNames()
+        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+        retval= net.forward(output_layers)
+        class_ids = []
+        confidences = []
+        boxes = []
+        conf_threshold = 0.5
+        nms_threshold = 0.4
+
+        for out in retval:
+            for detection in out:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > conf_threshold:
+                    if detection[2]>1 or detection[3]>1:
+                        continue
+                    center_x = int(detection[0] * image_width)
+                    center_y = int(detection[1] * image_height)
+
+                    w = int(detection[2] * image_width)
+                    h = int(detection[3] * image_height)
+                    x = center_x - w / 2
+                    y = center_y - h / 2
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    boxes.append([x, y, w, h])
+        indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
+
+        if len(indices) == 0:
+            return
+
+        annotation=[]
+        for i in indices:
+            i = i[0]
+            box = boxes[i]
+            x = box[0]
+            y = box[1]
+            w = box[2]
+            h = box[3]
+            annotation.append({'box':(x,y,w,h), 'class':classes[class_ids[i]],'confidence':confidences[i]})
+        keywords({'detection':annotation})
+        img(input.image)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
