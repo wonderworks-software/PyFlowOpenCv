@@ -1,3 +1,4 @@
 imutils
 numpy
-opencv
+scipy
+opencv-python
