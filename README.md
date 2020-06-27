@@ -23,10 +23,11 @@ Install requirements for your use case::
 ```
 To run the program in standalone mode, run pyflow.py in the root folder of PyFlow project. You can also invoke pyflow.exe on windows or pyflow on unix OS. Program is located inside PATH/TO/PYTHON/Scripts.
 
-You can enable the PyFlowOpenCv package by one of the following ways.
+You can enable the PyFlowOpenCv package by one of the following ways ( Just pick one, not all).
 
-- put the addition package path to 'Additional package locations' on preferences dialog.
- ![addpackage](docs/source/res/add_pyflowopencv_path.png)
+
+- put the addition package path to 'Additional package locations' on preferences dialog.Make sure you add path of PyFlow/Packages under PyFlowOpenCv project to the 'additional package location' edit.
+ ![addpackage](docs/source/res/add_package_path.png)
 - Copy the PyFlowOpenCv package to .PyFlow/Packages
 - User can add location of package to env variable for PYTHONPATH
 - Paths listed in PYFLOW_PACKAGES_PATHS env variable (; separated string)
