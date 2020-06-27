@@ -9,7 +9,7 @@ Learning OpenCV is quite challenging for most of the beginners. PyFlowOpenCv mak
 
 
 # Installation
-PyFlowOpenCv is not a standalone software, it is a extension package of PyFlow. PyFlow has to be installed first. You can refer to `PyFlow <https://github.com/wonderworks-software/PyFlow>`_  to install PyFlow.
+PyFlowOpenCv is not a standalone software, it is a extension package of PyFlow. PyFlow has to be installed first. You can refer to [PyFlow Project](https://github.com/wonderworks-software/PyFlow)  to install PyFlow.
 After PyFlow installed through pip or setup.py.
 
 Clone or download repository
