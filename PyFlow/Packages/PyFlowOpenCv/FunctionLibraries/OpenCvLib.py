@@ -506,8 +506,8 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
     def yolo_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                          keywords=(REF, ('GraphElementPin', 0)),
-                          ):
+                 detections=(REF, ('GraphElementPin', 0)),
+                 ):
         """Takes an image and mask and applied logic and operation"""
 
         yolo_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
@@ -573,7 +573,7 @@ class OpenCvLib(FunctionLibraryBase):
                 w = box[2]
                 h = box[3]
                 annotation.append({'box': (x, y, w, h), 'class': classes[class_ids[i]], 'confidence': confidences[i]})
-        keywords({'detection': annotation})
+        detections({'detection': annotation})
         img(input.image)
 
     @staticmethod
