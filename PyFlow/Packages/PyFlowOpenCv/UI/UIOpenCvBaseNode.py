@@ -74,9 +74,10 @@ class UIOpenCvBaseNode(UINodeBase):
                 self.setNumpyArray(img.image) 
 
     def refreshImage(self):
+        if self.imagePin:
+            self._rawNode.processNode()
         if self.displayImage and not self.collapsed :
             if self.imagePin:
-                self._rawNode.processNode()
                 img = self.imagePin.getData()
                 self.setNumpyArray(img.image)
             self.Imagelabel.setVisible(True)
@@ -86,6 +87,7 @@ class UIOpenCvBaseNode(UINodeBase):
     def viewImage(self):
         self.displayImage = not self.displayImage
         self.refreshImage()
+        self.updateNodeShape()
         self.updateSize()
 
     def setNumpyArray(self,image):
