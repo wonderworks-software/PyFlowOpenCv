@@ -15,7 +15,7 @@ See how image threshold works.
 ..  image:: res/threshold.gif
 
 
-Image Transform(Rotation) 
+Image Transform(Rotation and Translation) 
 ===================
 Image rotation can be done with the CV_Transform block, which provide a joystick like tool to choose the rotation center and angle.
 
