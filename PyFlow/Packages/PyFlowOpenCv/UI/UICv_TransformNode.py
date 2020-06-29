@@ -150,11 +150,7 @@ class UICv_TransformNode(UIOpenCvBaseNode):
         else:
             self.item.rotate(self.anglePin.getData(),True)
             self.item.rotationUpdated.emit(self.anglePin.getData())
-        self.refreshImage()
-        instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv", "ImageViewerTool")
-        if instance:
-            img = self.imagePin.getData()
-            instance.viewer.setNumpyArray(img.image)
+        self._refresh_tool_image()
 
     def setCenter(self,center):
         if len(self.xCenterPin.affected_by) == 0:
@@ -169,6 +165,9 @@ class UICv_TransformNode(UIOpenCvBaseNode):
         else:
             self.item.setY(self.yCenterPin.getData())
             self.item.yCenterChanged.emit(self.yCenterPin.getData())
+        self._refresh_tool_image()
+
+    def _refresh_tool_image(self):
         self.refreshImage()
         instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv", "ImageViewerTool")
         if instance:
