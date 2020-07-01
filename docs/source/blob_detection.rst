@@ -1,4 +1,4 @@
-Open and play a video 
+Blob detection 
 =============================
 
 In this example, we are going to create a project can detect blobs using OpenCV.
