@@ -147,7 +147,7 @@ class GraphElement():
                     for (x, y) in draw_list :
                         cv2.circle(image, (int(x), int(y)),5 , (0, 255, 0), -1)
                 if draw_type=='key_point':
-                    image=cv2.drawKeypoints(image, draw_list, image, (255, 255, 0), cv2.DrawMatchesFlags_DRAW_RICH_KEYPOINTS)
+                    image=cv2.drawKeypoints(image, draw_list, image, (255, 0, 0), cv2.DrawMatchesFlags_DRAW_RICH_KEYPOINTS)
                 if draw_type == 'text':
                     for text in draw_list:
                         image= cv2.putText(image, text, (5, 25),  cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 0, 255), 2)

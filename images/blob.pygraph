@@ -1,0 +1,429 @@
+{
+    "name": "root",
+    "category": "",
+    "vars": [],
+    "nodes": [
+        {
+            "package": "PyFlowOpenCv",
+            "lib": "OpenCvLib",
+            "type": "cv_ReadImage",
+            "owningGraphName": "root",
+            "name": "cv_ReadImage",
+            "uuid": "c5dca12f-5ae8-47f8-832d-e450f5e40b1a",
+            "inputs": [
+                {
+                    "name": "gray_scale",
+                    "package": "PyFlowBase",
+                    "fullName": "cv_ReadImage_gray_scale",
+                    "dataType": "BoolPin",
+                    "direction": 0,
+                    "value": "true",
+                    "uuid": "0de850a4-01f0-4abb-9f36-4516dba7aa8d",
+                    "linkedTo": [],
+                    "pinIndex": 2,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "gray_scale",
+                        "wires": {}
+                    }
+                },
+                {
+                    "name": "path",
+                    "package": "PyFlowBase",
+                    "fullName": "cv_ReadImage_path",
+                    "dataType": "StringPin",
+                    "direction": 0,
+                    "value": "\"D:/code/PyFlowOpenCv/images/blob.png\"",
+                    "uuid": "5f4b08fc-4f96-412d-991b-0d89e0606f81",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "path",
+                        "wires": {}
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "img",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "cv_ReadImage_img",
+                    "dataType": "ImagePin",
+                    "direction": 1,
+                    "value": null,
+                    "uuid": "c2464c56-6603-4cbb-83c4-d01190a54fdc",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "cv_ReadImage",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 2,
+                            "lhsNodeUid": "c5dca12f-5ae8-47f8-832d-e450f5e40b1a",
+                            "rhsNodeUid": "96cee193-afb0-493e-b8da-96bbef121bfb"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "img",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "c2464c56-6603-4cbb-83c4-d01190a54fdc",
+                                "destinationUUID": "8552453e-fef1-484e-bfc7-608c3e2e9c37",
+                                "sourceName": "cv_ReadImage_img",
+                                "destinationName": "ViewerNode_img",
+                                "uuid": "903dc2ee-a560-48c7-b50d-cab513b2def1",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "cv_ReadImage"
+            },
+            "wrapper": {
+                "resize": {
+                    "w": 77.0,
+                    "h": 65.0
+                },
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">cv_ReadImage</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -494.0,
+            "y": -205.0
+        },
+        {
+            "package": "PyFlowOpenCv",
+            "lib": null,
+            "type": "ViewerNode",
+            "owningGraphName": "root",
+            "name": "ViewerNode",
+            "uuid": "96cee193-afb0-493e-b8da-96bbef121bfb",
+            "inputs": [
+                {
+                    "name": "img",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "ViewerNode_img",
+                    "dataType": "ImagePin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "8552453e-fef1-484e-bfc7-608c3e2e9c37",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "cv_ReadImage",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 2,
+                            "lhsNodeUid": "c5dca12f-5ae8-47f8-832d-e450f5e40b1a",
+                            "rhsNodeUid": "96cee193-afb0-493e-b8da-96bbef121bfb"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "img",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "c2464c56-6603-4cbb-83c4-d01190a54fdc",
+                                "destinationUUID": "8552453e-fef1-484e-bfc7-608c3e2e9c37",
+                                "sourceName": "cv_ReadImage_img",
+                                "destinationName": "ViewerNode_img",
+                                "uuid": "903dc2ee-a560-48c7-b50d-cab513b2def1",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "inExec",
+                    "package": "PyFlowBase",
+                    "fullName": "ViewerNode_inExec",
+                    "dataType": "ExecPin",
+                    "direction": 0,
+                    "value": "null",
+                    "uuid": "b26a4b3d-04b0-4e03-aeb4-0cb4b6aa49f8",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "tick",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 1,
+                            "lhsNodeUid": "0826d914-93ab-41c3-a835-acf9e76c5883",
+                            "rhsNodeUid": "96cee193-afb0-493e-b8da-96bbef121bfb"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [
+                        8,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "inExec",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "ce7c0c8c-b00d-440b-8b6f-cff4b419e5d7",
+                                "destinationUUID": "b26a4b3d-04b0-4e03-aeb4-0cb4b6aa49f8",
+                                "sourceName": "tick_outExec",
+                                "destinationName": "ViewerNode_inExec",
+                                "uuid": "aedc4d96-2899-4b48-8fa0-e9fec1251817",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "graph",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "ViewerNode_graph",
+                    "dataType": "GraphElementPin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "d832d9db-158d-4abc-9f7d-1edda62532e0",
+                    "linkedTo": [],
+                    "pinIndex": 3,
+                    "options": [
+                        4,
+                        8
+                    ],
+                    "structure": 1,
+                    "alwaysList": true,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "graph",
+                        "wires": {}
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "outExec",
+                    "package": "PyFlowBase",
+                    "fullName": "ViewerNode_outExec",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "89a9d8eb-bff9-40b8-b3ce-5d88580df0d5",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "outExec",
+                        "wires": {}
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "ViewerNode"
+            },
+            "wrapper": {
+                "resize": {
+                    "w": 98.0,
+                    "h": 79.0
+                },
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">ViewerNode</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": 217.6177579612892,
+            "y": -173.60944242977578
+        },
+        {
+            "package": "PyFlowBase",
+            "lib": null,
+            "type": "tick",
+            "owningGraphName": "root",
+            "name": "tick",
+            "uuid": "0826d914-93ab-41c3-a835-acf9e76c5883",
+            "inputs": [
+                {
+                    "name": "enabled",
+                    "package": "PyFlowBase",
+                    "fullName": "tick_enabled",
+                    "dataType": "BoolPin",
+                    "direction": 0,
+                    "value": "false",
+                    "uuid": "15338d10-1b9a-41cc-a76e-3df24d114b3e",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "enabled",
+                        "wires": {}
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "delta",
+                    "package": "PyFlowBase",
+                    "fullName": "tick_delta",
+                    "dataType": "FloatPin",
+                    "direction": 1,
+                    "value": "0.0",
+                    "uuid": "02b46956-0597-4464-90e8-c009871d742b",
+                    "linkedTo": [],
+                    "pinIndex": 2,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "delta",
+                        "wires": {}
+                    }
+                },
+                {
+                    "name": "outExec",
+                    "package": "PyFlowBase",
+                    "fullName": "tick_outExec",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "ce7c0c8c-b00d-440b-8b6f-cff4b419e5d7",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "tick",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 1,
+                            "lhsNodeUid": "0826d914-93ab-41c3-a835-acf9e76c5883",
+                            "rhsNodeUid": "96cee193-afb0-493e-b8da-96bbef121bfb"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "outExec",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "ce7c0c8c-b00d-440b-8b6f-cff4b419e5d7",
+                                "destinationUUID": "b26a4b3d-04b0-4e03-aeb4-0cb4b6aa49f8",
+                                "sourceName": "tick_outExec",
+                                "destinationName": "ViewerNode_inExec",
+                                "uuid": "aedc4d96-2899-4b48-8fa0-e9fec1251817",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "tick"
+            },
+            "wrapper": {
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">tick</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": 9.0,
+            "y": -278.0
+        }
+    ],
+    "depth": 1,
+    "isRoot": true,
+    "parentGraphName": "None",
+    "fileVersion": "2.0.1",
+    "activeGraph": "root"
+}

@@ -1,16 +1,18 @@
-About this project
+**PyFlowOpenCv** 
 ==================
 
-**PyFlow** is a general-purpose Visual Dataflow Programming library. Nodes represent algorithms with certain inputs and outputs. Connections transfer data from the output (source) of the first node to the input (sink) of the second one.
-
-**PyFlowOpencv** is a visual scripting extension for PyFlow for OpenCV. **PyFlowOpencv** enable you learn Computer vision without writing a single line of code, which is great for rapid prototyping and learning. Plenty of OpenCV functions are available as building blocks in PyFlowOpenCv that can be combined in a graphical user interface with just a few mouse clicks.A quick demo on how **PyFlowOpenCv** works for a face detection.
+**PyFlowOpenCv** is a easy to use rapid prototyping GUI tool for OpenCV. **PyFlowOpenCV** enable you learn Computer vision without writing a single line of code, which is great for rapid prototyping and learning. Plenty of OpenCV functions are available as building blocks in PyFlowOpenCv that can be combined in a graphical user interface with just a few mouse clicks. A quick demo on how **PyFlowOpenCv** works for a face detection.
 
 .. image:: res/quick_demo.gif
+
+**PyFlow** is a general-purpose Visual Dataflow Programming library. Nodes represent algorithms with certain inputs and outputs. Connections transfer data from the output (source) of the first node to the input (sink) of the second one. **PyFlowOpencv** is a visual scripting extension for PyFlow for OpenCV.
 
 Goal
 ********
 
 Learning OpenCV is quite challenging for most of the beginners. PyFlowOpenCv make the learning curve of OpenCv much smoother. You do not need to write any code, just drag and drop the diagram. 
+
+OpenCV comes with GUI tools like Highui and OpenCVGUI, but they are far from user friendly. You still need to write a lot of code to use them. With **PyFlowOpenCV**, user can focus on build the computer vision pipeline and fine tune the parameters, instead of writing boilerplate source code.  
 
 Installation
 ==================

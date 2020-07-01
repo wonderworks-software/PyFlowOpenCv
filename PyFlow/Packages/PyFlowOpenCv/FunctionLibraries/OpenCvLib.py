@@ -1054,3 +1054,64 @@ class OpenCvLib(FunctionLibraryBase):
                 (ih, iw) = input.image.shape[:2]
                 if (x+w)<=iw and (y+h)<ih:
                     img(input.image[y:(y+h),x:(x+w),:])
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    def blob_detector(input=('ImagePin', 0),
+                      thresholdStep=('IntPin',10),
+                      minThreshold=('IntPin', 50, {PinSpecifires.VALUE_RANGE: (0, 255)}),
+                      maxThreshold=('IntPin', 220 ,{PinSpecifires.VALUE_RANGE: (0, 255)}),
+                      minRepeatability=('IntPin', 2),
+                      minDistBetweenBlobs=('FloatPin', 10.0),
+                      filterByColor=('BoolPin', True),
+                      blobColor=('IntPin', 0),
+                      filterByArea=('BoolPin', True),
+                      minArea=('FloatPin', 25.0),
+                      maxArea=('FloatPin', 5000.0),
+                      filterByCircularity=('BoolPin', False),
+                      minCircularity=('FloatPin', 0.8, {PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      maxCircularity=('FloatPin', 1, {PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      filterByInertia=('BoolPin', True),
+                      minInertiaRatio=('FloatPin', 0.1,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      maxInertiaRatio=('FloatPin', 1,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      filterByConvexity=('BoolPin', False),
+                      minConvexity=('FloatPin', 0.95,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      maxConvexity=('FloatPin', 1,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      maxTotalKeypoints=('IntPin', 1000),
+                      gridRows=('IntPin', 4),
+                      gridCols=('IntPin', 4),
+                      maxLevel=('IntPin', 2),
+                      draw_key_points=(REF,('GraphElementPin', 0))
+                      ):
+
+        params = cv2.SimpleBlobDetector_Params()
+        params.thresholdStep=thresholdStep
+        params.minThreshold = minThreshold
+        params.maxThreshold = maxThreshold
+        params.minDistBetweenBlobs=minDistBetweenBlobs
+        params.minRepeatability=minRepeatability
+
+        params.filterByColor=filterByColor
+        params.blobColor=blobColor
+
+        params.filterByArea = filterByArea
+        params.minArea = minArea
+        params.maxArea=maxArea
+
+        params.filterByCircularity = filterByCircularity
+        params.minCircularity = minCircularity
+        params.maxCircularity=maxCircularity
+
+        params.filterByConvexity = filterByConvexity
+        params.minConvexity = minConvexity
+        params.maxConvexity=maxConvexity
+
+        params.filterByInertia = filterByInertia
+        params.minInertiaRatio = minInertiaRatio
+        params.maxInertiaRatio=maxInertiaRatio
+
+        detector = cv2.SimpleBlobDetector_create(params)
+
+        # Detect blobs.
+        ret= detector.detect(input.image)
+        draw_key_points({'key_point': ret})
