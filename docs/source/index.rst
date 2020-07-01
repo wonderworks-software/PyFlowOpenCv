@@ -19,6 +19,7 @@ Welcome to PyFlowOpenCv's documentation!
    tutorial01
    tutorial02
    tutorial03
+   blob_detection
    tutorial04
    tutorial05
    tutorial06
