@@ -951,6 +951,7 @@ class OpenCvLib(FunctionLibraryBase):
     def Dense_optical_flow(
             prev_image=('ImagePin', 0),
             image=('ImagePin', 0),
+            img=(REF, ('ImagePin', 0)) ,
             output=(REF, ('ImagePin', 0)) ):
 
         # Create mask
@@ -958,7 +959,7 @@ class OpenCvLib(FunctionLibraryBase):
         mask = np.zeros_like(prev_image.image)
         # Sets image saturation to maximum
         mask[..., 1] = 255
-
+        img(image)
         prev_gray = cv2.cvtColor(prev_image.image, cv2.COLOR_BGR2GRAY)
         gray = cv2.cvtColor(image.image, cv2.COLOR_BGR2GRAY)
         flow = cv2.calcOpticalFlowFarneback(prev_gray, gray , None, pyr_scale=0.5, levels=5, winsize=11, iterations=5,
