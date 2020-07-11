@@ -12,6 +12,7 @@ from PyFlow.Core import (
     IMPLEMENT_NODE
 )
 from PyFlow.Core.Common import *
+import pytesseract
 
 
 class ShapeDetector:
@@ -527,6 +528,8 @@ class OpenCvLib(FunctionLibraryBase):
         image = cv2.resize(input.image, (modelSize, modelSize))
         image=image[:,:,:3]
         (h, w) = image.shape[:2]
+        rW = w/ float(modelSize)
+        rH = h/ float(modelSize)
         scale = 0.00392
         net= cv2.dnn.readNet(yolo_model_proto_path,yolo_model_path)
         blob = cv2.dnn.blobFromImage(image, scale, (w,h),
@@ -559,7 +562,8 @@ class OpenCvLib(FunctionLibraryBase):
                     y = center_y - h / 2
                     class_ids.append(class_id)
                     confidences.append(float(confidence))
-                    boxes.append([x, y, w, h])
+                    box=[x, y, w, h]
+                    boxes.append(box)
         indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
 
         annotation=[]
@@ -638,11 +642,13 @@ class OpenCvLib(FunctionLibraryBase):
 
         text_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
                                        "frozen_east_text_detection.pb")
-
-        image = cv2.resize(input.image, (320, 320))
-        (h, w) = image.shape[:2]
+        modelSize=320
+        (h, w) = input.image.shape[:2]
+        image = cv2.resize(input.image, (modelSize,modelSize))
+        rW = w/ float(modelSize)
+        rH = h/ float(modelSize)
         net = cv2.dnn.readNet(text_model_path)
-        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
+        blob = cv2.dnn.blobFromImage(image, 1.0, (modelSize,modelSize),
                                      mean=(104.00698793, 116.66876762, 122.67891434),
                                      swapRB=True, crop=False)
         net.setInput(blob)
@@ -697,12 +703,12 @@ class OpenCvLib(FunctionLibraryBase):
 
                 # add the bounding box coordinates and probability score to
                 # our respective lists
-                boxes.append((startX,startY,endX,endY))
-                # boxes.append((startX,startY,endX-startX,endY-startY))
+                # box = (x * rW, y * rH, w * rW, h*rH)
+                boxes.append((startX*rW,startY*rH,(endX)*rW,(endY)*rH))
                 confidences.append(scoresData[x])
         filtered_boxes = non_max_suppression(np.array(boxes), probs=confidences)
         boxes=[(startX,startY,endX-startX,endY-startY) for startX,startY,endX,endY in filtered_boxes]
-        img(image)
+        img(input.image)
         rects({'rect': boxes})
 
 
@@ -981,7 +987,7 @@ class OpenCvLib(FunctionLibraryBase):
         output(img3)
 
 
-
+        img(image)
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Histogram', NodeMeta.KEYWORDS: []})
     def cv_Histogram(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
@@ -1123,6 +1129,38 @@ class OpenCvLib(FunctionLibraryBase):
         # Detect blobs.
         ret= detector.detect(input.image)
         draw_key_points({'key_point': ret})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def ocr(input=('ImagePin', 0),
+            img=(REF, ('ImagePin', 0)),
+            engine= ('StringPin', 'LSTM',
+                     {PinSpecifires.VALUE_LIST: ["Legacy","LSTM",'Legacy+LSTM','Default']}),
+            boxes=('GraphElementPin', 0),
+            texts=(REF,('GraphElementPin', 0))
+                   ):
+        # loop over the bounding boxes to find the coordinate of bounding boxes
+        oem_dict={'Legacy':0,
+                  'LSTM':1,
+                  'Legacy+LSTM': 2,
+                  'Default': 3,
+                  }
+        results=[]
+        if 'rect' in boxes.graph:
+            for (startX, startY, w, h) in boxes.graph['rect']:
+                startX = int(startX)
+                startY = int(startY)
+                endX = int(startX+w)
+                endY = int(startY+h)
+                r = input.image[startY:endY, startX:endX]
+                configuration = (f"-l eng --oem {oem_dict[engine]} --psm 6")
+                text = pytesseract.image_to_string(r, config=configuration)
+                if text:
+                    d={'box':(startX,startY,w,h),'class':text}
+                    results.append(d)
+        texts({'detection':results})
+        img(input.image)
+
 
 class LK_optical_flow_Lib(FunctionLibraryBase):
     '''doc string for OpenCvLib'''
