@@ -727,12 +727,46 @@ class OpenCvLib(FunctionLibraryBase):
     def goodFeatureToTrack(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
                            draw_points=(REF, ('GraphElementPin', 0))):
         """Takes an image and mask and applied logic and operation"""
-        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
-        corners = cv2.goodFeaturesToTrack(gray, 25, 0.01, 10)
+        feature_params = dict(maxCorners=100,
+                              qualityLevel=0.3,
+                              minDistance=7,
+                              blockSize=7)
+        corners = cv2.goodFeaturesToTrack(input.image, 25, 0.01, 10)
         if corners is not None:
-            # corners = np.float32(corners)
             keypoints(corners)
             draw_points({'point': [(item[0][0], item[0][1]) for item in corners]})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def Feature_Extraction(input=('ImagePin', 0),
+                            algorithm=('StringPin', 'SURF',
+                                       {PinSpecifires.VALUE_LIST: ["SURF", "SIFT", 'FAST', 'BRISK','AKAZE','ORB']}),
+                            keypoints=(REF, ('KeyPointsPin', 0)),
+                     descriptor=(REF, ('DescriptorPin', 0)),
+                     draw_key_points=(REF, ('GraphElementPin', 0)),
+                     draw_points=(REF, ('GraphElementPin', 0))):
+        """Takes an image and mask and applied logic and operation"""
+
+
+        if algorithm=='SURF':
+            extractor = cv2.xfeatures2d.SURF_create(400)
+        elif algorithm=='SIFT':
+            extractor = cv2.xfeatures2d.SIFT_create(400)
+        elif algorithm=='FAST':
+            extractor= cv2.FastFeatureDetector_create()
+        elif algorithm=='BRISK':
+            extractor= cv2.BRISK_create()
+        elif algorithm=='AKAZE':
+            extractor= cv2.AKAZE_create()
+        elif algorithm=='ORB':
+            extractor= cv2.ORB_create(nfeatures=2000)
+        kp, des = extractor.detectAndCompute(input.image, None)
+        if kp and len(kp):
+            # corners = np.float32(corners)
+            keypoints((kp,))
+            descriptor(des)
+            draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
+            draw_key_points({'key_point': kp})
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
@@ -946,33 +980,7 @@ class OpenCvLib(FunctionLibraryBase):
                                   None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         output(img3)
 
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def Dense_optical_flow(
-            prev_image=('ImagePin', 0),
-            image=('ImagePin', 0),
-            output=(REF, ('ImagePin', 0)) ):
 
-        # Create mask
-        # mask = np.zeros(prev_image.image.shape+(3,),dtype=np.float32)
-        mask = np.zeros_like(prev_image.image)
-        # Sets image saturation to maximum
-        mask[..., 1] = 255
-
-        prev_gray = cv2.cvtColor(prev_image.image, cv2.COLOR_BGR2GRAY)
-        gray = cv2.cvtColor(image.image, cv2.COLOR_BGR2GRAY)
-        flow = cv2.calcOpticalFlowFarneback(prev_gray, gray , None, pyr_scale=0.5, levels=5, winsize=11, iterations=5,
-                                            poly_n=5, poly_sigma=1.1, flags=0)
-        # Compute the magnitude and angle of the 2D vectors
-        magnitude, angle = cv2.cartToPolar(flow[..., 0], flow[..., 1])
-        mask[..., 0] = angle * 180 / np.pi / 2
-        # Set image value according to the optical flow magnitude (normalized)
-        mask[..., 2] = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX)
-        # Convert HSV to RGB (BGR) color representation
-        rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
-        # Open a new window and displays the output frame
-        dense_flow = cv2.addWeighted(image.image, 1, rgb, 2, 0)
-        output(dense_flow)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Histogram', NodeMeta.KEYWORDS: []})
@@ -1115,3 +1123,88 @@ class OpenCvLib(FunctionLibraryBase):
         # Detect blobs.
         ret= detector.detect(input.image)
         draw_key_points({'key_point': ret})
+
+class LK_optical_flow_Lib(FunctionLibraryBase):
+    '''doc string for OpenCvLib'''
+
+    previous_image = None
+    previous_points=None
+    mask_image = None
+
+    def __init__(self, packageName):
+        super(LK_optical_flow_Lib, self).__init__(packageName)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def LK_optical_flow(
+            input=('ImagePin', 0),
+            previous_points=('KeyPointsPin', 0),
+            img=(REF, ('ImagePin', 0)) ):
+        color = np.random.randint(0, 255, (100, 3))
+        lk_params = dict(winSize=(15, 15),
+                         maxLevel=2,
+                         criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+        if LK_optical_flow_Lib.previous_image is None \
+                or LK_optical_flow_Lib.previous_image.shape!=input.image.shape:
+            LK_optical_flow_Lib.previous_image= input.image
+
+        if LK_optical_flow_Lib.mask_image is None \
+                or LK_optical_flow_Lib.mask_image.shape[:2]!=input.image.shape[:2]:
+            LK_optical_flow_Lib.mask_image= np.zeros_like(input.image)
+            LK_optical_flow_Lib.mask_image= cv2.cvtColor(LK_optical_flow_Lib.mask_image,cv2.COLOR_GRAY2BGR)
+
+        LK_optical_flow_Lib.previous_points=previous_points.data
+        color_draw= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
+        prev_gray =LK_optical_flow_Lib.previous_image
+        gray = input.image
+        if previous_points:
+            p1, st, err = cv2.calcOpticalFlowPyrLK(prev_gray, gray, LK_optical_flow_Lib.previous_points, None, **lk_params)
+            good_new = p1[st == 1]
+            good_old = previous_points.data[st == 1]
+            for i, (new, old) in enumerate(zip(good_new, good_old)):
+                a, b = new.ravel()
+                c, d = old.ravel()
+                LK_optical_flow_Lib.mask_image= cv2.line(LK_optical_flow_Lib.mask_image, (a, b), (c, d), color[i].tolist(), 2)
+                # color_draw= cv2.line(color_draw, (a, b), (c, d), color[i].tolist(), 2)
+                color_draw= cv2.circle(color_draw, (a, b), 5, color[i].tolist(), -1)
+            color_draw= cv2.add(color_draw, LK_optical_flow_Lib.mask_image)
+            LK_optical_flow_Lib.previous_points=good_new
+        img(color_draw)
+        LK_optical_flow_Lib.previous_image=input.image
+
+
+class Dense_optical_flow_Lib(FunctionLibraryBase):
+    '''doc string for OpenCvLib'''
+
+    previous_image = None
+
+    def __init__(self, packageName):
+        super(Dense_optical_flow_Lib, self).__init__(packageName)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
+    def Dense_optical_flow(
+            input=('ImagePin', 0),
+            img=(REF, ('ImagePin', 0)) ):
+
+        if Dense_optical_flow_Lib.previous_image is None \
+                or Dense_optical_flow_Lib.previous_image.shape!=input.image.shape:
+            Dense_optical_flow_Lib.previous_image= input.image
+        # Sets image saturation to maximum
+        color_img= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
+        mask= np.zeros_like(color_img)
+        mask[..., 1] = 255
+
+        prev_gray =Dense_optical_flow_Lib.previous_image
+        gray = input.image
+        if gray is not None and prev_gray is not None:
+            flow = cv2.calcOpticalFlowFarneback(prev_gray, gray , None, pyr_scale=0.5, levels=5, winsize=11, iterations=5,
+                                                poly_n=5, poly_sigma=1.1, flags=0)
+            magnitude, angle = cv2.cartToPolar(flow[..., 0], flow[..., 1])
+            mask[..., 0] = angle * 180 / np.pi / 2
+            mask[..., 2] = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX)
+            rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
+            dense_flow = cv2.addWeighted(color_img, 1, rgb, 2, 0)
+            img(dense_flow)
+        Dense_optical_flow_Lib.previous_image=input.image
+
