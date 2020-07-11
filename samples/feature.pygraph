@@ -17,7 +17,7 @@
                     "fullName": "cv_ReadVideo_path",
                     "dataType": "StringPin",
                     "direction": 0,
-                    "value": "\"D:/code/PyFlowOpenCv/images/Cars.mp4\"",
+                    "value": "\"images/Cars.mp4\"",
                     "uuid": "cc7c1ab7-7ef8-4bf2-aa54-2a55c835975f",
                     "linkedTo": [],
                     "pinIndex": 1,

@@ -17,7 +17,7 @@
                     "fullName": "cv_ReadImage_path",
                     "dataType": "StringPin",
                     "direction": 0,
-                    "value": "\"C:/working/gitroot/beh/pyflowopencv/images/face.jpg\"",
+                    "value": "\"images/face.jpg\"",
                     "uuid": "562a55ad-7170-412c-86d4-949d9403fd24",
                     "linkedTo": [],
                     "pinIndex": 1,

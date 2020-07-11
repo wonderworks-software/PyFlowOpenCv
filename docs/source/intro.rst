@@ -27,8 +27,9 @@ Clone or download PyFlowOpenCV repository to a local folder::
 
     git clone https://github.com/wonderworks-software/PyFlowOpenCv
 
-Install requirements for your use case::
+Go to the source code folder and install requirements for your use case::
 
+    cd PyFlowOpenCv
     pip install -r requirements.txt
 
 To run the program in standalone mode, you can invoke pyflow.exe on windows or pyflow on unix OS. Program is located inside PATH/TO/PYTHON/Scripts. You can also 
@@ -53,7 +54,7 @@ If everything works out, you should able to see 'PyFlowOpenCv' in your NodeBox d
 Getting Started
 ==========================
 
-We have `documentation <https://pyflow.readthedocs.io/en/latest/>`_
+We have `documentation <https://pyflow.readthedocs.io/en/latest/>`_, and check out the examples in samples folder.
 
 
 Authors

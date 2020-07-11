@@ -92,7 +92,7 @@
                                 "destinationUUID": "62dbd426-13e4-4678-b1f2-a9e860a40960",
                                 "sourceName": "cv_ReadImage_img",
                                 "destinationName": "cv_Histogram_input",
-                                "uuid": "85babe95-fbd1-4d9d-9126-f51f30eadde0",
+                                "uuid": "2dcd9eca-6d9a-4ace-8f92-7420e35af8a6",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -167,7 +167,7 @@
                                 "destinationUUID": "62dbd426-13e4-4678-b1f2-a9e860a40960",
                                 "sourceName": "cv_ReadImage_img",
                                 "destinationName": "cv_Histogram_input",
-                                "uuid": "85babe95-fbd1-4d9d-9126-f51f30eadde0",
+                                "uuid": "2dcd9eca-6d9a-4ace-8f92-7420e35af8a6",
                                 "hOffsetL": "0.0",
                                 "hOffsetR": "0.0",
                                 "hOffsetLSShape": "0.0",
@@ -210,7 +210,7 @@
             },
             "wrapper": {
                 "resize": {
-                    "w": 248.92671230159792,
+                    "w": 436.05596054876685,
                     "h": 51.0
                 },
                 "collapsed": false,
@@ -221,8 +221,8 @@
                     "output": {}
                 }
             },
-            "x": -347.8707517528311,
-            "y": -322.4804759056645
+            "x": -153.0,
+            "y": -322.48047590566443
         }
     ],
     "depth": 1,

@@ -40,7 +40,7 @@
                     "fullName": "cv_ReadImage_path",
                     "dataType": "StringPin",
                     "direction": 0,
-                    "value": "\"D:/code/PyFlowOpenCv/images/blob.png\"",
+                    "value": "\"images/blob.png\"",
                     "uuid": "5f4b08fc-4f96-412d-991b-0d89e0606f81",
                     "linkedTo": [],
                     "pinIndex": 1,

@@ -24,9 +24,10 @@ Clone or download PyFlowOpenCV repository
 ```bash
     git clone https://github.com/wonderworks-software/PyFlowOpenCv
 ```
-Install requirements for your use case::
+Go to the installed folder and install requirements for your use case::
 
 ```bash
+    cd PyFlowOpenCv
     pip install -r requirements.txt
 ```
 
@@ -48,7 +49,7 @@ If everything works out, you should able to see 'PyFlowOpenCv' in your NodeBox d
 
 ## Getting Started
 
-We have [documentation](https://pyflowopencv.readthedocs.io/en/latest/)
+We have [documentation](https://pyflowopencv.readthedocs.io/en/latest/), and check out the examples in sample folder.
 
 ## Authors
 

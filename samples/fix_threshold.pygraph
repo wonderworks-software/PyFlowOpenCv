@@ -17,7 +17,7 @@
                     "fullName": "cv_ReadImage_path",
                     "dataType": "StringPin",
                     "direction": 0,
-                    "value": "\"D:/code/PyFlowOpenCv/images/sign.jpg\"",
+                    "value": "\"images/sign.jpg\"",
                     "uuid": "dfdde9d1-7850-4ba3-bef8-3d82190e3dce",
                     "linkedTo": [],
                     "pinIndex": 1,

@@ -501,11 +501,13 @@ class OpenCvLib(FunctionLibraryBase):
         for (i, idx) in enumerate(idxs):
             # draw the top prediction on the input image
             if i == 0:
-                text = "Label: {}, {:.2f}%".format(classes[idx],
+                text = "{}, {:.2f}%".format(classes[idx],
                                                    preds[0][idx] * 100)
                 words.append(text)
                 break
-        keywords({'text':words})
+        if words:
+            concat_words='Lable: '+','.join(words)
+        keywords({'text':[concat_words]})
         img(input.image)
 
     @staticmethod

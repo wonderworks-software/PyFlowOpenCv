@@ -26,7 +26,7 @@
                     "name": "path", 
                     "package": "PyFlowBase", 
                     "linkedTo": [], 
-                    "value": "\"C:/working/gitroot/beh/pyflowopencv/images/face_detection.mp4\"", 
+                    "value": "\"images/face_detection.mp4\"",
                     "options": [
                         256
                     ]

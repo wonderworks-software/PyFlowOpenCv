@@ -40,7 +40,7 @@
                     "fullName": "cv_ReadImage_path",
                     "dataType": "StringPin",
                     "direction": 0,
-                    "value": "\"D:/code/PyFlowOpenCv/images/face.jpg\"",
+                    "value": "\"images/face.jpg\"",
                     "uuid": "917313d7-99f4-43bf-b4be-1178340bddee",
                     "linkedTo": [],
                     "pinIndex": 1,

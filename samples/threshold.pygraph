@@ -17,7 +17,7 @@
                     "fullName": "cv_ReadImage_path",
                     "dataType": "StringPin",
                     "direction": 0,
-                    "value": "\"D:/code/PyFlowOpenCv/images/traffic_light.png\"",
+                    "value": "\"images/traffic_light.png\"",
                     "uuid": "5ff5535d-44c3-4ea9-989f-1c3abca3924f",
                     "linkedTo": [],
                     "pinIndex": 1,

@@ -49,7 +49,7 @@
                     "name": "path", 
                     "package": "PyFlowBase", 
                     "linkedTo": [], 
-                    "value": "\"C:/working/gitroot/beh/pyflowopencv/images/box.png\"", 
+                    "value": "\"images/box.png\"",
                     "options": [
                         256
                     ]
