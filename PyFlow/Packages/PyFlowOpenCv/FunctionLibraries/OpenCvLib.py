@@ -136,9 +136,13 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=('BoolPin', False),
                     meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
-    def cv_ReadNextFrame(video=('VideoPin', ""), img=(REF, ('ImagePin', 0))):
+    def cv_ReadNextFrame(video=('VideoPin', ""),
+                         skip_frame=('IntPin', 0),
+                         img=(REF, ('ImagePin', 0))
+                         ):
         """Return a frame of the loaded image."""
-        ret, frame = video.read()
+        for _ in range(skip_frame+1):
+            ret, frame = video.read()
         if not ret:
             video.video_capture.set(cv2.CAP_PROP_POS_FRAMES, 0)
         img(frame)
@@ -1134,6 +1138,7 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     def ocr(input=('ImagePin', 0),
             img=(REF, ('ImagePin', 0)),
+            psm_mode=('IntPin',6),
             engine= ('StringPin', 'LSTM',
                      {PinSpecifires.VALUE_LIST: ["Legacy","LSTM",'Legacy+LSTM','Default']}),
             boxes=('GraphElementPin', 0),
@@ -1146,14 +1151,15 @@ class OpenCvLib(FunctionLibraryBase):
                   'Default': 3,
                   }
         results=[]
+        hh,ww=input.image.shape[:2]
         if 'rect' in boxes.graph:
             for (startX, startY, w, h) in boxes.graph['rect']:
-                startX = int(startX)
-                startY = int(startY)
-                endX = int(startX+w)
-                endY = int(startY+h)
+                startX = max(int(startX),0)
+                startY = max(int(startY),0)
+                endX = min(int(startX+w),ww-1)
+                endY = min(int(startY+h),hh-1)
                 r = input.image[startY:endY, startX:endX]
-                configuration = (f"-l eng --oem {oem_dict[engine]} --psm 6")
+                configuration = (f"-l eng --oem {oem_dict[engine]} --psm {psm_mode}")
                 text = pytesseract.image_to_string(r, config=configuration)
                 if text:
                     d={'box':(startX,startY,w,h),'class':text}
