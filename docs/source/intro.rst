@@ -32,6 +32,9 @@ Go to the source code folder and install requirements for your use case::
     cd PyFlowOpenCv
     pip install -r requirements.txt
 
+
+**Option**: if you need to use OCR module, please refer to this page to install the `Tesseract <https://github.com/tesseract-ocr/tesseract/wiki>`_
+
 To run the program in standalone mode, you can invoke pyflow.exe on windows or pyflow on unix OS. Program is located inside PATH/TO/PYTHON/Scripts. You can also 
 run pyflow.py in the root folder of PyFlow(not PyFlowOpenCV) project.
 

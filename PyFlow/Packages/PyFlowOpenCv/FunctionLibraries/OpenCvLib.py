@@ -468,7 +468,7 @@ class OpenCvLib(FunctionLibraryBase):
         cv2.imwrite('line_parking.png', lines_edges)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def classifcation_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                            keywords=(REF, ('GraphElementPin', 0)),
                            ):
@@ -511,7 +511,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(input.image)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def yolo_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                  detections=(REF, ('GraphElementPin', 0)),
                  ):
@@ -587,7 +587,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(input.image)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def face_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                        rects=(REF, ('GraphElementPin', 0)),
                        scaleFactor=('FloatPin', 1.1),
@@ -604,7 +604,7 @@ class OpenCvLib(FunctionLibraryBase):
         rects({'rect': [(x, y, w, h) for (x, y, w, h) in faces]})
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def face_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                        rects=(REF, ('GraphElementPin', 0)),
                        ):
@@ -640,7 +640,7 @@ class OpenCvLib(FunctionLibraryBase):
 
         rects({'rect': boxs})
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def text_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                            rects=(REF, ('GraphElementPin', 0)),
                            ):
@@ -719,7 +719,7 @@ class OpenCvLib(FunctionLibraryBase):
 
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def eye_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                       rects=(REF, ('GraphElementPin', 0)),
                       scaleFactor=('FloatPin', 1.1),
@@ -1034,7 +1034,7 @@ class OpenCvLib(FunctionLibraryBase):
         img(cv__threshold)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def gender_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                           keywords=(REF, ('GraphElementPin', 0)),
                           ):
@@ -1076,7 +1076,7 @@ class OpenCvLib(FunctionLibraryBase):
                     img(input.image[y:(y+h),x:(x+w),:])
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def blob_detector(input=('ImagePin', 0),
                       thresholdStep=('IntPin',10),
                       minThreshold=('IntPin', 50, {PinSpecifires.VALUE_RANGE: (0, 255)}),
@@ -1137,7 +1137,7 @@ class OpenCvLib(FunctionLibraryBase):
         draw_key_points({'key_point': ret})
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def ocr(input=('ImagePin', 0),
             img=(REF, ('ImagePin', 0)),
             psm_mode=('IntPin',6),
