@@ -158,7 +158,11 @@ class OpenCvLib(FunctionLibraryBase):
                             ):
         """Return a frame of the loaded image."""
         ret, frame = video.read()
+        if not ret:
+            video.video_capture.set(cv2.CAP_PROP_POS_FRAMES, 0)        
         ret, next_frame = video.read()
+        if not ret:
+            video.video_capture.set(cv2.CAP_PROP_POS_FRAMES, 0)        
         img(frame)
         next_img(next_frame)
         return ret
@@ -1161,7 +1165,7 @@ class OpenCvLib(FunctionLibraryBase):
                 endX = min(int(startX+w),ww-1)
                 endY = min(int(startY+h),hh-1)
                 r = input.image[startY:endY, startX:endX]
-                configuration = (f"-l eng --oem {oem_dict[engine]} --psm {psm_mode}")
+                configuration = ("-l eng --oem {oem_dict[engine]} --psm {psm_mode}")
                 text = pytesseract.image_to_string(r, config=configuration)
                 if text:
                     d={'box':(startX,startY,w,h),'class':text}
