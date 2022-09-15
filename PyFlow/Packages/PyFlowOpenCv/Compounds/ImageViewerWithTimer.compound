@@ -1,0 +1,732 @@
+{
+    "name": "ImageViewerWithTimer",
+    "category": "Viewers",
+    "vars": [],
+    "nodes": [
+        {
+            "package": "PyFlowOpenCv",
+            "lib": null,
+            "type": "ViewerNode",
+            "owningGraphName": "ImageViewerWithTimer",
+            "name": "ViewerNode",
+            "uuid": "3b17aaa4-42eb-4189-a178-0374e854a027",
+            "inputs": [
+                {
+                    "name": "inExec",
+                    "package": "PyFlowBase",
+                    "fullName": "ViewerNode_inExec",
+                    "dataType": "ExecPin",
+                    "direction": 0,
+                    "value": "null",
+                    "uuid": "1cc4ac30-5c71-4d14-ba4c-c7a1e8ed82b9",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "timer",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 1,
+                            "lhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575",
+                            "rhsNodeUid": "3b17aaa4-42eb-4189-a178-0374e854a027"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [
+                        8,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "inExec",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "7badcd54-605f-4112-81fb-bdc1e6dacde4",
+                                "destinationUUID": "1cc4ac30-5c71-4d14-ba4c-c7a1e8ed82b9",
+                                "sourceName": "timer_OUT",
+                                "destinationName": "ViewerNode_inExec",
+                                "uuid": "5de63b42-0ea0-4e1b-8e2d-0a3313305954",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "index",
+                    "package": "PyFlowBase",
+                    "fullName": "ViewerNode_index",
+                    "dataType": "IntPin",
+                    "direction": 0,
+                    "value": "2",
+                    "uuid": "02f63355-e925-4f1a-b8d2-dad949182100",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 2,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 3,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "3b17aaa4-42eb-4189-a178-0374e854a027"
+                        }
+                    ],
+                    "pinIndex": 3,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "index",
+                        "wires": {
+                            "3": {
+                                "sourceUUID": "bf1b727a-2a1a-466e-939e-1d860504ac13",
+                                "destinationUUID": "02f63355-e925-4f1a-b8d2-dad949182100",
+                                "sourceName": "graphInputs_ImageIndex",
+                                "destinationName": "ViewerNode_index",
+                                "uuid": "08c79dda-d217-4d43-a4aa-c3d562594ead",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "graph",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "ViewerNode_graph",
+                    "dataType": "GraphElementPin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "115d4c98-e62d-40de-9a70-62f4164dbecf",
+                    "linkedTo": [],
+                    "pinIndex": 4,
+                    "options": [
+                        4,
+                        8
+                    ],
+                    "structure": 1,
+                    "alwaysList": true,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "graph",
+                        "wires": {}
+                    }
+                },
+                {
+                    "name": "img",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "ViewerNode_img",
+                    "dataType": "ImagePin",
+                    "direction": 0,
+                    "value": null,
+                    "uuid": "ec7d2c67-d734-451c-a94c-71485224cc5b",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 2,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "3b17aaa4-42eb-4189-a178-0374e854a027"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [
+                        1,
+                        4
+                    ],
+                    "structure": 1,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "img",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "386f5bd5-6a7b-42dd-b2bf-4c3650b2687c",
+                                "destinationUUID": "ec7d2c67-d734-451c-a94c-71485224cc5b",
+                                "sourceName": "graphInputs_Images",
+                                "destinationName": "ViewerNode_img",
+                                "uuid": "88c2f1c4-e65d-4082-87bc-ab18d6190c63",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "outExec",
+                    "package": "PyFlowBase",
+                    "fullName": "ViewerNode_outExec",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "8acf0bea-180c-4cb7-bcbd-031c30f107d7",
+                    "linkedTo": [],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "outExec",
+                        "wires": {}
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "ViewerNode"
+            },
+            "wrapper": {
+                "resize": {
+                    "w": 98.0,
+                    "h": 93.0
+                },
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">ViewerNode</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -270.03339565641835,
+            "y": -13.275170175016644
+        },
+        {
+            "package": "PyFlowBase",
+            "lib": null,
+            "type": "timer",
+            "owningGraphName": "ImageViewerWithTimer",
+            "name": "timer",
+            "uuid": "06e8f11d-0088-496d-88f6-793f2fcdf575",
+            "inputs": [
+                {
+                    "name": "Begin",
+                    "package": "PyFlowBase",
+                    "fullName": "timer_Begin",
+                    "dataType": "ExecPin",
+                    "direction": 0,
+                    "value": "null",
+                    "uuid": "6be6e033-8282-4a67-82f4-2dc60f6e8383",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 3,
+                            "rhsNodeName": "timer",
+                            "inPinId": 1,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [
+                        8,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "Begin",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "d29f301a-8f43-4998-9a29-062d8d2edcd4",
+                                "destinationUUID": "6be6e033-8282-4a67-82f4-2dc60f6e8383",
+                                "sourceName": "graphInputs_BeginTimer",
+                                "destinationName": "timer_Begin",
+                                "uuid": "a8c2d0dd-3fdb-4ae7-8d1a-fb8e60de8e28",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Delta(s)",
+                    "package": "PyFlowBase",
+                    "fullName": "timer_Delta(s)",
+                    "dataType": "FloatPin",
+                    "direction": 0,
+                    "value": "0.0",
+                    "uuid": "cd0da661-7eb9-4791-9d63-5d31f31e43bc",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 5,
+                            "rhsNodeName": "timer",
+                            "inPinId": 3,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575"
+                        }
+                    ],
+                    "pinIndex": 3,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "Delta(s)",
+                        "wires": {
+                            "3": {
+                                "sourceUUID": "cb8a5a0a-07d0-471e-a26a-ed62a6fe8a2b",
+                                "destinationUUID": "cd0da661-7eb9-4791-9d63-5d31f31e43bc",
+                                "sourceName": "graphInputs_TimerDelta",
+                                "destinationName": "timer_Delta(s)",
+                                "uuid": "a56b8086-655d-4a18-9a8d-2229724b934c",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Stop",
+                    "package": "PyFlowBase",
+                    "fullName": "timer_Stop",
+                    "dataType": "ExecPin",
+                    "direction": 0,
+                    "value": "null",
+                    "uuid": "5f84eb9c-51c3-40bb-a984-58debcc40d84",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 4,
+                            "rhsNodeName": "timer",
+                            "inPinId": 2,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [
+                        8,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "Stop",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "32f45883-4364-49be-8eff-ba196a8af8dd",
+                                "destinationUUID": "5f84eb9c-51c3-40bb-a984-58debcc40d84",
+                                "sourceName": "graphInputs_StopTimer",
+                                "destinationName": "timer_Stop",
+                                "uuid": "7d9f604b-684d-4dc2-a4d9-534405d458ac",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "outputs": [
+                {
+                    "name": "OUT",
+                    "package": "PyFlowBase",
+                    "fullName": "timer_OUT",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "7badcd54-605f-4112-81fb-bdc1e6dacde4",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "timer",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 1,
+                            "lhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575",
+                            "rhsNodeUid": "3b17aaa4-42eb-4189-a178-0374e854a027"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "OUT",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "7badcd54-605f-4112-81fb-bdc1e6dacde4",
+                                "destinationUUID": "1cc4ac30-5c71-4d14-ba4c-c7a1e8ed82b9",
+                                "sourceName": "timer_OUT",
+                                "destinationName": "ViewerNode_inExec",
+                                "uuid": "5de63b42-0ea0-4e1b-8e2d-0a3313305954",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "timer"
+            },
+            "wrapper": {
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">timer</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -406.5084460391349,
+            "y": -71.73678459514146
+        },
+        {
+            "package": "PyFlowBase",
+            "lib": null,
+            "type": "graphInputs",
+            "owningGraphName": "ImageViewerWithTimer",
+            "name": "graphInputs",
+            "uuid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+            "inputs": [],
+            "outputs": [
+                {
+                    "name": "ImageIndex",
+                    "package": "PyFlowBase",
+                    "fullName": "graphInputs_ImageIndex",
+                    "dataType": "IntPin",
+                    "direction": 1,
+                    "value": "2",
+                    "uuid": "bf1b727a-2a1a-466e-939e-1d860504ac13",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 2,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 3,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "3b17aaa4-42eb-4189-a178-0374e854a027"
+                        }
+                    ],
+                    "pinIndex": 2,
+                    "options": [
+                        32,
+                        64,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "ImageIndex",
+                        "wires": {
+                            "3": {
+                                "sourceUUID": "bf1b727a-2a1a-466e-939e-1d860504ac13",
+                                "destinationUUID": "02f63355-e925-4f1a-b8d2-dad949182100",
+                                "sourceName": "graphInputs_ImageIndex",
+                                "destinationName": "ViewerNode_index",
+                                "uuid": "08c79dda-d217-4d43-a4aa-c3d562594ead",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "TimerDelta",
+                    "package": "PyFlowBase",
+                    "fullName": "graphInputs_TimerDelta",
+                    "dataType": "FloatPin",
+                    "direction": 1,
+                    "value": "0.0",
+                    "uuid": "cb8a5a0a-07d0-471e-a26a-ed62a6fe8a2b",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 5,
+                            "rhsNodeName": "timer",
+                            "inPinId": 3,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575"
+                        }
+                    ],
+                    "pinIndex": 5,
+                    "options": [
+                        32,
+                        64,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "TimerDelta",
+                        "wires": {
+                            "3": {
+                                "sourceUUID": "cb8a5a0a-07d0-471e-a26a-ed62a6fe8a2b",
+                                "destinationUUID": "cd0da661-7eb9-4791-9d63-5d31f31e43bc",
+                                "sourceName": "graphInputs_TimerDelta",
+                                "destinationName": "timer_Delta(s)",
+                                "uuid": "a56b8086-655d-4a18-9a8d-2229724b934c",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "Images",
+                    "package": "PyFlowOpenCv",
+                    "fullName": "graphInputs_Images",
+                    "dataType": "ImagePin",
+                    "direction": 1,
+                    "value": null,
+                    "uuid": "386f5bd5-6a7b-42dd-b2bf-4c3650b2687c",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 1,
+                            "rhsNodeName": "ViewerNode",
+                            "inPinId": 2,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "3b17aaa4-42eb-4189-a178-0374e854a027"
+                        }
+                    ],
+                    "pinIndex": 1,
+                    "options": [
+                        1,
+                        4,
+                        32,
+                        64
+                    ],
+                    "structure": 1,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "Images",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "386f5bd5-6a7b-42dd-b2bf-4c3650b2687c",
+                                "destinationUUID": "ec7d2c67-d734-451c-a94c-71485224cc5b",
+                                "sourceName": "graphInputs_Images",
+                                "destinationName": "ViewerNode_img",
+                                "uuid": "88c2f1c4-e65d-4082-87bc-ab18d6190c63",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "BeginTimer",
+                    "package": "PyFlowBase",
+                    "fullName": "graphInputs_BeginTimer",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "d29f301a-8f43-4998-9a29-062d8d2edcd4",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 3,
+                            "rhsNodeName": "timer",
+                            "inPinId": 1,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575"
+                        }
+                    ],
+                    "pinIndex": 3,
+                    "options": [
+                        32,
+                        64,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "BeginTimer",
+                        "wires": {
+                            "1": {
+                                "sourceUUID": "d29f301a-8f43-4998-9a29-062d8d2edcd4",
+                                "destinationUUID": "6be6e033-8282-4a67-82f4-2dc60f6e8383",
+                                "sourceName": "graphInputs_BeginTimer",
+                                "destinationName": "timer_Begin",
+                                "uuid": "a8c2d0dd-3fdb-4ae7-8d1a-fb8e60de8e28",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                },
+                {
+                    "name": "StopTimer",
+                    "package": "PyFlowBase",
+                    "fullName": "graphInputs_StopTimer",
+                    "dataType": "ExecPin",
+                    "direction": 1,
+                    "value": "null",
+                    "uuid": "32f45883-4364-49be-8eff-ba196a8af8dd",
+                    "linkedTo": [
+                        {
+                            "lhsNodeName": "graphInputs",
+                            "outPinId": 4,
+                            "rhsNodeName": "timer",
+                            "inPinId": 2,
+                            "lhsNodeUid": "2779636c-61b7-471e-8f6f-50e1ea1fa39b",
+                            "rhsNodeUid": "06e8f11d-0088-496d-88f6-793f2fcdf575"
+                        }
+                    ],
+                    "pinIndex": 4,
+                    "options": [
+                        32,
+                        64,
+                        256
+                    ],
+                    "structure": 0,
+                    "alwaysList": false,
+                    "alwaysSingle": false,
+                    "alwaysDict": false,
+                    "wrapper": {
+                        "bLabelHidden": false,
+                        "displayName": "StopTimer",
+                        "wires": {
+                            "2": {
+                                "sourceUUID": "32f45883-4364-49be-8eff-ba196a8af8dd",
+                                "destinationUUID": "5f84eb9c-51c3-40bb-a984-58debcc40d84",
+                                "sourceName": "graphInputs_StopTimer",
+                                "destinationName": "timer_Stop",
+                                "uuid": "7d9f604b-684d-4dc2-a4d9-534405d458ac",
+                                "hOffsetL": "0.0",
+                                "hOffsetR": "0.0",
+                                "hOffsetLSShape": "0.0",
+                                "hOffsetRSShape": "0.0",
+                                "vOffset": "0.0",
+                                "vOffsetSShape": "0.0",
+                                "snapVToFirst": 1,
+                                "snapVToSecond": 0
+                            }
+                        }
+                    }
+                }
+            ],
+            "meta": {
+                "var": {},
+                "label": "graphInputs"
+            },
+            "wrapper": {
+                "collapsed": false,
+                "headerHtml": "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n<html><head><meta name=\"qrichtext\" content=\"1\" /><style type=\"text/css\">\np, li { white-space: pre-wrap; }\n</style></head><body style=\" font-family:'Consolas'; font-size:6pt; font-weight:400; font-style:normal;\">\n<p style=\" margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\">graphInputs</p></body></html>",
+                "exposeInputsToCompound": false,
+                "groups": {
+                    "input": {},
+                    "output": {}
+                }
+            },
+            "x": -613.0667913128369,
+            "y": -1.5822548140183028
+        }
+    ],
+    "depth": 2,
+    "isRoot": false,
+    "parentGraphName": "root"
+}
