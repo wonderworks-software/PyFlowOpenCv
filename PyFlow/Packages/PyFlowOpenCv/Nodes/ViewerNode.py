@@ -7,7 +7,7 @@ class ViewerNode(NodeBase):
     def __init__(self, name):
         super(ViewerNode, self).__init__(name)
         self.inExec = self.createInputPin(DEFAULT_IN_EXEC_NAME, 'ExecPin', None, self.compute)
-        self.inp = self.createInputPin('img', 'ImagePin')
+        self.inp = self.createInputPin('img', 'ImagePin', structure=StructureType.Multi)
         self.arrayData = self.createInputPin('graph', 'GraphElementPin', structure=StructureType.Array)
         self.arrayData.enableOptions(PinOptions.AllowMultipleConnections)
         self.outExec = self.createOutputPin(DEFAULT_OUT_EXEC_NAME, 'ExecPin')
@@ -40,12 +40,17 @@ class ViewerNode(NodeBase):
     def compute(self, *args, **kwargs):
         if self.inp.dirty or self.arrayData.dirty:
             inputData = self.inp.getData()
-            instance = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
+            #if self.viewer is None:
+            viewer = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
             yInputPins= sorted(self.arrayData.affected_by, key=lambda pin: pin.owningNode().y)
-            draw_image=inputData.image
-            for i in yInputPins:
-                draw_image=i.getData().draw(draw_image)
-            instance.viewer.setNumpyArray(draw_image)
-            # self.inp.setClean()
+            if isinstance(inputData,list):
+                viewer.viewer.setNumpyArrayList([x.image for x in inputData])
+            else:
+                draw_image=inputData.image.copy()
+                for i in self.arrayData.getData():
+                    draw_image=i.draw(draw_image)
+
+                viewer.viewer.setNumpyArray(draw_image)
+
             QtWidgets.QApplication.processEvents()
         self.outExec.call()

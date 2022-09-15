@@ -23,6 +23,7 @@ from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.GeometricImageTransformation
 
 # Class based nodes
 from PyFlow.Packages.PyFlowOpenCv.Nodes.ViewerNode import ViewerNode
+from PyFlow.Packages.PyFlowOpenCv.Nodes.PaintNode import PaintNode
 
 # Tools
 from PyFlow.Packages.PyFlowOpenCv.Tools.ImageViewerTool import ImageViewerTool
@@ -46,6 +47,7 @@ _EXPORTERS = OrderedDict()
 
 
 _NODES[ViewerNode.__name__] = ViewerNode
+_NODES[PaintNode.__name__] = PaintNode
 
 _PINS[ImagePin.__name__] = ImagePin
 _PINS[VideoPin.__name__] = VideoPin

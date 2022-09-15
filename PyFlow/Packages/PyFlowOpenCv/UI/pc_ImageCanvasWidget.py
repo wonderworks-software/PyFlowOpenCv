@@ -9,6 +9,15 @@ class NotImplementedException:
 
 gray_color_table = [QtGui.qRgb(i, i, i) for i in range(256)]
 
+def clamp(n, vmin, vmax):
+    """Computes the value of the first specified argument clamped to a range defined by the second and third specified arguments
+
+    :param n: input Value
+    :param vmin: MiniMum Value
+    :param vmax: Maximum Value
+    :returns: The clamped value of n
+    """
+    return max(min(n, vmax), vmin)
 
 def toQImage(im, copy=False):
     if im is None:
@@ -70,6 +79,40 @@ class BG_Widget(QtWidgets.QGraphicsWidget):
         self.update()
         self.adjustSize()
 
+class HoverButton(QtWidgets.QPushButton):
+    def __init__(self,text=""):
+        super(HoverButton,self).__init__(text)
+        self.__initUi()
+
+    def __initUi(self):
+        #self.setText('ABC')
+        self.__animation = QtCore.QPropertyAnimation(self, b"opacity")
+        self.__animation.valueChanged.connect(self.__setOpacity)
+        self.__animation.setStartValue(0.0)
+        self.__animation.setEndValue(0.5)
+        self.__animation.setDuration(200)
+        self.__styleInit(0.5)
+
+    def __styleInit(self, opacity: float):
+        style = f'QPushButton {{ background-color: rgba(127, 127, 127, {opacity});' \
+                f'border: 0;' \
+                f'padding: 5;' \
+                f'border-radius: 10; }}'
+        self.setStyleSheet(style)
+
+    def enterEvent(self, e):
+        self.__animation.setDirection(QtCore.QAbstractAnimation.Forward)
+        self.__animation.start()
+        return super().enterEvent(e)
+
+    def leaveEvent(self, e):
+        self.__animation.setDirection(QtCore.QAbstractAnimation.Backward)
+        self.__animation.start()
+        return super().leaveEvent(e)
+
+    def __setOpacity(self, opacity):
+        self.__styleInit(opacity)
+
 class pc_ImageCanvas(QtWidgets.QGraphicsView):
 
     photoClicked = QtCore.Signal(QtCore.QPoint)
@@ -86,6 +129,20 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         self.setDragMode(QtWidgets.QGraphicsView.ScrollHandDrag)
         self.setScene(self._scene)
         self._scene.addItem(self._bgWidget)
+
+        self.prevImageButton = HoverButton('<')
+        self.prevImageButton.setMinimumWidth(20)
+        self.nextImageButton = HoverButton('>')
+        self.nextImageButton.setMinimumWidth(20)
+        #self.prevImageButton.__setOpacity(0.0)
+        #self.nextImageButton.__setOpacity(0.0)
+
+        self.prevImageButton_proxy = self._scene.addWidget(self.prevImageButton)
+        self.nextImageButton_proxy = self._scene.addWidget(self.nextImageButton)
+
+        self.prevImageButton.clicked.connect(self.prevImageInList)
+        self.nextImageButton.clicked.connect(self.nextImageInList)
+
         self.setTransformationAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setResizeAnchor(QtWidgets.QGraphicsView.AnchorUnderMouse)
         self.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
@@ -103,8 +160,17 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         self._lastMousePos = QtCore.QPointF(0, 0)
 
         self.centerOn(QtCore.QPointF(self.sceneRect().width() / 2, self.sceneRect().height() / 2))
+        self.imageList = []
+        self.imageIndex = 0
 
-        
+    def nextImageInList(self):
+        self.imageIndex = clamp(self.imageIndex +1, 0, len(self.imageList)-1)
+        self.setPhoto(self.imageList[self.imageIndex])
+
+    def prevImageInList(self):
+        self.imageIndex = clamp(self.imageIndex -1, 0, len(self.imageList)-1)
+        self.setPhoto(self.imageList[self.imageIndex])
+
     def currentViewScale(self):
         return self.transform().m22()
 
@@ -149,7 +215,29 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
                 unity = self.transform().mapRect(QtCore.QRectF(0, 0, 1, 1))
                 self.scale(factor / unity.width(), factor / unity.height())
 
+    def setNumpyArrayList(self, imageList):
+        self.imageList = []
+        self.imageIndex = 0
+        for image in imageList:
+            if image.__class__.__name__ == "UMat":
+                image = cv2.UMat.get(image)
+            image = toQImage(image)  # self.createQimagefromNumpyArray(image)
+            pixmap = QtGui.QPixmap.fromImage(image, QtCore.Qt.ThresholdAlphaDither)
+            self.imageList.append(pixmap)
+        self.setPhoto(self.imageList[self.imageIndex])
+        if self.prevImageButton_proxy.scene() != self._scene:
+            self._scene.addItem(self.prevImageButton_proxy)
+        if self.nextImageButton_proxy.scene() != self._scene:
+            self._scene.addItem(self.nextImageButton_proxy)
+
     def setNumpyArray(self, image):
+        self.imageList = []
+        self.imageIndex = 0
+        if self.prevImageButton_proxy.scene() == self._scene:
+            self._scene.removeItem(self.prevImageButton_proxy)
+        if self.nextImageButton_proxy.scene() == self._scene:
+            self._scene.removeItem(self.nextImageButton_proxy)        
+
         if image.__class__.__name__ == "UMat":
             image = cv2.UMat.get(image)
         image = toQImage(image)  # self.createQimagefromNumpyArray(image)
@@ -161,7 +249,8 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
             self._empty = False
             self._photo.setPixmap(pixmap)
             self._bgWidget.setRect(self._photo.boundingRect().toRect())
-
+            self.prevImageButton.setGeometry(QtCore.QRect(-40, 0, 40, self._photo.boundingRect().toRect().height()))
+            self.nextImageButton.setGeometry(QtCore.QRect(self._photo.boundingRect().toRect().width(), 0, 40, self._photo.boundingRect().toRect().height()))
             if self.fit:
                 self.fitInView(True)
         else:
@@ -310,7 +399,7 @@ if __name__ == '__main__':
     from Qt import QtSvg
     app = QtWidgets.QApplication(sys.argv)
     window = pc_ImageCanvas(None)
-    window.setPhoto(QtGui.QPixmap(r"C:\Users\pedro\OneDrive\pcTools_v5\PyFlowPackages\PyFlowOpenCv\images\shapes_and_colors.png"))
+    window.setPhoto(QtGui.QPixmap(r"F:/Pedro/Google Drive/AI/EYTHOR.png"))
  
 
     window.setGeometry(500, 300, 800, 600)

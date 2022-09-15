@@ -13,7 +13,8 @@ from PyFlow.Core import (
 )
 from PyFlow.Core.Common import *
 import pytesseract
-
+import math
+from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import MyImage
 
 class ShapeDetector:
     def __init__(self):
@@ -228,6 +229,20 @@ class OpenCvLib(FunctionLibraryBase):
     def cv_FlipImage(input=('ImagePin', 0), mode=('IntPin', 0), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         img(cv2.flip(input.image, mode))
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def cv_AlphaMixImages(FG=('ImagePin', 0),BG=('ImagePin', 0),Mask=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+        foreground = FG.image.astype(float)
+        background = BG.image.astype(float)
+        alpha = Mask.image.astype(float)/255
+        # Multiply the foreground with the alpha matte
+        foreground = cv2.multiply(alpha, foreground)
+        # Multiply the background with ( 1 - alpha )
+        background = cv2.multiply(1.0 - alpha, background)
+        # Add the masked foreground and background.
+        outImage = cv2.normalize(cv2.add(foreground, background), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
+        img(outImage)        
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
@@ -739,6 +754,46 @@ class OpenCvLib(FunctionLibraryBase):
         rects({'rect': [(x, y, w, h) for (x, y, w, h) in eyes]})
 
     @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def eye_Masking(input=('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
+                    xSize = ('IntPin',2), 
+                    ySize = ('IntPin',1), 
+                    mask=(REF, ('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported})),
+                    scaleFactor=('FloatPin', 1.1),
+                    minNeighbores=('IntPin', 4)
+                      ):
+        eye_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_eye.xml")
+        eye_cascade = cv2.CascadeClassifier(eye_model_path)
+        if isinstance(input,list):
+            maskList = []
+            for imagen in input:
+
+                gray = cv2.cvtColor(imagen.image, cv2.COLOR_BGR2GRAY)
+                eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+                tmp=np.zeros(imagen.image.shape,dtype="uint8")
+                angle = 0
+                if len(eyes) == 2:
+                    dirx = eyes[0][0] - eyes[1][0]
+                    diry = eyes[0][1] - eyes[1][1]
+                    angle = math.atan2(diry,dirx)*180/math.pi
+                for (x, y, w, h) in eyes:
+                    cv2.ellipse(tmp, (int(x+w/2), int(y+h/2)),(xSize,ySize) ,angle, 0.0, 360.0, (255, 255, 255), -1)
+                maskList.append(MyImage(tmp))
+            mask(maskList)
+        else:
+            gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+            eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+            tmp=np.zeros(input.image.shape,dtype="uint8")
+            angle = 0
+            if len(eyes) == 2:
+                dirx = eyes[0][0] - eyes[1][0]
+                diry = eyes[0][1] - eyes[1][1]
+                angle = math.atan2(diry,dirx)*180/math.pi
+            for (x, y, w, h) in eyes:
+                cv2.ellipse(tmp, (int(x+w/2), int(y+h/2)),(xSize,ySize) ,angle, 0.0, 360.0, (255, 255, 255), -1)
+            mask(tmp)            
+
+    @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def goodFeatureToTrack(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
                            draw_points=(REF, ('GraphElementPin', 0))):
@@ -802,7 +857,6 @@ class OpenCvLib(FunctionLibraryBase):
             draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
             draw_key_points({'key_point': kp})
 
-
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def SIFT_Feature(input=('ImagePin', 0),
@@ -856,7 +910,6 @@ class OpenCvLib(FunctionLibraryBase):
             descriptor(des)
             draw_points({'point': [(item.pt[0], item.pt[1]) for item in kp]})
             draw_key_points({'key_point': kp})
-
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
@@ -965,7 +1018,6 @@ class OpenCvLib(FunctionLibraryBase):
                 good.append([m])
         match(good)
 
-
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def FLANN_Match(
@@ -1066,6 +1118,28 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def image_resize_by_Factor(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                       factor=('FloatPin', 1.0 ), interpolation=('StringPin', "INTER_CUBIC", {PinSpecifires.VALUE_LIST: ["INTER_LINEAR","INTER_CUBIC","INTER_AREA","INTER_LANCZOS4","INTER_LINEAR_EXACT","INTER_MAX","WARP_FILL_OUTLIERS","WARP_INVERSE_MAP" ]} )
+                       ):    
+        inter = {   "INTER_NEAREST": cv2.INTER_NEAREST ,
+                            "INTER_LINEAR": cv2.INTER_LINEAR  ,
+                            "INTER_CUBIC": cv2.INTER_CUBIC   ,
+                            "INTER_AREA": cv2.INTER_AREA   ,
+                            "INTER_LANCZOS4": cv2.INTER_LANCZOS4   ,
+                            "INTER_LINEAR_EXACT": cv2.INTER_LINEAR_EXACT    ,
+                            "INTER_MAX": cv2.INTER_MAX,
+                            "WARP_FILL_OUTLIERS": cv2.WARP_FILL_OUTLIERS,
+                            "WARP_INVERSE_MAP ": cv2.WARP_INVERSE_MAP
+                        }
+        imagen = input.image
+        width  = int(imagen.shape[1] * factor)
+        height = int(imagen.shape[0] * factor)
+        dim = (width, height)
+        # resize image
+        img( MyImage(cv2.resize(imagen, dim, interpolation = inter[interpolation])))    
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     def image_crop(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
                        rect=('GraphElementPin', 0)
                        ):
@@ -1078,6 +1152,89 @@ class OpenCvLib(FunctionLibraryBase):
                 (ih, iw) = input.image.shape[:2]
                 if (x+w)<=iw and (y+h)<ih:
                     img(input.image[y:(y+h),x:(x+w),:])
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def image_crop_multi(img=('ImagePin', 0 ), croped=(REF, ('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported })),
+                       rects=('GraphElementPin', 0)
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+        rects = rects.graph
+        images = []
+        if 'rect' in rects.keys():
+            only_rects=rects['rect']
+            for rect in only_rects:  
+                x, y, w, h=rect
+                (ih, iw) = img.image.shape[:2]
+                if (x+w)<=iw and (y+h)<ih:
+                    images.append(MyImage(img.image[y:(y+h),x:(x+w),:]))
+        croped(images)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def image_unCrop_multi(originalImage=('ImagePin', 0 ),croped=('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
+                         img=(REF, ('ImagePin', 0)),
+                        rects=('GraphElementPin', 0)
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+        originalImage = originalImage.image
+        originalImage=np.zeros(originalImage.shape,dtype="uint8")
+        rects = rects.graph
+        if 'rect' in rects.keys():
+            only_rects=rects['rect']
+            for index,rect in enumerate(only_rects): 
+                x, y, w, h=rect
+                (ih, iw) = originalImage.shape[:2]
+                if (x+w)<=iw and (y+h)<ih:
+                    originalImage[y:(y+h),x:(x+w)]=croped[index].image
+        img(MyImage(originalImage))
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def cv_Draw_Rects(refImage=('ImagePin', 0 ), img=(REF, ('ImagePin',0)),
+                       rects=('GraphElementPin', 0)
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+        rects = rects.graph
+        originalImage=np.zeros(refImage.image.shape,dtype="uint8")
+
+        for draw_type,draw_list in rects.items():
+            if draw_type=='rect':
+                for (x, y, w, h) in draw_list :
+                    cv2.rectangle(originalImage, (x, y), (x + w, y + h), (255, 255, 255), -1)        
+
+        img(MyImage(originalImage))
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    def cv_expand_Rects(rects=('GraphElementPin', 0 ), increment = ('IntPin',0), multiplesOf64 = ('BoolPin',True),
+                       expandedrects=(REF, ('GraphElementPin', 0))
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+        rects = rects.graph
+        expanded = []
+        for draw_type,draw_list in rects.items():
+            if draw_type=='rect':
+                for rect in draw_list:
+                    x, y, w, h = rect
+                    if not multiplesOf64:
+                        x=x-increment
+                        y=y-increment
+                        w=w+increment*2
+                        h=h+increment*2
+                        expanded.append((x, y, w, h))
+                    else:
+                        centerx = x + int(w/2)
+                        centery = y + int(h/2)
+                        x=x-increment
+                        y=y-increment
+                        w=int((w+increment*2)/8)*8
+                        h=int((h+increment*2)/8)*8
+                        x = int(centerx - int(w/2))
+                        y = int(centery - int(h/2))
+                        expanded.append((x, y, w, h))
+
+        expandedrects({'rect': expanded})      
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})

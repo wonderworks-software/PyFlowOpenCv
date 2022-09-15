@@ -17,7 +17,7 @@ class ImageViewerTool(DockTool):
 
     @staticmethod
     def toolTip():
-        return "My awesome dock tool!"
+        return ""
 
     @staticmethod
     def isSingleton():
