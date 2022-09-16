@@ -15,11 +15,10 @@ from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import NumpyDataPin
 
 # Function based nodes
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import OpenCvLib
-from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpticalFlowLib import OpticalFlowLib
-from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import LK_optical_flow_Lib
-from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpenCvLib import Dense_optical_flow_Lib
+from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.OpticalFlowLib import OpticalFlowLib , LK_optical_flow_Lib, Dense_optical_flow_Lib
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.ImageFilteringLib import ImageFilteringLib
 from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.GeometricImageTransformationsLib import GeometricImageTransformationsLib
+from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.ImageBlendingLib import ImageBlendingLib
 
 # Class based nodes
 from PyFlow.Packages.PyFlowOpenCv.Nodes.ViewerNode import ViewerNode
@@ -37,6 +36,7 @@ _FOO_LIBS = {OpenCvLib.__name__: OpenCvLib(PACKAGE_NAME),
 			Dense_optical_flow_Lib.__name__:Dense_optical_flow_Lib(PACKAGE_NAME),
 			ImageFilteringLib.__name__: ImageFilteringLib(PACKAGE_NAME),
 			GeometricImageTransformationsLib.__name__: GeometricImageTransformationsLib(PACKAGE_NAME),
+			ImageBlendingLib.__name__: ImageBlendingLib(PACKAGE_NAME),
 			OpticalFlowLib.__name__: OpticalFlowLib(PACKAGE_NAME),
 			}
 _NODES = {}

@@ -79,3 +79,86 @@ class OpticalFlowLib(FunctionLibraryBase):
         flowVis(bgr)
         flowVisCombined(dense_flow)
 
+class LK_optical_flow_Lib(FunctionLibraryBase):
+    '''doc string for OpenCvLib'''
+
+    previous_image = None
+    previous_points=None
+    mask_image = None
+
+    def __init__(self, packageName):
+        super(LK_optical_flow_Lib, self).__init__(packageName)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpticalFlow', NodeMeta.KEYWORDS: []})
+    def LK_optical_flow(
+            input=('ImagePin', 0),
+            previous_points=('KeyPointsPin', 0),
+            img=(REF, ('ImagePin', 0)) ):
+        color = np.random.randint(0, 255, (100, 3))
+        lk_params = dict(winSize=(15, 15),
+                         maxLevel=2,
+                         criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
+        if LK_optical_flow_Lib.previous_image is None \
+                or LK_optical_flow_Lib.previous_image.shape!=input.image.shape:
+            LK_optical_flow_Lib.previous_image= input.image
+
+        if LK_optical_flow_Lib.mask_image is None \
+                or LK_optical_flow_Lib.mask_image.shape[:2]!=input.image.shape[:2]:
+            LK_optical_flow_Lib.mask_image= np.zeros_like(input.image)
+            LK_optical_flow_Lib.mask_image= cv2.cvtColor(LK_optical_flow_Lib.mask_image,cv2.COLOR_GRAY2BGR)
+
+        LK_optical_flow_Lib.previous_points=previous_points.data
+        color_draw= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
+        prev_gray =LK_optical_flow_Lib.previous_image
+        gray = input.image
+        if previous_points:
+            p1, st, err = cv2.calcOpticalFlowPyrLK(prev_gray, gray, LK_optical_flow_Lib.previous_points, None, **lk_params)
+            good_new = p1[st == 1]
+            good_old = previous_points.data[st == 1]
+            for i, (new, old) in enumerate(zip(good_new, good_old)):
+                a, b = new.ravel()
+                c, d = old.ravel()
+                LK_optical_flow_Lib.mask_image= cv2.line(LK_optical_flow_Lib.mask_image, (a, b), (c, d), color[i].tolist(), 2)
+                # color_draw= cv2.line(color_draw, (a, b), (c, d), color[i].tolist(), 2)
+                color_draw= cv2.circle(color_draw, (a, b), 5, color[i].tolist(), -1)
+            color_draw= cv2.add(color_draw, LK_optical_flow_Lib.mask_image)
+            LK_optical_flow_Lib.previous_points=good_new
+        img(color_draw)
+        LK_optical_flow_Lib.previous_image=input.image
+
+
+class Dense_optical_flow_Lib(FunctionLibraryBase):
+    '''doc string for OpenCvLib'''
+
+    previous_image = None
+
+    def __init__(self, packageName):
+        super(Dense_optical_flow_Lib, self).__init__(packageName)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpticalFlow', NodeMeta.KEYWORDS: []})
+    def Dense_optical_flow(
+            input=('ImagePin', 0),
+            img=(REF, ('ImagePin', 0)) ):
+
+        if Dense_optical_flow_Lib.previous_image is None \
+                or Dense_optical_flow_Lib.previous_image.shape!=input.image.shape:
+            Dense_optical_flow_Lib.previous_image= input.image
+        # Sets image saturation to maximum
+        color_img= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
+        mask= np.zeros_like(color_img)
+        mask[..., 1] = 255
+
+        prev_gray =Dense_optical_flow_Lib.previous_image
+        gray = input.image
+        if gray is not None and prev_gray is not None:
+            flow = cv2.calcOpticalFlowFarneback(prev_gray, gray , None, pyr_scale=0.5, levels=5, winsize=11, iterations=5,
+                                                poly_n=5, poly_sigma=1.1, flags=0)
+            magnitude, angle = cv2.cartToPolar(flow[..., 0], flow[..., 1])
+            mask[..., 0] = angle * 180 / np.pi / 2
+            mask[..., 2] = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX)
+            rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
+            dense_flow = cv2.addWeighted(color_img, 1, rgb, 2, 0)
+            img(dense_flow)
+        Dense_optical_flow_Lib.previous_image=input.image

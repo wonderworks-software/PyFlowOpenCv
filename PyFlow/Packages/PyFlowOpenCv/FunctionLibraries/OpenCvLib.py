@@ -97,22 +97,24 @@ class OpenCvLib(FunctionLibraryBase):
     def __init__(self, packageName):
         super(OpenCvLib, self).__init__(packageName)
 
+    ###################     IO NODES      ################################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
+    # Reads an Image from a file
     def cv_ReadImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
                      gray_scale= ( 'BoolPin', False), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
+        print(path)
+        print(os.path.exists(path))
         if gray_scale:
             img(cv2.imread(path, cv2.IMREAD_GRAYSCALE))
         else:
             img(cv2.imread(path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH | cv2.IMREAD_UNCHANGED))
 
-
     @staticmethod
     @IMPLEMENT_NODE(returns=None, nodeType=NodeTypes.Callable,
                     meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
+    # Writes an Image to a file
     def cv_WriteImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
                       img=('ImagePin', 0)):
         """Return a frame of the loaded image."""
@@ -120,7 +122,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
+    # Reads an Video from a file
     def cv_ReadVideo(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
                      video=(REF, ('VideoPin', 0))):
         """Return a frame of the loaded image."""
@@ -128,7 +130,7 @@ class OpenCvLib(FunctionLibraryBase):
         
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
+    # Reads a WebCam input
     def cv_WebCam(cam_index=('IntPin', 0), video=(REF, ('VideoPin', 0))):
         """Return a frame of the loaded image."""
         video(cv2.VideoCapture(cam_index))
@@ -136,7 +138,7 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=('BoolPin', False),
                     meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
-    # Return a random frame of x,y
+    # Reads next Video Frame from an already loaded video with cv_ReadVideo
     def cv_ReadNextFrame(video=('VideoPin', ""),
                          skip_frame=('IntPin', 0),
                          img=(REF, ('ImagePin', 0))
@@ -157,7 +159,7 @@ class OpenCvLib(FunctionLibraryBase):
                             img=(REF, ('ImagePin', 0)),
                             next_img=(REF, ('ImagePin', 0))
                             ):
-        """Return a frame of the loaded image."""
+        """Reads next 2 Video Frames from an already loaded video with cv_ReadVideo"""
         ret, frame = video.read()
         if not ret:
             video.video_capture.set(cv2.CAP_PROP_POS_FRAMES, 0)        
@@ -170,7 +172,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=('BoolPin', False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
+    # Reads a specific Video Frame from an already loaded video with cv_ReadVideo
     def cv_ReadVideoFrame(video=('VideoPin', 0,), frame=('IntPin', 0), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         video.set(1, frame)
@@ -181,11 +183,13 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=('BoolPin', False),
                     meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
-    # Return a random frame of x,y
+    # Check if video stills open
     def cv_VideoisOpened(video=('VideoPin', 0)):
         """Return a frame of the loaded image."""
         return video.isOpened()
 
+
+    ###################     CONVERSORS NODES      ##########################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Converters', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
@@ -197,6 +201,42 @@ class OpenCvLib(FunctionLibraryBase):
     def cv_BGR2GRAY(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
         img(cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY))
 
+
+    ###################     DEBUG NODES      ##########################################################
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Debug', NodeMeta.KEYWORDS: []})
+    def cv_Histogram(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+
+        bgr_planes = cv2.split(input.image)
+        histSize = 256
+        histRange = (0, 256)  # the upper boundary is exclusive
+        accumulate = False
+        b_hist = cv2.calcHist(bgr_planes, [0], None, [histSize], histRange, accumulate=accumulate)
+        g_hist = cv2.calcHist(bgr_planes, [1], None, [histSize], histRange, accumulate=accumulate)
+        r_hist = cv2.calcHist(bgr_planes, [2], None, [histSize], histRange, accumulate=accumulate)
+        hist_w = 512
+        hist_h = 400
+        bin_w = int(round(hist_w / histSize))
+        histImage = np.zeros((hist_h, hist_w, 3), dtype=np.uint8)
+        cv2.normalize(b_hist, b_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
+        cv2.normalize(g_hist, g_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
+        cv2.normalize(r_hist, r_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
+        for i in range(1, histSize):
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(b_hist[i - 1][0]))),
+                    (bin_w * (i), hist_h - int(round(b_hist[i][0]))),
+                    (255, 0, 0), thickness=2)
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(g_hist[i - 1][0]))),
+                    (bin_w * (i), hist_h - int(round(g_hist[i][0]))),
+                    (0, 255, 0), thickness=2)
+            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(r_hist[i - 1][0]))),
+                    (bin_w * (i), hist_h - int(round(r_hist[i][0]))),
+                    (0, 0, 255), thickness=2)
+
+        img(histImage)
+
+
+
+    ###################     OPENCL NODES      ##########################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpenCl', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
@@ -212,6 +252,9 @@ class OpenCvLib(FunctionLibraryBase):
         else:
             img(gpuImg)
 
+
+
+    ###################     COLOR NODES      ##########################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
     def cv_HDR_AutoGamma(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
@@ -222,76 +265,6 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
     def cv_ConvertScaleAbs(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
         img(cv2.convertScaleAbs(input.image))
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
-    def cv_FlipImage(input=('ImagePin', 0), mode=('IntPin', 0), img=(REF, ('ImagePin', 0))):
-        """Return a frame of the loaded image."""
-        img(cv2.flip(input.image, mode))
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def cv_AlphaMixImages(FG=('ImagePin', 0),BG=('ImagePin', 0),Mask=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        foreground = FG.image.astype(float)
-        background = BG.image.astype(float)
-        alpha = Mask.image.astype(float)/255
-        # Multiply the foreground with the alpha matte
-        foreground = cv2.multiply(alpha, foreground)
-        # Multiply the background with ( 1 - alpha )
-        background = cv2.multiply(1.0 - alpha, background)
-        # Add the masked foreground and background.
-        outImage = cv2.normalize(cv2.add(foreground, background), None, 0, 255, cv2.NORM_MINMAX, cv2.CV_8U)
-        img(outImage)        
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
-    def auto_canny(input=('ImagePin', 0), sigma=('FloatPin', 0.33), img=(REF, ('ImagePin', 0))):
-        """Return a frame of the loaded image."""
-        image = input.image
-        v = np.median(image)
-        lower = int(max(0, (1.0 - sigma) * v))
-        upper = int(min(255, (1.0 + sigma) * v))
-        img(cv2.Canny(image, lower, upper))
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
-    def shape_detector(input=('ImagePin', 0), thres1=('IntPin', 20), thres2=('IntPin', 255),
-                       img=(REF, ('ImagePin', 0)), _thresh=(REF, ('ImagePin', 0))):
-        """Return a frame of the loaded image."""
-        image = input.image
-        blurred = cv2.GaussianBlur(input.image, (5, 5), 0)
-        gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
-        lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
-        thresh = cv2.threshold(gray, thres1, thres2, cv2.THRESH_BINARY)[1]
-        _thresh(thresh)
-        # find contours in the thresholded image
-        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-        cnts = imutils.grab_contours(cnts)
-        # initialize the shape detector and color labeler
-        sd = ShapeDetector()
-        cl = ColorLabeler()
-
-        for c in cnts:
-            # compute the center of the contour
-            M = cv2.moments(c)
-            cX = int((M["m10"] / (1 + M["m00"])))
-            cY = int((M["m01"] / (1 + M["m00"])))
-            # detect the shape of the contour and label the color
-            shape = sd.detect(c)
-            color = cl.label(lab, c)
-            # multiply the contour (x, y)-coordinates by the resize ratio,
-            # then draw the contours and the name of the shape and labeled
-            # color on the image
-            c = c.astype("int")
-            text = "{} {}".format(color, shape)
-            cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
-            cv2.putText(image, text, (cX, cY),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
-
-        img(image)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
@@ -317,6 +290,21 @@ class OpenCvLib(FunctionLibraryBase):
             output = cv2.bitwise_and(image, image, mask=mask)
 
         img(output)
+
+
+
+
+    ###################     Edge Detection NODES    ##########################################################
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def auto_canny(input=('ImagePin', 0), sigma=('FloatPin', 0.33), img=(REF, ('ImagePin', 0))):
+        """Return a frame of the loaded image."""
+        image = input.image
+        v = np.median(image)
+        lower = int(max(0, (1.0 - sigma) * v))
+        upper = int(min(255, (1.0 + sigma) * v))
+        img(cv2.Canny(image, lower, upper))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
@@ -380,62 +368,6 @@ class OpenCvLib(FunctionLibraryBase):
         img(hed)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
-    def adapt_thres(input=('ImagePin', 0), _mean=(REF, ('ImagePin', 0)),
-                    _thresh=(REF, ('ImagePin', 0)), _gaussian=(REF, ('ImagePin', 0))):
-        """filter a BGR color range from image"""
-        image = input.image
-
-        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        ret, thresh = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
-        # here 11 is the pixel neighbourhood that is used to calculate the threshold value
-        mean = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
-        gaussian = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
-        images = [gray_image, thresh, mean, gaussian]
-
-        _thresh(thresh)
-        _mean(mean)
-        _gaussian(gaussian)
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    # Return a random frame of x,y
-    def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin', 0)), _sure_bg=(REF, ('ImagePin', 0)),
-                   img=(REF, ('ImagePin', 0))):
-        """filter a BGR color range from image"""
-        image = input.image
-
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        # apply thresholding
-        ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        # get a kernel
-        kernel = np.ones((3, 3), np.uint8)
-        opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=2)
-        # extract the background from image
-        sure_bg = cv2.dilate(opening, kernel, iterations=3)
-        dist_transform = cv2.distanceTransform(opening, cv2.DIST_L2, 5)
-        ret, sure_fg = cv2.threshold(dist_transform, 0.7 * dist_transform.max(), 255, 0)
-        sure_fg = np.uint8(sure_fg)
-        unknown = cv2.subtract(sure_bg, sure_bg)
-        ret, markers = cv2.connectedComponents(sure_fg)
-        markers = markers + 1
-        markers[unknown == 255] = 0
-        markers = cv2.watershed(image, markers)
-        image[markers == -1] = [255, 0, 0]
-        img(image)
-        _thres(thresh)
-        _sure_bg(sure_fg)
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def bit_and(input=('ImagePin', 0), mask=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _mask=(REF, ('ImagePin', 0))):
-        """Takes an image and mask and applied logic and operation"""
-        ret, mask = cv2.threshold(mask.image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        img(cv2.bitwise_and(input.image, input.image, mask=mask))
-        _mask(mask)
-
-    @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
     def detectLines(input=('ImagePin', 0),
                     low_threshold=('IntPin', 50),
@@ -486,313 +418,10 @@ class OpenCvLib(FunctionLibraryBase):
 
         cv2.imwrite('line_parking.png', lines_edges)
 
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def classifcation_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                           keywords=(REF, ('GraphElementPin', 0)),
-                           ):
-        """Takes an image and mask and applied logic and operation"""
-
-        face_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                             "bvlc_googlenet.prototxt")
-        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "bvlc_googlenet.caffemodel")
-        keywords_path= os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "synset_words.txt")
-
-        words_rows = open(keywords_path).read().strip().split("\n")
-        classes = [r[r.find(" ") + 1:].split(",")[0] for r in words_rows]
 
 
-        image = cv2.resize(input.image, (224, 224))
-        image=image[:,:,:3]
-        (h, w) = image.shape[:2]
-        net = cv2.dnn.readNetFromCaffe(face_model_proto_path,face_model_path)
-        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
-                                     mean=(104.00698793, 116.66876762, 122.67891434),
-                                     swapRB=False, crop=False)
-        net.setInput(blob)
-        preds= net.forward()
-        idxs = np.argsort(preds[0])[::-1][:5]
 
-        # loop over the top-5 predictions and display them
-        words=[]
-        for (i, idx) in enumerate(idxs):
-            # draw the top prediction on the input image
-            if i == 0:
-                text = "{}, {:.2f}%".format(classes[idx],
-                                                   preds[0][idx] * 100)
-                words.append(text)
-                break
-        if words:
-            concat_words='Lable: '+','.join(words)
-        keywords({'text':[concat_words]})
-        img(input.image)
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def yolo_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                 detections=(REF, ('GraphElementPin', 0)),
-                 ):
-        """Takes an image and mask and applied logic and operation"""
-
-        yolo_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                             "yolov3-tiny.weights")
-        yolo_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "yolov3-tiny.cfg")
-        keywords_path= os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                    "yolov3.txt")
-
-        modelSize = 416
-
-        with open(keywords_path, 'r') as f:
-            classes = [line.strip() for line in f.readlines()]
-
-        (image_height, image_width) = input.image.shape[:2]
-
-        image = cv2.resize(input.image, (modelSize, modelSize))
-        image=image[:,:,:3]
-        (h, w) = image.shape[:2]
-        rW = w/ float(modelSize)
-        rH = h/ float(modelSize)
-        scale = 0.00392
-        net= cv2.dnn.readNet(yolo_model_proto_path,yolo_model_path)
-        blob = cv2.dnn.blobFromImage(image, scale, (w,h),
-                                     mean=(0,0,0),
-                                     swapRB=True, crop=False)
-        net.setInput(blob)
-        layer_names = net.getLayerNames()
-        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
-        retval= net.forward(output_layers)
-        class_ids = []
-        confidences = []
-        boxes = []
-        conf_threshold = 0.5
-        nms_threshold = 0.4
-
-        for out in retval:
-            for detection in out:
-                scores = detection[5:]
-                class_id = np.argmax(scores)
-                confidence = scores[class_id]
-                if confidence > conf_threshold:
-                    if detection[2]>1 or detection[3]>1:
-                        continue
-                    center_x = int(detection[0] * image_width)
-                    center_y = int(detection[1] * image_height)
-
-                    w = int(detection[2] * image_width)
-                    h = int(detection[3] * image_height)
-                    x = center_x - w / 2
-                    y = center_y - h / 2
-                    class_ids.append(class_id)
-                    confidences.append(float(confidence))
-                    box=[x, y, w, h]
-                    boxes.append(box)
-        indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
-
-        annotation=[]
-        if len(indices) != 0:
-
-            for i in indices:
-                i = i[0]
-                box = boxes[i]
-                x = box[0]
-                y = box[1]
-                w = box[2]
-                h = box[3]
-                annotation.append({'box': (x, y, w, h), 'class': classes[class_ids[i]], 'confidence': confidences[i]})
-        detections({'detection': annotation})
-        img(input.image)
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def face_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                       rects=(REF, ('GraphElementPin', 0)),
-                       scaleFactor=('FloatPin', 1.1),
-                       minNeighbores=('IntPin', 4)
-                       ):
-        """Takes an image and mask and applied logic and operation"""
-
-        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "haarcascade_frontalface_default.xml")
-        face_cascade = cv2.CascadeClassifier(face_model_path)
-        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
-        faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
-        img(gray)
-        rects({'rect': [(x, y, w, h) for (x, y, w, h) in faces]})
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def face_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                       rects=(REF, ('GraphElementPin', 0)),
-                       ):
-        """Takes an image and mask and applied logic and operation"""
-
-        face_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "face_detect_deploy.prototxt")
-        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "res10_300x300_ssd_iter_140000_fp16.caffemodel")
-        (h, w) = input.image.shape[:2]
-        net = cv2.dnn.readNetFromCaffe(face_model_proto_path,face_model_path)
-        blob = cv2.dnn.blobFromImage(cv2.resize(input.image, (300, 300)), 1.0, (300, 300),
-                                     mean=(104.00698793, 116.66876762, 122.67891434),
-                                     swapRB=False, crop=False)
-        net.setInput(blob)
-        detections = net.forward()
-
-        boxs=[]
-        for i in range(0, detections.shape[2]):
-            # extract the confidence (i.e., probability) associated with the
-            # prediction
-            confidence = detections[0, 0, i, 2]
-            # filter out weak detections by ensuring the `confidence` is
-            # greater than the minimum confidence
-            if confidence < 0.5:
-                continue
-            # compute the (x, y)-coordinates of the bounding box for the
-            # object
-            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
-            (startX, startY, endX, endY) = box.astype("int")
-            boxs.append((startX,startY,endX-startX,endY-startY))
-        img(input.image)
-
-        rects({'rect': boxs})
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def text_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                           rects=(REF, ('GraphElementPin', 0)),
-                           ):
-        """Takes an image and mask and applied logic and operation"""
-
-        text_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "frozen_east_text_detection.pb")
-        modelSize=320
-        (h, w) = input.image.shape[:2]
-        image = cv2.resize(input.image, (modelSize,modelSize))
-        rW = w/ float(modelSize)
-        rH = h/ float(modelSize)
-        net = cv2.dnn.readNet(text_model_path)
-        blob = cv2.dnn.blobFromImage(image, 1.0, (modelSize,modelSize),
-                                     mean=(104.00698793, 116.66876762, 122.67891434),
-                                     swapRB=True, crop=False)
-        net.setInput(blob)
-        layerNames = [
-            "feature_fusion/Conv_7/Sigmoid",
-            "feature_fusion/concat_3"]
-        (scores, geometry) = net.forward(layerNames)
-        # scores = net.forward()
-        (numRows, numCols) = scores.shape[2:4]
-        boxes= []
-        confidences = []
-
-        # loop over the number of rows
-        for y in range(0, numRows):
-            # extract the scores (probabilities), followed by the geometrical
-            # data used to derive potential bounding box coordinates that
-            # surround text
-            scoresData = scores[0, 0, y]
-            xData0 = geometry[0, 0, y]
-            xData1 = geometry[0, 1, y]
-            xData2 = geometry[0, 2, y]
-            xData3 = geometry[0, 3, y]
-            anglesData = geometry[0, 4, y]
-
-            # loop over the number of columns
-            for x in range(0, numCols):
-                # if our score does not have sufficient probability, ignore it
-                if scoresData[x] < 0.5:
-                    continue
-
-                # compute the offset factor as our resulting feature maps will
-                # be 4x smaller than the input image
-                (offsetX, offsetY) = (x * 4.0, y * 4.0)
-
-                # extract the rotation angle for the prediction and then
-                # compute the sin and cosine
-                angle = anglesData[x]
-                cos = np.cos(angle)
-                sin = np.sin(angle)
-
-                # use the geometry volume to derive the width and height of
-                # the bounding box
-                h = xData0[x] + xData2[x]
-                w = xData1[x] + xData3[x]
-
-                # compute both the starting and ending (x, y)-coordinates for
-                # the text prediction bounding box
-                endX = int(offsetX + (cos * xData1[x]) + (sin * xData2[x]))
-                endY = int(offsetY - (sin * xData1[x]) + (cos * xData2[x]))
-                startX = int(endX - w)
-                startY = int(endY - h)
-
-                # add the bounding box coordinates and probability score to
-                # our respective lists
-                # box = (x * rW, y * rH, w * rW, h*rH)
-                boxes.append((startX*rW,startY*rH,(endX)*rW,(endY)*rH))
-                confidences.append(scoresData[x])
-        filtered_boxes = non_max_suppression(np.array(boxes), probs=confidences)
-        boxes=[(startX,startY,endX-startX,endY-startY) for startX,startY,endX,endY in filtered_boxes]
-        img(input.image)
-        rects({'rect': boxes})
-
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def eye_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                      rects=(REF, ('GraphElementPin', 0)),
-                      scaleFactor=('FloatPin', 1.1),
-                      minNeighbores=('IntPin', 4)
-                      ):
-        """Takes an image and mask and applied logic and operation"""
-
-        eye_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_eye.xml")
-        eye_cascade = cv2.CascadeClassifier(eye_model_path)
-        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
-        eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
-        img(gray)
-        rects({'rect': [(x, y, w, h) for (x, y, w, h) in eyes]})
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def eye_Masking(input=('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
-                    xSize = ('IntPin',2), 
-                    ySize = ('IntPin',1), 
-                    mask=(REF, ('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported})),
-                    scaleFactor=('FloatPin', 1.1),
-                    minNeighbores=('IntPin', 4)
-                      ):
-        eye_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_eye.xml")
-        eye_cascade = cv2.CascadeClassifier(eye_model_path)
-        if isinstance(input,list):
-            maskList = []
-            for imagen in input:
-
-                gray = cv2.cvtColor(imagen.image, cv2.COLOR_BGR2GRAY)
-                eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
-                tmp=np.zeros(imagen.image.shape,dtype="uint8")
-                angle = 0
-                if len(eyes) == 2:
-                    dirx = eyes[0][0] - eyes[1][0]
-                    diry = eyes[0][1] - eyes[1][1]
-                    angle = math.atan2(diry,dirx)*180/math.pi
-                for (x, y, w, h) in eyes:
-                    cv2.ellipse(tmp, (int(x+w/2), int(y+h/2)),(xSize,ySize) ,angle, 0.0, 360.0, (255, 255, 255), -1)
-                maskList.append(MyImage(tmp))
-            mask(maskList)
-        else:
-            gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
-            eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
-            tmp=np.zeros(input.image.shape,dtype="uint8")
-            angle = 0
-            if len(eyes) == 2:
-                dirx = eyes[0][0] - eyes[1][0]
-                diry = eyes[0][1] - eyes[1][1]
-                angle = math.atan2(diry,dirx)*180/math.pi
-            for (x, y, w, h) in eyes:
-                cv2.ellipse(tmp, (int(x+w/2), int(y+h/2)),(xSize,ySize) ,angle, 0.0, 360.0, (255, 255, 255), -1)
-            mask(tmp)            
-
+    ###################     FEATURE EXTRACTION NODES      ######################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def goodFeatureToTrack(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
@@ -977,33 +606,6 @@ class OpenCvLib(FunctionLibraryBase):
         descriptor(des)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
-    def CreateBackgroundSubtractorMOG2(
-            history=('IntPin', 400),
-            threshold=('FloatPin', 16),
-            detectShadow=('BoolPin', True),
-            background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
-        backSub = cv2.createBackgroundSubtractorMOG2(history,threshold,detectShadow)
-        background_subtrator(backSub)
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
-    def CreateBackgroundSubtractorKNN(
-            history=('IntPin', 400),
-            threshold=('FloatPin', 16),
-            detectShadow=('BoolPin', True),
-            background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
-        backSub = cv2.createBackgroundSubtractorKNN(history,threshold,detectShadow)
-        background_subtrator(backSub)
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
-    def BackgroundSubtract(input=('ImagePin', 0), background_subtrator=('BackgroundSubtractorPin', 0),
-                           fgMask=(REF, ('ImagePin', 0))):
-        mask = background_subtrator.data.apply(input.image)
-        fgMask(mask)
-
-    @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def KNN_Match(
             descriptor_1=('DescriptorPin',0),
@@ -1050,36 +652,94 @@ class OpenCvLib(FunctionLibraryBase):
 
 
         img(image)
+
+
+    ###################     PROCESS NODES      #######################################################
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Histogram', NodeMeta.KEYWORDS: []})
-    def cv_Histogram(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def shape_detector(input=('ImagePin', 0), thres1=('IntPin', 20), thres2=('IntPin', 255),
+                       img=(REF, ('ImagePin', 0)), _thresh=(REF, ('ImagePin', 0))):
+        """Return a frame of the loaded image."""
+        image = input.image
+        blurred = cv2.GaussianBlur(input.image, (5, 5), 0)
+        gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
+        lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
+        thresh = cv2.threshold(gray, thres1, thres2, cv2.THRESH_BINARY)[1]
+        _thresh(thresh)
+        # find contours in the thresholded image
+        cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        cnts = imutils.grab_contours(cnts)
+        # initialize the shape detector and color labeler
+        sd = ShapeDetector()
+        cl = ColorLabeler()
 
-        bgr_planes = cv2.split(input.image)
-        histSize = 256
-        histRange = (0, 256)  # the upper boundary is exclusive
-        accumulate = False
-        b_hist = cv2.calcHist(bgr_planes, [0], None, [histSize], histRange, accumulate=accumulate)
-        g_hist = cv2.calcHist(bgr_planes, [1], None, [histSize], histRange, accumulate=accumulate)
-        r_hist = cv2.calcHist(bgr_planes, [2], None, [histSize], histRange, accumulate=accumulate)
-        hist_w = 512
-        hist_h = 400
-        bin_w = int(round(hist_w / histSize))
-        histImage = np.zeros((hist_h, hist_w, 3), dtype=np.uint8)
-        cv2.normalize(b_hist, b_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
-        cv2.normalize(g_hist, g_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
-        cv2.normalize(r_hist, r_hist, alpha=0, beta=hist_h, norm_type=cv2.NORM_MINMAX)
-        for i in range(1, histSize):
-            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(b_hist[i - 1][0]))),
-                    (bin_w * (i), hist_h - int(round(b_hist[i][0]))),
-                    (255, 0, 0), thickness=2)
-            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(g_hist[i - 1][0]))),
-                    (bin_w * (i), hist_h - int(round(g_hist[i][0]))),
-                    (0, 255, 0), thickness=2)
-            cv2.line(histImage, (bin_w * (i - 1), hist_h - int(round(r_hist[i - 1][0]))),
-                    (bin_w * (i), hist_h - int(round(r_hist[i][0]))),
-                    (0, 0, 255), thickness=2)
+        for c in cnts:
+            # compute the center of the contour
+            M = cv2.moments(c)
+            cX = int((M["m10"] / (1 + M["m00"])))
+            cY = int((M["m01"] / (1 + M["m00"])))
+            # detect the shape of the contour and label the color
+            shape = sd.detect(c)
+            color = cl.label(lab, c)
+            # multiply the contour (x, y)-coordinates by the resize ratio,
+            # then draw the contours and the name of the shape and labeled
+            # color on the image
+            c = c.astype("int")
+            text = "{} {}".format(color, shape)
+            cv2.drawContours(image, [c], -1, (0, 255, 0), 2)
+            cv2.putText(image, text, (cX, cY),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 255), 2)
 
-        img(histImage)
+        img(image)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def adapt_thres(input=('ImagePin', 0), _mean=(REF, ('ImagePin', 0)),
+                    _thresh=(REF, ('ImagePin', 0)), _gaussian=(REF, ('ImagePin', 0))):
+        """filter a BGR color range from image"""
+        image = input.image
+
+        gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        ret, thresh = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
+        # here 11 is the pixel neighbourhood that is used to calculate the threshold value
+        mean = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_MEAN_C, cv2.THRESH_BINARY, 11, 2)
+        gaussian = cv2.adaptiveThreshold(gray_image, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C, cv2.THRESH_BINARY, 11, 2)
+        images = [gray_image, thresh, mean, gaussian]
+
+        _thresh(thresh)
+        _mean(mean)
+        _gaussian(gaussian)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
+    # Return a random frame of x,y
+    def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin', 0)), _sure_bg=(REF, ('ImagePin', 0)),
+                   img=(REF, ('ImagePin', 0))):
+        """filter a BGR color range from image"""
+        image = input.image
+
+        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+        # apply thresholding
+        ret, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        # get a kernel
+        kernel = np.ones((3, 3), np.uint8)
+        opening = cv2.morphologyEx(thresh, cv2.MORPH_OPEN, kernel, iterations=2)
+        # extract the background from image
+        sure_bg = cv2.dilate(opening, kernel, iterations=3)
+        dist_transform = cv2.distanceTransform(opening, cv2.DIST_L2, 5)
+        ret, sure_fg = cv2.threshold(dist_transform, 0.7 * dist_transform.max(), 255, 0)
+        sure_fg = np.uint8(sure_fg)
+        unknown = cv2.subtract(sure_bg, sure_bg)
+        ret, markers = cv2.connectedComponents(sure_fg)
+        markers = markers + 1
+        markers[unknown == 255] = 0
+        markers = cv2.watershed(image, markers)
+        image[markers == -1] = [255, 0, 0]
+        img(image)
+        _thres(thresh)
+        _sure_bg(sure_fg)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
@@ -1087,56 +747,7 @@ class OpenCvLib(FunctionLibraryBase):
     def cv_Threahold(input=('ImagePin', 0), threshold=('IntPin', 127), img=(REF, ('ImagePin', 0))):
         """Return a frame of the loaded image."""
         threshold, cv__threshold = cv2.threshold(input.image, threshold, 255, cv2.THRESH_BINARY)
-        img(cv__threshold)
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def gender_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                          keywords=(REF, ('GraphElementPin', 0)),
-                          ):
-        """Takes an image and mask and applied logic and operation"""
-
-        gender_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                             "deploy_gender2.prototxt")
-        gender_caffe_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
-                                       "gender_net.caffemodel")
-
-        image = cv2.resize(input.image, (227, 227))
-        image=image[:,:,:3]
-        (h, w) = image.shape[:2]
-        net = cv2.dnn.readNetFromCaffe(gender_proto_path,gender_caffe_path)
-        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
-                                     mean=(104.00698793, 116.66876762, 122.67891434),
-                                     swapRB=False, crop=False)
-        net.setInput(blob)
-        preds= net.forward()
-        words=[]
-        text = "M:{:.1f}%, F:{:.1f}%".format(preds[0][0] * 100,preds[0][1] * 100)
-        words.append(text)
-        img(image)
-        keywords({'text':words})
-
-    @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def image_resize_by_Factor(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
-                       factor=('FloatPin', 1.0 ), interpolation=('StringPin', "INTER_CUBIC", {PinSpecifires.VALUE_LIST: ["INTER_LINEAR","INTER_CUBIC","INTER_AREA","INTER_LANCZOS4","INTER_LINEAR_EXACT","INTER_MAX","WARP_FILL_OUTLIERS","WARP_INVERSE_MAP" ]} )
-                       ):    
-        inter = {   "INTER_NEAREST": cv2.INTER_NEAREST ,
-                            "INTER_LINEAR": cv2.INTER_LINEAR  ,
-                            "INTER_CUBIC": cv2.INTER_CUBIC   ,
-                            "INTER_AREA": cv2.INTER_AREA   ,
-                            "INTER_LANCZOS4": cv2.INTER_LANCZOS4   ,
-                            "INTER_LINEAR_EXACT": cv2.INTER_LINEAR_EXACT    ,
-                            "INTER_MAX": cv2.INTER_MAX,
-                            "WARP_FILL_OUTLIERS": cv2.WARP_FILL_OUTLIERS,
-                            "WARP_INVERSE_MAP ": cv2.WARP_INVERSE_MAP
-                        }
-        imagen = input.image
-        width  = int(imagen.shape[1] * factor)
-        height = int(imagen.shape[0] * factor)
-        dim = (width, height)
-        # resize image
-        img( MyImage(cv2.resize(imagen, dim, interpolation = inter[interpolation])))    
+        img(cv__threshold)    
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
@@ -1236,6 +847,38 @@ class OpenCvLib(FunctionLibraryBase):
 
         expandedrects({'rect': expanded})      
 
+
+
+    ###################     VIDEO ANALYSIS NODES      ##########################################################
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
+    def CreateBackgroundSubtractorMOG2(
+            history=('IntPin', 400),
+            threshold=('FloatPin', 16),
+            detectShadow=('BoolPin', True),
+            background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
+        backSub = cv2.createBackgroundSubtractorMOG2(history,threshold,detectShadow)
+        background_subtrator(backSub)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
+    def CreateBackgroundSubtractorKNN(
+            history=('IntPin', 400),
+            threshold=('FloatPin', 16),
+            detectShadow=('BoolPin', True),
+            background_subtrator=(REF, ('BackgroundSubtractorPin', 0))):
+        backSub = cv2.createBackgroundSubtractorKNN(history,threshold,detectShadow)
+        background_subtrator(backSub)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
+    def BackgroundSubtract(input=('ImagePin', 0), background_subtrator=('BackgroundSubtractorPin', 0),
+                           fgMask=(REF, ('ImagePin', 0))):
+        mask = background_subtrator.data.apply(input.image)
+        fgMask(mask)
+
+
+    ###################     RECOGNITION NODES      ##########################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def blob_detector(input=('ImagePin', 0),
@@ -1330,88 +973,336 @@ class OpenCvLib(FunctionLibraryBase):
         texts({'detection':results})
         img(input.image)
 
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def gender_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                          keywords=(REF, ('GraphElementPin', 0)),
+                          ):
+        """Takes an image and mask and applied logic and operation"""
 
-class LK_optical_flow_Lib(FunctionLibraryBase):
-    '''doc string for OpenCvLib'''
+        gender_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                             "deploy_gender2.prototxt")
+        gender_caffe_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "gender_net.caffemodel")
 
-    previous_image = None
-    previous_points=None
-    mask_image = None
-
-    def __init__(self, packageName):
-        super(LK_optical_flow_Lib, self).__init__(packageName)
+        image = cv2.resize(input.image, (227, 227))
+        image=image[:,:,:3]
+        (h, w) = image.shape[:2]
+        net = cv2.dnn.readNetFromCaffe(gender_proto_path,gender_caffe_path)
+        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
+                                     mean=(104.00698793, 116.66876762, 122.67891434),
+                                     swapRB=False, crop=False)
+        net.setInput(blob)
+        preds= net.forward()
+        words=[]
+        text = "M:{:.1f}%, F:{:.1f}%".format(preds[0][0] * 100,preds[0][1] * 100)
+        words.append(text)
+        img(image)
+        keywords({'text':words})
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def LK_optical_flow(
-            input=('ImagePin', 0),
-            previous_points=('KeyPointsPin', 0),
-            img=(REF, ('ImagePin', 0)) ):
-        color = np.random.randint(0, 255, (100, 3))
-        lk_params = dict(winSize=(15, 15),
-                         maxLevel=2,
-                         criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
-        if LK_optical_flow_Lib.previous_image is None \
-                or LK_optical_flow_Lib.previous_image.shape!=input.image.shape:
-            LK_optical_flow_Lib.previous_image= input.image
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def classifcation_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                           keywords=(REF, ('GraphElementPin', 0)),
+                           ):
+        """Takes an image and mask and applied logic and operation"""
 
-        if LK_optical_flow_Lib.mask_image is None \
-                or LK_optical_flow_Lib.mask_image.shape[:2]!=input.image.shape[:2]:
-            LK_optical_flow_Lib.mask_image= np.zeros_like(input.image)
-            LK_optical_flow_Lib.mask_image= cv2.cvtColor(LK_optical_flow_Lib.mask_image,cv2.COLOR_GRAY2BGR)
+        face_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                             "bvlc_googlenet.prototxt")
+        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "bvlc_googlenet.caffemodel")
+        keywords_path= os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "synset_words.txt")
 
-        LK_optical_flow_Lib.previous_points=previous_points.data
-        color_draw= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
-        prev_gray =LK_optical_flow_Lib.previous_image
-        gray = input.image
-        if previous_points:
-            p1, st, err = cv2.calcOpticalFlowPyrLK(prev_gray, gray, LK_optical_flow_Lib.previous_points, None, **lk_params)
-            good_new = p1[st == 1]
-            good_old = previous_points.data[st == 1]
-            for i, (new, old) in enumerate(zip(good_new, good_old)):
-                a, b = new.ravel()
-                c, d = old.ravel()
-                LK_optical_flow_Lib.mask_image= cv2.line(LK_optical_flow_Lib.mask_image, (a, b), (c, d), color[i].tolist(), 2)
-                # color_draw= cv2.line(color_draw, (a, b), (c, d), color[i].tolist(), 2)
-                color_draw= cv2.circle(color_draw, (a, b), 5, color[i].tolist(), -1)
-            color_draw= cv2.add(color_draw, LK_optical_flow_Lib.mask_image)
-            LK_optical_flow_Lib.previous_points=good_new
-        img(color_draw)
-        LK_optical_flow_Lib.previous_image=input.image
+        words_rows = open(keywords_path).read().strip().split("\n")
+        classes = [r[r.find(" ") + 1:].split(",")[0] for r in words_rows]
 
 
-class Dense_optical_flow_Lib(FunctionLibraryBase):
-    '''doc string for OpenCvLib'''
+        image = cv2.resize(input.image, (224, 224))
+        image=image[:,:,:3]
+        (h, w) = image.shape[:2]
+        net = cv2.dnn.readNetFromCaffe(face_model_proto_path,face_model_path)
+        blob = cv2.dnn.blobFromImage(image, 1.0, (w,h),
+                                     mean=(104.00698793, 116.66876762, 122.67891434),
+                                     swapRB=False, crop=False)
+        net.setInput(blob)
+        preds= net.forward()
+        idxs = np.argsort(preds[0])[::-1][:5]
 
-    previous_image = None
-
-    def __init__(self, packageName):
-        super(Dense_optical_flow_Lib, self).__init__(packageName)
+        # loop over the top-5 predictions and display them
+        words=[]
+        for (i, idx) in enumerate(idxs):
+            # draw the top prediction on the input image
+            if i == 0:
+                text = "{}, {:.2f}%".format(classes[idx],
+                                                   preds[0][idx] * 100)
+                words.append(text)
+                break
+        if words:
+            concat_words='Lable: '+','.join(words)
+        keywords({'text':[concat_words]})
+        img(input.image)
 
     @staticmethod
-    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def Dense_optical_flow(
-            input=('ImagePin', 0),
-            img=(REF, ('ImagePin', 0)) ):
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def yolo_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                 detections=(REF, ('GraphElementPin', 0)),
+                 ):
+        """Takes an image and mask and applied logic and operation"""
 
-        if Dense_optical_flow_Lib.previous_image is None \
-                or Dense_optical_flow_Lib.previous_image.shape!=input.image.shape:
-            Dense_optical_flow_Lib.previous_image= input.image
-        # Sets image saturation to maximum
-        color_img= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
-        mask= np.zeros_like(color_img)
-        mask[..., 1] = 255
+        yolo_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                             "yolov3-tiny.weights")
+        yolo_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "yolov3-tiny.cfg")
+        keywords_path= os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                    "yolov3.txt")
 
-        prev_gray =Dense_optical_flow_Lib.previous_image
-        gray = input.image
-        if gray is not None and prev_gray is not None:
-            flow = cv2.calcOpticalFlowFarneback(prev_gray, gray , None, pyr_scale=0.5, levels=5, winsize=11, iterations=5,
-                                                poly_n=5, poly_sigma=1.1, flags=0)
-            magnitude, angle = cv2.cartToPolar(flow[..., 0], flow[..., 1])
-            mask[..., 0] = angle * 180 / np.pi / 2
-            mask[..., 2] = cv2.normalize(magnitude, None, 0, 255, cv2.NORM_MINMAX)
-            rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
-            dense_flow = cv2.addWeighted(color_img, 1, rgb, 2, 0)
-            img(dense_flow)
-        Dense_optical_flow_Lib.previous_image=input.image
+        modelSize = 416
 
+        with open(keywords_path, 'r') as f:
+            classes = [line.strip() for line in f.readlines()]
+
+        (image_height, image_width) = input.image.shape[:2]
+
+        image = cv2.resize(input.image, (modelSize, modelSize))
+        image=image[:,:,:3]
+        (h, w) = image.shape[:2]
+        rW = w/ float(modelSize)
+        rH = h/ float(modelSize)
+        scale = 0.00392
+        net= cv2.dnn.readNet(yolo_model_proto_path,yolo_model_path)
+        blob = cv2.dnn.blobFromImage(image, scale, (w,h),
+                                     mean=(0,0,0),
+                                     swapRB=True, crop=False)
+        net.setInput(blob)
+        layer_names = net.getLayerNames()
+        output_layers = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
+        retval= net.forward(output_layers)
+        class_ids = []
+        confidences = []
+        boxes = []
+        conf_threshold = 0.5
+        nms_threshold = 0.4
+
+        for out in retval:
+            for detection in out:
+                scores = detection[5:]
+                class_id = np.argmax(scores)
+                confidence = scores[class_id]
+                if confidence > conf_threshold:
+                    if detection[2]>1 or detection[3]>1:
+                        continue
+                    center_x = int(detection[0] * image_width)
+                    center_y = int(detection[1] * image_height)
+
+                    w = int(detection[2] * image_width)
+                    h = int(detection[3] * image_height)
+                    x = center_x - w / 2
+                    y = center_y - h / 2
+                    class_ids.append(class_id)
+                    confidences.append(float(confidence))
+                    box=[x, y, w, h]
+                    boxes.append(box)
+        indices = cv2.dnn.NMSBoxes(boxes, confidences, conf_threshold, nms_threshold)
+
+        annotation=[]
+        if len(indices) != 0:
+
+            for i in indices:
+                i = i[0]
+                box = boxes[i]
+                x = box[0]
+                y = box[1]
+                w = box[2]
+                h = box[3]
+                annotation.append({'box': (x, y, w, h), 'class': classes[class_ids[i]], 'confidence': confidences[i]})
+        detections({'detection': annotation})
+        img(input.image)
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def face_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                       rects=(REF, ('GraphElementPin', 0)),
+                       scaleFactor=('FloatPin', 1.1),
+                       minNeighbores=('IntPin', 4)
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+
+        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "haarcascade_frontalface_default.xml")
+        face_cascade = cv2.CascadeClassifier(face_model_path)
+        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+        img(gray)
+        rects({'rect': [(x, y, w, h) for (x, y, w, h) in faces]})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def face_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                       rects=(REF, ('GraphElementPin', 0)),
+                       ):
+        """Takes an image and mask and applied logic and operation"""
+
+        face_model_proto_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "face_detect_deploy.prototxt")
+        face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "res10_300x300_ssd_iter_140000_fp16.caffemodel")
+        (h, w) = input.image.shape[:2]
+        net = cv2.dnn.readNetFromCaffe(face_model_proto_path,face_model_path)
+        blob = cv2.dnn.blobFromImage(cv2.resize(input.image, (300, 300)), 1.0, (300, 300),
+                                     mean=(104.00698793, 116.66876762, 122.67891434),
+                                     swapRB=False, crop=False)
+        net.setInput(blob)
+        detections = net.forward()
+
+        boxs=[]
+        for i in range(0, detections.shape[2]):
+            # extract the confidence (i.e., probability) associated with the
+            # prediction
+            confidence = detections[0, 0, i, 2]
+            # filter out weak detections by ensuring the `confidence` is
+            # greater than the minimum confidence
+            if confidence < 0.5:
+                continue
+            # compute the (x, y)-coordinates of the bounding box for the
+            # object
+            box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
+            (startX, startY, endX, endY) = box.astype("int")
+            boxs.append((startX,startY,endX-startX,endY-startY))
+        img(input.image)
+
+        rects({'rect': boxs})
+        
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def text_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                           rects=(REF, ('GraphElementPin', 0)),
+                           ):
+        """Takes an image and mask and applied logic and operation"""
+
+        text_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
+                                       "frozen_east_text_detection.pb")
+        modelSize=320
+        (h, w) = input.image.shape[:2]
+        image = cv2.resize(input.image, (modelSize,modelSize))
+        rW = w/ float(modelSize)
+        rH = h/ float(modelSize)
+        net = cv2.dnn.readNet(text_model_path)
+        blob = cv2.dnn.blobFromImage(image, 1.0, (modelSize,modelSize),
+                                     mean=(104.00698793, 116.66876762, 122.67891434),
+                                     swapRB=True, crop=False)
+        net.setInput(blob)
+        layerNames = [
+            "feature_fusion/Conv_7/Sigmoid",
+            "feature_fusion/concat_3"]
+        (scores, geometry) = net.forward(layerNames)
+        # scores = net.forward()
+        (numRows, numCols) = scores.shape[2:4]
+        boxes= []
+        confidences = []
+
+        # loop over the number of rows
+        for y in range(0, numRows):
+            # extract the scores (probabilities), followed by the geometrical
+            # data used to derive potential bounding box coordinates that
+            # surround text
+            scoresData = scores[0, 0, y]
+            xData0 = geometry[0, 0, y]
+            xData1 = geometry[0, 1, y]
+            xData2 = geometry[0, 2, y]
+            xData3 = geometry[0, 3, y]
+            anglesData = geometry[0, 4, y]
+
+            # loop over the number of columns
+            for x in range(0, numCols):
+                # if our score does not have sufficient probability, ignore it
+                if scoresData[x] < 0.5:
+                    continue
+
+                # compute the offset factor as our resulting feature maps will
+                # be 4x smaller than the input image
+                (offsetX, offsetY) = (x * 4.0, y * 4.0)
+
+                # extract the rotation angle for the prediction and then
+                # compute the sin and cosine
+                angle = anglesData[x]
+                cos = np.cos(angle)
+                sin = np.sin(angle)
+
+                # use the geometry volume to derive the width and height of
+                # the bounding box
+                h = xData0[x] + xData2[x]
+                w = xData1[x] + xData3[x]
+
+                # compute both the starting and ending (x, y)-coordinates for
+                # the text prediction bounding box
+                endX = int(offsetX + (cos * xData1[x]) + (sin * xData2[x]))
+                endY = int(offsetY - (sin * xData1[x]) + (cos * xData2[x]))
+                startX = int(endX - w)
+                startY = int(endY - h)
+
+                # add the bounding box coordinates and probability score to
+                # our respective lists
+                # box = (x * rW, y * rH, w * rW, h*rH)
+                boxes.append((startX*rW,startY*rH,(endX)*rW,(endY)*rH))
+                confidences.append(scoresData[x])
+        filtered_boxes = non_max_suppression(np.array(boxes), probs=confidences)
+        boxes=[(startX,startY,endX-startX,endY-startY) for startX,startY,endX,endY in filtered_boxes]
+        img(input.image)
+        rects({'rect': boxes})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def eye_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+                      rects=(REF, ('GraphElementPin', 0)),
+                      scaleFactor=('FloatPin', 1.1),
+                      minNeighbores=('IntPin', 4)
+                      ):
+        """Takes an image and mask and applied logic and operation"""
+
+        eye_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_eye.xml")
+        eye_cascade = cv2.CascadeClassifier(eye_model_path)
+        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+        img(gray)
+        rects({'rect': [(x, y, w, h) for (x, y, w, h) in eyes]})
+
+    @staticmethod
+    @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
+    def eye_Masking(input=('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
+                    xSize = ('IntPin',2), 
+                    ySize = ('IntPin',1), 
+                    mask=(REF, ('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported})),
+                    scaleFactor=('FloatPin', 1.1),
+                    minNeighbores=('IntPin', 4)
+                      ):
+        eye_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_eye.xml")
+        eye_cascade = cv2.CascadeClassifier(eye_model_path)
+        if isinstance(input,list):
+            maskList = []
+            for imagen in input:
+
+                gray = cv2.cvtColor(imagen.image, cv2.COLOR_BGR2GRAY)
+                eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+                tmp=np.zeros(imagen.image.shape,dtype="uint8")
+                angle = 0
+                if len(eyes) == 2:
+                    dirx = eyes[0][0] - eyes[1][0]
+                    diry = eyes[0][1] - eyes[1][1]
+                    angle = math.atan2(diry,dirx)*180/math.pi
+                for (x, y, w, h) in eyes:
+                    cv2.ellipse(tmp, (int(x+w/2), int(y+h/2)),(xSize,ySize) ,angle, 0.0, 360.0, (255, 255, 255), -1)
+                maskList.append(MyImage(tmp))
+            mask(maskList)
+        else:
+            gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+            eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
+            tmp=np.zeros(input.image.shape,dtype="uint8")
+            angle = 0
+            if len(eyes) == 2:
+                dirx = eyes[0][0] - eyes[1][0]
+                diry = eyes[0][1] - eyes[1][1]
+                angle = math.atan2(diry,dirx)*180/math.pi
+            for (x, y, w, h) in eyes:
+                cv2.ellipse(tmp, (int(x+w/2), int(y+h/2)),(xSize,ySize) ,angle, 0.0, 360.0, (255, 255, 255), -1)
+            mask(tmp)            
