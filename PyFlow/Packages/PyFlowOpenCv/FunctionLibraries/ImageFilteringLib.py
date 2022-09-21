@@ -55,7 +55,7 @@ class ImageFilteringLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'ImageFiltering', NodeMeta.KEYWORDS: []})
     # Blurs An image
-    def cv_Erode(input=('ImagePin', None), kernel=('ImagePin',0), iterations =('IntPin',1),  img=(REF, ('ImagePin', None))):
+    def cv_Erode(input=('ImagePin', None), kernel=('ImagePin', None), iterations =('IntPin',1),  img=(REF, ('ImagePin', None))):
         """ Blurs An image."""
         image = cv2.erode(input, kernel, iterations=iterations)
         img(image)          
@@ -63,7 +63,7 @@ class ImageFilteringLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'ImageFiltering', NodeMeta.KEYWORDS: []})
     # Blurs An image
-    def cv_Filter2D(input=('ImagePin', None), ddepth=('IntPin',-1), kernel=('ImagePin',0), delta =('FloatPin', 0),  img=(REF, ('ImagePin', None))):
+    def cv_Filter2D(input=('ImagePin', None), ddepth=('IntPin',-1), kernel=('ImagePin', None), delta =('FloatPin', 0),  img=(REF, ('ImagePin', None))):
         """ Blurs An image."""
         image = cv2.filter2D(input, ddepth,kernel, delta =delta )
         img(image)  
@@ -177,7 +177,7 @@ class ImageFilteringLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'ImageFiltering', NodeMeta.KEYWORDS: []})
     # Blurs An image
     def cv_SepFilter2D(input=('ImagePin', None),  ddepth=('IntPin',-1),
-                    kernelX=('ImagePin',0), kernelY=('ImagePin',0), 
+                    kernelX=('ImagePin',0), kernelY=('ImagePin', None), 
                     delta  =('FloatPin',0), img=(REF, ('ImagePin', None))):
         """ Blurs An image."""
         image = cv2.sepFilter2D(input, ddepth, kernelX, kernelY, delta = delta )
