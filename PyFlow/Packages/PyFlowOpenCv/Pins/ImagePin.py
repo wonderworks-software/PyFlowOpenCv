@@ -4,6 +4,18 @@ import numpy as np
 import json
 import cv2
 
+class NoneEncoder(json.JSONEncoder):
+    def default(self, vec3):
+        return None
+
+
+class NoneDecoder(json.JSONDecoder):
+    def __init__(self, *args, **kwargs):
+        super(NoneDecoder, self).__init__(object_hook=self.object_hook, *args, **kwargs)
+
+    def object_hook(self, vec3Dict):
+        return None
+
 class VideoInput():
     def __init__(self, video_capture=None):
         if isinstance(video_capture, VideoInput):
@@ -106,7 +118,7 @@ class ImagePin(PinBase):
         if isinstance(data, np.ndarray):
             return data
         else:
-            raise Exception("non Valid Image//numpy Array")#return ImagePin.internalDataStructure()(data)
+            raise Exception("non Valid Image//numpy Array")
 
 class GraphElement():
     def __init__(self, graph=None):
