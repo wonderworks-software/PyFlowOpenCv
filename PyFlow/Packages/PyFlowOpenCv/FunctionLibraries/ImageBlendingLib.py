@@ -18,10 +18,10 @@ class ImageBlendingLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Blending', NodeMeta.KEYWORDS: []})
-    def cv_AlphaMixImages(FG=('ImagePin', 0),BG=('ImagePin', 0),Mask=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        foreground = FG.image.astype(float)
-        background = BG.image.astype(float)
-        alpha = Mask.image.astype(float)/255
+    def cv_AlphaMixImages(FG=('ImagePin', None),BG=('ImagePin', None),Mask=('ImagePin', None), img=(REF, ('ImagePin', None))):
+        foreground = FG.astype(float)
+        background = BG.astype(float)
+        alpha = Mask.astype(float)/255
         # Multiply the foreground with the alpha matte
         foreground = cv2.multiply(alpha, foreground)
         # Multiply the background with ( 1 - alpha )
@@ -32,20 +32,20 @@ class ImageBlendingLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Blending', NodeMeta.KEYWORDS: []})
-    def bit_and(input=('ImagePin', 0), mask=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _mask=(REF, ('ImagePin', 0))):
+    def bit_and(input=('ImagePin', None), mask=('ImagePin', None), img=(REF, ('ImagePin', None)), _mask=(REF, ('ImagePin', None))):
         """Takes an image and mask and applied logic and operation"""
-        ret, mask = cv2.threshold(mask.image, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
-        img(cv2.bitwise_and(input.image, input.image, mask=mask))
+        ret, mask = cv2.threshold(mask, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+        img(cv2.bitwise_and(input, input, mask=mask))
         _mask(mask)        
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Blending', NodeMeta.KEYWORDS: []})
-    def cv_BlendImages( base_image=('ImagePin', 0),overlay_image=('ImagePin', 0), Mask=('ImagePin', 0),
+    def cv_BlendImages( base_image=('ImagePin', None),overlay_image=('ImagePin', None), Mask=('ImagePin', None),
                         blendmode=('StringPin', 0,
                             {PinSpecifires.VALUE_LIST: ['NORMAL', 'MULTIPLY', 'DARKEN', 'LIGHTEN', 'ADD', 
                             'COLOR_BURN', 'COLOR_DODGE', 'REFLECT', 'GLOW', 'OVERLAY', 'DIFFERENCE', 'NEGATION', 'SCREEN', 'XOR',
                             'SUBTRACT', 'DIVIDE', 'EXCLUSION', 'SOFT_LIGHT']}),
-                        img=(REF, ('ImagePin', 0)), center=('BoolPin', True,),
+                        img=(REF, ('ImagePin', None)), center=('BoolPin', True,),
                         interpolation=('StringPin', "INTER_CUBIC",
                             {PinSpecifires.VALUE_LIST: ["INTER_LINEAR","INTER_CUBIC","INTER_AREA","INTER_LANCZOS4",
                             "INTER_LINEAR_EXACT","INTER_MAX","WARP_FILL_OUTLIERS","WARP_INVERSE_MAP" ]} )
@@ -63,12 +63,12 @@ class ImageBlendingLib(FunctionLibraryBase):
 
         modes = {key:value for key, value in BlendModes.__dict__.items() if not key.startswith('__') and not callable(key)}        
         blend_mode = modes[blendmode]
-        base = normalize_image(base_image.image)
-        overlay = normalize_image(overlay_image.image)
+        base = normalize_image(base_image)
+        overlay = normalize_image(overlay_image)
 
         b_h, b_w, b_c = get_h_w_c(base)
         o_h, o_w, _ = get_h_w_c(overlay)
-        m_h, m_w, m_c = get_h_w_c(Mask.image)
+        m_h, m_w, m_c = get_h_w_c(Mask)
 
         max_h = max(b_h, o_h)
         max_w = max(b_w, o_w)
@@ -87,8 +87,8 @@ class ImageBlendingLib(FunctionLibraryBase):
             )
             result_c = get_h_w_c(result)[2]
 
-        if Mask.image.any():
-            alpha = normalize_image(Mask.image)
+        if Mask.any():
+            alpha = normalize_image(Mask)
             if (m_h, m_w) != (b_h, b_w):
                 alpha = resize_to_fit(alpha, base, inter[interpolation])
                 alpha = expand_image_to_fit(alpha, base, center)

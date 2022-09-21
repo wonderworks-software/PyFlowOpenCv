@@ -44,9 +44,9 @@ class ViewerNode(NodeBase):
             viewer = self._wrapper.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
             yInputPins= sorted(self.arrayData.affected_by, key=lambda pin: pin.owningNode().y)
             if isinstance(inputData,list):
-                viewer.viewer.setNumpyArrayList([x.image for x in inputData])
+                viewer.viewer.setNumpyArrayList(inputData)
             else:
-                draw_image=inputData.image.copy()
+                draw_image=inputData.copy()
                 for i in self.arrayData.getData():
                     draw_image=i.draw(draw_image)
 

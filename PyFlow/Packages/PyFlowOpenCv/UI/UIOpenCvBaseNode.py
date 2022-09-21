@@ -71,7 +71,7 @@ class UIOpenCvBaseNode(UINodeBase):
         if self.displayImage and not self.collapsed :
             if self.imagePin:
                 img = self.imagePin.getData()
-                self.setNumpyArray(img.image) 
+                self.setNumpyArray(img) 
 
     def refreshImage(self):
         if self.imagePin:
@@ -79,7 +79,7 @@ class UIOpenCvBaseNode(UINodeBase):
         if self.displayImage and not self.collapsed :
             if self.imagePin:
                 img = self.imagePin.getData()
-                self.setNumpyArray(img.image)
+                self.setNumpyArray(img)
             self.Imagelabel.setVisible(True)
         else:
             self.Imagelabel.setVisible(False)

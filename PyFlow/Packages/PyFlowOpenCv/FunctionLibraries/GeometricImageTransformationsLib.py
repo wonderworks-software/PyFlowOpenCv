@@ -5,7 +5,6 @@ from PyFlow.Core import (
     IMPLEMENT_NODE
 )
 from PyFlow.Core.Common import *
-from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import MyImage
 
 def oddify(value):
     return max(0,value+(value-1))
@@ -18,7 +17,7 @@ class GeometricImageTransformationsLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: []})
-    def image_resize_by_Factor(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def image_resize_by_Factor(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                        factor=('FloatPin', 1.0 ), interpolation=('StringPin', "INTER_CUBIC", {PinSpecifires.VALUE_LIST: ["INTER_LINEAR","INTER_CUBIC","INTER_AREA","INTER_LANCZOS4","INTER_LINEAR_EXACT","INTER_MAX","WARP_FILL_OUTLIERS","WARP_INVERSE_MAP" ]} )
                        ):    
         inter = {   "INTER_NEAREST": cv2.INTER_NEAREST ,
@@ -31,7 +30,7 @@ class GeometricImageTransformationsLib(FunctionLibraryBase):
                             "WARP_FILL_OUTLIERS": cv2.WARP_FILL_OUTLIERS,
                             "WARP_INVERSE_MAP ": cv2.WARP_INVERSE_MAP
                         }
-        imagen = input.image
+        imagen = input
         width  = int(imagen.shape[1] * factor)
         height = int(imagen.shape[0] * factor)
         dim = (width, height)
@@ -41,18 +40,18 @@ class GeometricImageTransformationsLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: []})
     # Blurs An image
-    def cv_Transform(  input=('ImagePin', 0), 
+    def cv_Transform(  input=('ImagePin', None), 
                     xCenter=('IntPin', 0), yCenter=('IntPin', 75),
                     angle=('FloatPin',0), scale=('FloatPin', 1),
-                    img=(REF, ('ImagePin', 0))):
+                    img=(REF, ('ImagePin', None))):
         """ Transform an Image."""
-        rows,cols = input.image.shape[0],input.image.shape[1]
+        rows,cols = input.shape[0],input.shape[1]
         M = cv2.getRotationMatrix2D((xCenter,yCenter),angle,scale)
-        img(cv2.warpAffine(input.image,M,(cols,rows)))  
+        img(cv2.warpAffine(input,M,(cols,rows)))  
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Transformations', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_FlipImage(input=('ImagePin', 0), mode=('IntPin', 0), img=(REF, ('ImagePin', 0))):
+    def cv_FlipImage(input=('ImagePin', None), mode=('IntPin', 0), img=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
-        img(cv2.flip(input.image, mode))        
+        img(cv2.flip(input, mode))        

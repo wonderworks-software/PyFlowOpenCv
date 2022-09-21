@@ -3,7 +3,6 @@ from PyFlow.Core.NodeBase import NodePinsSuggestionsHelper
 from PyFlow.Core.Common import *
 from Qt import QtWidgets
 import numpy as np
-from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import MyImage
 
 class PaintNode(NodeBase):
     def __init__(self, name):
@@ -43,4 +42,4 @@ class PaintNode(NodeBase):
         return "Description in rst format."
 
     def compute(self, *args, **kwargs):
-        self.img.setData(MyImage(self.IMAGE))
+        self.img.setData(self.IMAGE)

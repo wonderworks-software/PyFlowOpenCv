@@ -23,13 +23,13 @@ class OpticalFlowLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpticalFlow', NodeMeta.KEYWORDS: []})
-    def OpticalFlowSparseToDense(previmg=('ImagePin', 0), img=('ImagePin', 0),
+    def OpticalFlowSparseToDense(previmg=('ImagePin', None), img=('ImagePin', None),
                                  grid_step=('IntPin',8),k=('IntPin',128),
                                  sigma = ('FloatPin',0.05),use_post_proc=('BoolPin',True),
                                  fgs_lambda = ('FloatPin',500),fgs_sigma =('FloatPin',1.5),
-                                 flowVis=(REF, ('ImagePin', 0)),flowVisCombined=(REF, ('ImagePin', 0))):
-        prevFrame = previmg.image
-        frame = img.image
+                                 flowVis=(REF, ('ImagePin', None)),flowVisCombined=(REF, ('ImagePin', None))):
+        prevFrame = previmg
+        frame = img
         hsv = np.zeros_like(prevFrame)
         hsv[..., 1] = 255
         prevGrey = cv2.cvtColor(prevFrame, cv2.COLOR_BGR2GRAY)
@@ -49,7 +49,7 @@ class OpticalFlowLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpticalFlow', NodeMeta.KEYWORDS: []})
-    def OpticalFlowSF(previmg=('ImagePin', 0), img=('ImagePin', 0),
+    def OpticalFlowSF(previmg=('ImagePin', None), img=('ImagePin', None),
                                  layers=('IntPin',3),averaging_block_size=('IntPin',2),
                                  max_flow=('IntPin',4),
                                  sigma_dist = ('FloatPin',4.1), sigma_color = ('FloatPin',25.5),
@@ -58,9 +58,9 @@ class OpticalFlowLib(FunctionLibraryBase):
                                  occ_thr  = ('FloatPin',0.35),upscale_averaging_radius=('IntPin',18),
                                  upscale_sigma_dist  = ('FloatPin',55.0),upscale_sigma_color = ('FloatPin',25.5),
                                  speed_up_thr = ('FloatPin',10),
-                                 flowVis=(REF, ('ImagePin', 0)),flowVisCombined=(REF, ('ImagePin', 0))):
-        prevFrame = previmg.image
-        frame = img.image
+                                 flowVis=(REF, ('ImagePin', None)),flowVisCombined=(REF, ('ImagePin', None))):
+        prevFrame = previmg
+        frame = img
         hsv = np.zeros_like(prevFrame)
         hsv[..., 1] = 255    
         flow = cv2.optflow.calcOpticalFlowSF(prevFrame, frame, layers,averaging_block_size,
@@ -92,26 +92,26 @@ class LK_optical_flow_Lib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpticalFlow', NodeMeta.KEYWORDS: []})
     def LK_optical_flow(
-            input=('ImagePin', 0),
+            input=('ImagePin', None),
             previous_points=('KeyPointsPin', 0),
-            img=(REF, ('ImagePin', 0)) ):
+            img=(REF, ('ImagePin', None)) ):
         color = np.random.randint(0, 255, (100, 3))
         lk_params = dict(winSize=(15, 15),
                          maxLevel=2,
                          criteria=(cv2.TERM_CRITERIA_EPS | cv2.TERM_CRITERIA_COUNT, 10, 0.03))
         if LK_optical_flow_Lib.previous_image is None \
-                or LK_optical_flow_Lib.previous_image.shape!=input.image.shape:
-            LK_optical_flow_Lib.previous_image= input.image
+                or LK_optical_flow_Lib.previous_image.shape!=input.shape:
+            LK_optical_flow_Lib.previous_image= input
 
         if LK_optical_flow_Lib.mask_image is None \
-                or LK_optical_flow_Lib.mask_image.shape[:2]!=input.image.shape[:2]:
-            LK_optical_flow_Lib.mask_image= np.zeros_like(input.image)
+                or LK_optical_flow_Lib.mask_image.shape[:2]!=input.shape[:2]:
+            LK_optical_flow_Lib.mask_image= np.zeros_like(input)
             LK_optical_flow_Lib.mask_image= cv2.cvtColor(LK_optical_flow_Lib.mask_image,cv2.COLOR_GRAY2BGR)
 
         LK_optical_flow_Lib.previous_points=previous_points.data
-        color_draw= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
+        color_draw= cv2.cvtColor(input, cv2.COLOR_GRAY2BGR)
         prev_gray =LK_optical_flow_Lib.previous_image
-        gray = input.image
+        gray = input
         if previous_points:
             p1, st, err = cv2.calcOpticalFlowPyrLK(prev_gray, gray, LK_optical_flow_Lib.previous_points, None, **lk_params)
             good_new = p1[st == 1]
@@ -125,7 +125,7 @@ class LK_optical_flow_Lib(FunctionLibraryBase):
             color_draw= cv2.add(color_draw, LK_optical_flow_Lib.mask_image)
             LK_optical_flow_Lib.previous_points=good_new
         img(color_draw)
-        LK_optical_flow_Lib.previous_image=input.image
+        LK_optical_flow_Lib.previous_image=input
 
 
 class Dense_optical_flow_Lib(FunctionLibraryBase):
@@ -139,19 +139,19 @@ class Dense_optical_flow_Lib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpticalFlow', NodeMeta.KEYWORDS: []})
     def Dense_optical_flow(
-            input=('ImagePin', 0),
-            img=(REF, ('ImagePin', 0)) ):
+            input=('ImagePin', None),
+            img=(REF, ('ImagePin', None)) ):
 
         if Dense_optical_flow_Lib.previous_image is None \
-                or Dense_optical_flow_Lib.previous_image.shape!=input.image.shape:
-            Dense_optical_flow_Lib.previous_image= input.image
+                or Dense_optical_flow_Lib.previous_image.shape!=input.shape:
+            Dense_optical_flow_Lib.previous_image= input
         # Sets image saturation to maximum
-        color_img= cv2.cvtColor(input.image, cv2.COLOR_GRAY2BGR)
+        color_img= cv2.cvtColor(input, cv2.COLOR_GRAY2BGR)
         mask= np.zeros_like(color_img)
         mask[..., 1] = 255
 
         prev_gray =Dense_optical_flow_Lib.previous_image
-        gray = input.image
+        gray = input
         if gray is not None and prev_gray is not None:
             flow = cv2.calcOpticalFlowFarneback(prev_gray, gray , None, pyr_scale=0.5, levels=5, winsize=11, iterations=5,
                                                 poly_n=5, poly_sigma=1.1, flags=0)
@@ -161,4 +161,4 @@ class Dense_optical_flow_Lib(FunctionLibraryBase):
             rgb = cv2.cvtColor(mask, cv2.COLOR_HSV2BGR)
             dense_flow = cv2.addWeighted(color_img, 1, rgb, 2, 0)
             img(dense_flow)
-        Dense_optical_flow_Lib.previous_image=input.image
+        Dense_optical_flow_Lib.previous_image=input

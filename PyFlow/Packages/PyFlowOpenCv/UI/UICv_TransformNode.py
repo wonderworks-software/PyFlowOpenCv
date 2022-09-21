@@ -173,7 +173,7 @@ class UICv_TransformNode(UIOpenCvBaseNode):
         instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv", "ImageViewerTool")
         if instance:
             img = self.imagePin.getData()
-            instance.viewer.setNumpyArray(img.image)
+            instance.viewer.setNumpyArray(img)
 
     def createInputWidgets(self, inputsCategory, inGroup=None, pins=True):
         

@@ -4,31 +4,6 @@ import numpy as np
 import json
 import cv2
 
-class MyImage():
-    def __init__(self, image=None):
-        if isinstance(image, MyImage):
-            if image.image.__class__.__name__ == "UMat":
-                self.image = cv2.UMat(image.image)
-            else:
-                self.image = image.image.copy()
-        elif isinstance(image, np.ndarray) or image.__class__.__name__ == "UMat":
-            self.image = image
-        else:
-            self.image = np.zeros((2, 2, 3), np.uint8)
-
-
-class NoneEncoder(json.JSONEncoder):
-    def default(self, vec3):
-        return None
-
-
-class NoneDecoder(json.JSONDecoder):
-    def __init__(self, *args, **kwargs):
-        super(NoneDecoder, self).__init__(object_hook=self.object_hook, *args, **kwargs)
-
-    def object_hook(self, vec3Dict):
-        return MyImage()
-
 class VideoInput():
     def __init__(self, video_capture=None):
         if isinstance(video_capture, VideoInput):
@@ -93,7 +68,7 @@ class ImagePin(PinBase):
 
     def __init__(self, name, parent, direction, **kwargs):
         super(ImagePin, self).__init__(name, parent, direction, **kwargs)
-        self.setDefaultValue(MyImage())
+        self.setDefaultValue(ImagePin.pinDataTypeHint()[1])
         self.disableOptions(PinOptions.Storable)
 
     @staticmethod
@@ -114,7 +89,7 @@ class ImagePin(PinBase):
 
     @staticmethod
     def pinDataTypeHint():
-        return 'ImagePin', MyImage()
+        return 'ImagePin', np.zeros((2, 2, 3), np.uint8)
 
     @staticmethod
     def color():
@@ -122,11 +97,16 @@ class ImagePin(PinBase):
 
     @staticmethod
     def internalDataStructure():
-        return MyImage
+        return np.ndarray
 
     @staticmethod
     def processData(data):
-        return ImagePin.internalDataStructure()(data)
+        if data is None:
+            return ImagePin.pinDataTypeHint()[1]
+        if isinstance(data, np.ndarray):
+            return data
+        else:
+            raise Exception("non Valid Image//numpy Array")#return ImagePin.internalDataStructure()(data)
 
 class GraphElement():
     def __init__(self, graph=None):

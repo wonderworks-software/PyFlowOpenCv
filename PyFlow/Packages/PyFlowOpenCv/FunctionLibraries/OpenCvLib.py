@@ -14,7 +14,6 @@ from PyFlow.Core import (
 from PyFlow.Core.Common import *
 import pytesseract
 import math
-from PyFlow.Packages.PyFlowOpenCv.Pins.ImagePin import MyImage
 
 class ShapeDetector:
     def __init__(self):
@@ -102,7 +101,7 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Reads an Image from a file
     def cv_ReadImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
-                     gray_scale= ( 'BoolPin', False), img=(REF, ('ImagePin', 0))):
+                     gray_scale= ( 'BoolPin', False), img=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
         print(path)
         print(os.path.exists(path))
@@ -116,9 +115,9 @@ class OpenCvLib(FunctionLibraryBase):
                     meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Writes an Image to a file
     def cv_WriteImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
-                      img=('ImagePin', 0)):
+                      img=('ImagePin', None)):
         """Return a frame of the loaded image."""
-        cv2.imwrite(path, img.image)
+        cv2.imwrite(path, img)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
@@ -141,7 +140,7 @@ class OpenCvLib(FunctionLibraryBase):
     # Reads next Video Frame from an already loaded video with cv_ReadVideo
     def cv_ReadNextFrame(video=('VideoPin', ""),
                          skip_frame=('IntPin', 0),
-                         img=(REF, ('ImagePin', 0))
+                         img=(REF, ('ImagePin', None))
                          ):
         """Return a frame of the loaded image."""
         for _ in range(skip_frame+1):
@@ -156,8 +155,8 @@ class OpenCvLib(FunctionLibraryBase):
                     meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: [], NodeMeta.CACHE_ENABLED: False})
     # Return a random frame of x,y
     def cv_ReadNextTwoFrame(video=('VideoPin', ""),
-                            img=(REF, ('ImagePin', 0)),
-                            next_img=(REF, ('ImagePin', 0))
+                            img=(REF, ('ImagePin', None)),
+                            next_img=(REF, ('ImagePin', None))
                             ):
         """Reads next 2 Video Frames from an already loaded video with cv_ReadVideo"""
         ret, frame = video.read()
@@ -173,7 +172,7 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=('BoolPin', False), meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Reads a specific Video Frame from an already loaded video with cv_ReadVideo
-    def cv_ReadVideoFrame(video=('VideoPin', 0,), frame=('IntPin', 0), img=(REF, ('ImagePin', 0))):
+    def cv_ReadVideoFrame(video=('VideoPin', 0,), frame=('IntPin', 0), img=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
         video.set(1, frame)
         ret, im = video.read()
@@ -193,21 +192,21 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Converters', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_BGR2RGB(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        img(cv2.cvtColor(input.image, cv2.COLOR_BGR2RGB))
+    def cv_BGR2RGB(input=('ImagePin', None), img=(REF, ('ImagePin', None))):
+        img(cv2.cvtColor(input, cv2.COLOR_BGR2RGB))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Converters', NodeMeta.KEYWORDS: []})
-    def cv_BGR2GRAY(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        img(cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY))
+    def cv_BGR2GRAY(input=('ImagePin', None), img=(REF, ('ImagePin', None))):
+        img(cv2.cvtColor(input, cv2.COLOR_BGR2GRAY))
 
 
     ###################     DEBUG NODES      ##########################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Debug', NodeMeta.KEYWORDS: []})
-    def cv_Histogram(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
+    def cv_Histogram(input=('ImagePin', None), img=(REF, ('ImagePin', None))):
 
-        bgr_planes = cv2.split(input.image)
+        bgr_planes = cv2.split(input)
         histSize = 256
         histRange = (0, 256)  # the upper boundary is exclusive
         accumulate = False
@@ -240,15 +239,15 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpenCl', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_convertToGPU(img=('ImagePin', 0), gpuImg=(REF, ('ImagePin', 0))):
-        gpuImg(cv2.UMat(img.image))
+    def cv_convertToGPU(img=('ImagePin', None), gpuImg=(REF, ('ImagePin', None))):
+        gpuImg(cv2.UMat(img))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'OpenCl', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_convertToCPU(gpuImg=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        if gpuImg.image.__class__.__name__ == "UMat":
-            img(cv2.UMat.get(gpuImg.image))
+    def cv_convertToCPU(gpuImg=('ImagePin', None), img=(REF, ('ImagePin', None))):
+        if gpuImg.__class__.__name__ == "UMat":
+            img(cv2.UMat.get(gpuImg))
         else:
             img(gpuImg)
 
@@ -257,21 +256,21 @@ class OpenCvLib(FunctionLibraryBase):
     ###################     COLOR NODES      ##########################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
-    def cv_HDR_AutoGamma(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        image = np.clip(np.power(input.image, 1.0 / 2.2), 0, 1)
+    def cv_HDR_AutoGamma(input=('ImagePin', None), img=(REF, ('ImagePin', None))):
+        image = np.clip(np.power(input, 1.0 / 2.2), 0, 1)
         img(np.uint8(image * 255))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
-    def cv_ConvertScaleAbs(input=('ImagePin', 0), img=(REF, ('ImagePin', 0))):
-        img(cv2.convertScaleAbs(input.image))
+    def cv_ConvertScaleAbs(input=('ImagePin', None), img=(REF, ('ImagePin', None))):
+        img(cv2.convertScaleAbs(input))
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Color', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def color_filter(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _thresh=(REF, ('ImagePin', 0))):
+    def color_filter(input=('ImagePin', None), img=(REF, ('ImagePin', None)), _thresh=(REF, ('ImagePin', None))):
         """filter a BGR color range from image"""
-        image = input.image
+        image = input
         # define the list of boundaries
         boundaries = [  # would be good to have a BGR colour picker..
             ([17, 15, 100], [50, 56, 200]),  # RBG lower and upper limit for RED
@@ -298,9 +297,9 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def auto_canny(input=('ImagePin', 0), sigma=('FloatPin', 0.33), img=(REF, ('ImagePin', 0))):
+    def auto_canny(input=('ImagePin', None), sigma=('FloatPin', 0.33), img=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
-        image = input.image
+        image = input
         v = np.median(image)
         lower = int(max(0, (1.0 - sigma) * v))
         upper = int(min(255, (1.0 + sigma) * v))
@@ -309,9 +308,9 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def HED(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)), _canny=(REF, ('ImagePin', 0))):
+    def HED(input=('ImagePin', None), img=(REF, ('ImagePin', None)), _canny=(REF, ('ImagePin', None))):
         """Holistically-Nested Edge Detection"""
-        image = input.image
+        image = input
 
         class CropLayer(object):
             def __init__(self, params, blobs):
@@ -369,7 +368,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Edge Detection', NodeMeta.KEYWORDS: []})
-    def detectLines(input=('ImagePin', 0),
+    def detectLines(input=('ImagePin', None),
                     low_threshold=('IntPin', 50),
                     high_threshold=('IntPin', 150),
                     rho=('IntPin', 1),
@@ -378,11 +377,11 @@ class OpenCvLib(FunctionLibraryBase):
                     min_line_length=('IntPin', 50),
                     max_line_gap=('IntPin', 20),
 
-                    img=(REF, ('ImagePin', 0)), _mask=(REF, ('ImagePin', 0))):
+                    img=(REF, ('ImagePin', None)), _mask=(REF, ('ImagePin', None))):
         """Detects lines and crossings"""
         import CV_classes.poly_point_isect as bot
 
-        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
         kernel_size = 5
         blur_gray = cv2.GaussianBlur(gray, (kernel_size, kernel_size), 0)
 
@@ -424,21 +423,21 @@ class OpenCvLib(FunctionLibraryBase):
     ###################     FEATURE EXTRACTION NODES      ######################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def goodFeatureToTrack(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
+    def goodFeatureToTrack(input=('ImagePin', None), keypoints=(REF, ('KeyPointsPin', 0)),
                            draw_points=(REF, ('GraphElementPin', 0))):
         """Takes an image and mask and applied logic and operation"""
         feature_params = dict(maxCorners=100,
                               qualityLevel=0.3,
                               minDistance=7,
                               blockSize=7)
-        corners = cv2.goodFeaturesToTrack(input.image, 25, 0.01, 10)
+        corners = cv2.goodFeaturesToTrack(input, 25, 0.01, 10)
         if corners is not None:
             keypoints(corners)
             draw_points({'point': [(item[0][0], item[0][1]) for item in corners]})
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def Feature_Extraction(input=('ImagePin', 0),
+    def Feature_Extraction(input=('ImagePin', None),
                             algorithm=('StringPin', 'SURF',
                                        {PinSpecifires.VALUE_LIST: ["SURF", "SIFT", 'FAST', 'BRISK','AKAZE','ORB']}),
                             keypoints=(REF, ('KeyPointsPin', 0)),
@@ -460,7 +459,7 @@ class OpenCvLib(FunctionLibraryBase):
             extractor= cv2.AKAZE_create()
         elif algorithm=='ORB':
             extractor= cv2.ORB_create(nfeatures=2000)
-        kp, des = extractor.detectAndCompute(input.image, None)
+        kp, des = extractor.detectAndCompute(input, None)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -470,7 +469,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def SURF_Feature(input=('ImagePin', 0),
+    def SURF_Feature(input=('ImagePin', None),
                      keypoints=(REF, ('KeyPointsPin', 0)),
                      descriptor=(REF, ('DescriptorPin', 0)),
                      draw_key_points=(REF, ('GraphElementPin', 0)),
@@ -478,7 +477,7 @@ class OpenCvLib(FunctionLibraryBase):
         """Takes an image and mask and applied logic and operation"""
 
         surf = cv2.xfeatures2d.SURF_create(400)
-        kp, des = surf.detectAndCompute(input.image, None)
+        kp, des = surf.detectAndCompute(input, None)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -488,7 +487,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def SIFT_Feature(input=('ImagePin', 0),
+    def SIFT_Feature(input=('ImagePin', None),
                      keypoints=(REF, ('KeyPointsPin', 0)),
                      descriptor=(REF, ('DescriptorPin', 0)),
                      draw_key_points=(REF, ('GraphElementPin', 0)),
@@ -496,7 +495,7 @@ class OpenCvLib(FunctionLibraryBase):
         """Takes an image and mask and applied logic and operation"""
 
         sift = cv2.xfeatures2d.SIFT_create()
-        kp, des = sift.detectAndCompute(input.image, None)
+        kp, des = sift.detectAndCompute(input, None)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -506,7 +505,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def FAST_Feature(input=('ImagePin', 0),
+    def FAST_Feature(input=('ImagePin', None),
                      keypoints=(REF, ('KeyPointsPin', 0)),
                      descriptor=(REF, ('DescriptorPin', 0)),
                      draw_key_points=(REF, ('GraphElementPin', 0)),
@@ -514,7 +513,7 @@ class OpenCvLib(FunctionLibraryBase):
         """Takes an image and mask and applied logic and operation"""
 
         fast= cv2.FastFeatureDetector_create()
-        kp, des = fast.detectAndCompute(input.image, None)
+        kp, des = fast.detectAndCompute(input, None)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -524,7 +523,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def BRISK_Feature(input=('ImagePin', 0),
+    def BRISK_Feature(input=('ImagePin', None),
                       keypoints=(REF, ('KeyPointsPin', 0)),
                       descriptor=(REF, ('DescriptorPin', 0)),
                       draw_key_points=(REF, ('GraphElementPin', 0)),
@@ -532,7 +531,7 @@ class OpenCvLib(FunctionLibraryBase):
         """Takes an image and mask and applied logic and operation"""
 
         brisk= cv2.BRISK_create()
-        kp, des = brisk.detectAndCompute(input.image, None)
+        kp, des = brisk.detectAndCompute(input, None)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -542,7 +541,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def AKAZE_Feature(input=('ImagePin', 0),
+    def AKAZE_Feature(input=('ImagePin', None),
                      keypoints=(REF, ('KeyPointsPin', 0)),
                      descriptor=(REF, ('DescriptorPin', 0)),
                      draw_key_points=(REF, ('GraphElementPin', 0)),
@@ -550,7 +549,7 @@ class OpenCvLib(FunctionLibraryBase):
         """Takes an image and mask and applied logic and operation"""
 
         akaze= cv2.AKAZE_create()
-        kp, des = akaze.detectAndCompute(input.image, None)
+        kp, des = akaze.detectAndCompute(input, None)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -560,7 +559,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def BRIEF_Feature(input=('ImagePin', 0),
+    def BRIEF_Feature(input=('ImagePin', None),
                      keypoints=(REF, ('KeyPointsPin', 0)),
                      descriptor=(REF, ('DescriptorPin', 0)),
                      draw_key_points=(REF, ('GraphElementPin', 0)),
@@ -571,9 +570,9 @@ class OpenCvLib(FunctionLibraryBase):
         # Initiate BRIEF extractor
         brief = cv2.xfeatures2d.BriefDescriptorExtractor_create()
         # find the keypoints with STAR
-        kp = star.detect(input.image, None)
+        kp = star.detect(input, None)
         # compute the descriptors with BRIEF
-        kp, des = brief.compute(input.image, kp)
+        kp, des = brief.compute(input, kp)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -583,12 +582,12 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def ORB_Feature_Detector(input=('ImagePin', 0), keypoints=(REF, ('KeyPointsPin', 0)),
+    def ORB_Feature_Detector(input=('ImagePin', None), keypoints=(REF, ('KeyPointsPin', 0)),
                              draw_key_points=(REF, ('GraphElementPin', 0)),
                              draw_points=(REF, ('GraphElementPin', 0))):
         """Takes an image and mask and applied logic and operation"""
         orb = cv2.ORB_create(nfeatures=2000)
-        kp = orb.detect(input.image)
+        kp = orb.detect(input)
         if kp and len(kp):
             # corners = np.float32(corners)
             keypoints((kp,))
@@ -597,12 +596,12 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
-    def ORB_Feature_Extraction(input=('ImagePin', 0), keypoints=('KeyPointsPin', 0),
+    def ORB_Feature_Extraction(input=('ImagePin', None), keypoints=('KeyPointsPin', 0),
                                descriptor=(REF, ('DescriptorPin',0))
                                ):
         """Takes an image and mask and applied logic and operation"""
         orb = cv2.ORB_create(nfeatures=2000)
-        kp, des = orb.compute(input.image, keypoints.data[0])
+        kp, des = orb.compute(input, keypoints.data[0])
         descriptor(des)
 
     @staticmethod
@@ -641,12 +640,12 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def Draw_Match(
-            input_1=('ImagePin', 0), keypoints_1=('KeyPointsPin', 0),
-            input_2=('ImagePin', 0), keypoints_2=('KeyPointsPin', 0),
+            input_1=('ImagePin', None), keypoints_1=('KeyPointsPin', 0),
+            input_2=('ImagePin', None), keypoints_2=('KeyPointsPin', 0),
             matches= ('FeatureMatchPin',0),
-            output=(REF, ('ImagePin', 0)) ):
+            output=(REF, ('ImagePin', None)) ):
         """Takes an image and mask and applied logic and operation"""
-        img3 = cv2.drawMatchesKnn(input_1.image, keypoints_1.data[0], input_2.image, keypoints_2.data[0], matches,
+        img3 = cv2.drawMatchesKnn(input_1, keypoints_1.data[0], input_2, keypoints_2.data[0], matches,
                                   None, flags=cv2.DrawMatchesFlags_NOT_DRAW_SINGLE_POINTS)
         output(img3)
 
@@ -658,11 +657,11 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def shape_detector(input=('ImagePin', 0), thres1=('IntPin', 20), thres2=('IntPin', 255),
-                       img=(REF, ('ImagePin', 0)), _thresh=(REF, ('ImagePin', 0))):
+    def shape_detector(input=('ImagePin', None), thres1=('IntPin', 20), thres2=('IntPin', 255),
+                       img=(REF, ('ImagePin', None)), _thresh=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
-        image = input.image
-        blurred = cv2.GaussianBlur(input.image, (5, 5), 0)
+        image = input
+        blurred = cv2.GaussianBlur(input, (5, 5), 0)
         gray = cv2.cvtColor(blurred, cv2.COLOR_BGR2GRAY)
         lab = cv2.cvtColor(blurred, cv2.COLOR_BGR2LAB)
         thresh = cv2.threshold(gray, thres1, thres2, cv2.THRESH_BINARY)[1]
@@ -696,10 +695,10 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def adapt_thres(input=('ImagePin', 0), _mean=(REF, ('ImagePin', 0)),
-                    _thresh=(REF, ('ImagePin', 0)), _gaussian=(REF, ('ImagePin', 0))):
+    def adapt_thres(input=('ImagePin', None), _mean=(REF, ('ImagePin', None)),
+                    _thresh=(REF, ('ImagePin', None)), _gaussian=(REF, ('ImagePin', None))):
         """filter a BGR color range from image"""
-        image = input.image
+        image = input
 
         gray_image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         ret, thresh = cv2.threshold(gray_image, 127, 255, cv2.THRESH_BINARY)
@@ -715,10 +714,10 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def waters_hed(input=('ImagePin', 0), _thres=(REF, ('ImagePin', 0)), _sure_bg=(REF, ('ImagePin', 0)),
-                   img=(REF, ('ImagePin', 0))):
+    def waters_hed(input=('ImagePin', None), _thres=(REF, ('ImagePin', None)), _sure_bg=(REF, ('ImagePin', None)),
+                   img=(REF, ('ImagePin', None))):
         """filter a BGR color range from image"""
-        image = input.image
+        image = input
 
         gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
         # apply thresholding
@@ -744,14 +743,14 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
     # Return a random frame of x,y
-    def cv_Threahold(input=('ImagePin', 0), threshold=('IntPin', 127), img=(REF, ('ImagePin', 0))):
+    def cv_Threahold(input=('ImagePin', None), threshold=('IntPin', 127), img=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
-        threshold, cv__threshold = cv2.threshold(input.image, threshold, 255, cv2.THRESH_BINARY)
+        threshold, cv__threshold = cv2.threshold(input, threshold, 255, cv2.THRESH_BINARY)
         img(cv__threshold)    
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def image_crop(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def image_crop(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                        rect=('GraphElementPin', 0)
                        ):
         """Takes an image and mask and applied logic and operation"""
@@ -760,13 +759,13 @@ class OpenCvLib(FunctionLibraryBase):
             only_rect=rect.graph['rect']
             if only_rect:
                 x, y, w, h=only_rect[0]
-                (ih, iw) = input.image.shape[:2]
+                (ih, iw) = input.shape[:2]
                 if (x+w)<=iw and (y+h)<ih:
-                    img(input.image[y:(y+h),x:(x+w),:])
+                    img(input[y:(y+h),x:(x+w),:])
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def image_crop_multi(img=('ImagePin', 0 ), croped=(REF, ('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported })),
+    def image_crop_multi(img=('ImagePin', None ), croped=(REF, ('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported })),
                        rects=('GraphElementPin', 0)
                        ):
         """Takes an image and mask and applied logic and operation"""
@@ -776,19 +775,19 @@ class OpenCvLib(FunctionLibraryBase):
             only_rects=rects['rect']
             for rect in only_rects:  
                 x, y, w, h=rect
-                (ih, iw) = img.image.shape[:2]
+                (ih, iw) = img.shape[:2]
                 if (x+w)<=iw and (y+h)<ih:
-                    images.append(MyImage(img.image[y:(y+h),x:(x+w),:]))
+                    images.append(img[y:(y+h),x:(x+w),:])
         croped(images)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def image_unCrop_multi(originalImage=('ImagePin', 0 ),croped=('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
-                         img=(REF, ('ImagePin', 0)),
+    def image_unCrop_multi(originalImage=('ImagePin', None ),croped=('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
+                         img=(REF, ('ImagePin', None)),
                         rects=('GraphElementPin', 0)
                        ):
         """Takes an image and mask and applied logic and operation"""
-        originalImage = originalImage.image
+        originalImage = originalImage
         originalImage=np.zeros(originalImage.shape,dtype="uint8")
         rects = rects.graph
         if 'rect' in rects.keys():
@@ -798,23 +797,23 @@ class OpenCvLib(FunctionLibraryBase):
                 (ih, iw) = originalImage.shape[:2]
                 if (x+w)<=iw and (y+h)<ih:
                     originalImage[y:(y+h),x:(x+w)]=croped[index].image
-        img(MyImage(originalImage))
+        img(originalImage)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def cv_Draw_Rects(refImage=('ImagePin', 0 ), img=(REF, ('ImagePin',0)),
+    def cv_Draw_Rects(refImage=('ImagePin', None ), img=(REF, ('ImagePin',0)),
                        rects=('GraphElementPin', 0)
                        ):
         """Takes an image and mask and applied logic and operation"""
         rects = rects.graph
-        originalImage=np.zeros(refImage.image.shape,dtype="uint8")
+        originalImage=np.zeros(refImage.shape,dtype="uint8")
 
         for draw_type,draw_list in rects.items():
             if draw_type=='rect':
                 for (x, y, w, h) in draw_list :
                     cv2.rectangle(originalImage, (x, y), (x + w, y + h), (255, 255, 255), -1)        
 
-        img(MyImage(originalImage))
+        img(originalImage)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
@@ -872,16 +871,16 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'VideoAnalysis', NodeMeta.KEYWORDS: []})
-    def BackgroundSubtract(input=('ImagePin', 0), background_subtrator=('BackgroundSubtractorPin', 0),
-                           fgMask=(REF, ('ImagePin', 0))):
-        mask = background_subtrator.data.apply(input.image)
+    def BackgroundSubtract(input=('ImagePin', None), background_subtrator=('BackgroundSubtractorPin', 0),
+                           fgMask=(REF, ('ImagePin', None))):
+        mask = background_subtrator.data.apply(input)
         fgMask(mask)
 
 
     ###################     RECOGNITION NODES      ##########################################################
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def blob_detector(input=('ImagePin', 0),
+    def blob_detector(input=('ImagePin', None),
                       thresholdStep=('IntPin',10),
                       minThreshold=('IntPin', 50, {PinSpecifires.VALUE_RANGE: (0, 255)}),
                       maxThreshold=('IntPin', 220 ,{PinSpecifires.VALUE_RANGE: (0, 255)}),
@@ -937,13 +936,13 @@ class OpenCvLib(FunctionLibraryBase):
         detector = cv2.SimpleBlobDetector_create(params)
 
         # Detect blobs.
-        ret= detector.detect(input.image)
+        ret= detector.detect(input)
         draw_key_points({'key_point': ret})
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def ocr(input=('ImagePin', 0),
-            img=(REF, ('ImagePin', 0)),
+    def ocr(input=('ImagePin', None),
+            img=(REF, ('ImagePin', None)),
             psm_mode=('IntPin',6),
             engine= ('StringPin', 'LSTM',
                      {PinSpecifires.VALUE_LIST: ["Legacy","LSTM",'Legacy+LSTM','Default']}),
@@ -957,25 +956,25 @@ class OpenCvLib(FunctionLibraryBase):
                   'Default': 3,
                   }
         results=[]
-        hh,ww=input.image.shape[:2]
+        hh,ww=input.shape[:2]
         if 'rect' in boxes.graph:
             for (startX, startY, w, h) in boxes.graph['rect']:
                 startX = max(int(startX),0)
                 startY = max(int(startY),0)
                 endX = min(int(startX+w),ww-1)
                 endY = min(int(startY+h),hh-1)
-                r = input.image[startY:endY, startX:endX]
+                r = input[startY:endY, startX:endX]
                 configuration = ("-l eng --oem {oem_dict[engine]} --psm {psm_mode}")
                 text = pytesseract.image_to_string(r, config=configuration)
                 if text:
                     d={'box':(startX,startY,w,h),'class':text}
                     results.append(d)
         texts({'detection':results})
-        img(input.image)
+        img(input)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def gender_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def gender_dnn(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                           keywords=(REF, ('GraphElementPin', 0)),
                           ):
         """Takes an image and mask and applied logic and operation"""
@@ -985,7 +984,7 @@ class OpenCvLib(FunctionLibraryBase):
         gender_caffe_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
                                        "gender_net.caffemodel")
 
-        image = cv2.resize(input.image, (227, 227))
+        image = cv2.resize(input, (227, 227))
         image=image[:,:,:3]
         (h, w) = image.shape[:2]
         net = cv2.dnn.readNetFromCaffe(gender_proto_path,gender_caffe_path)
@@ -1002,7 +1001,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def classifcation_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def classifcation_dnn(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                            keywords=(REF, ('GraphElementPin', 0)),
                            ):
         """Takes an image and mask and applied logic and operation"""
@@ -1018,7 +1017,7 @@ class OpenCvLib(FunctionLibraryBase):
         classes = [r[r.find(" ") + 1:].split(",")[0] for r in words_rows]
 
 
-        image = cv2.resize(input.image, (224, 224))
+        image = cv2.resize(input, (224, 224))
         image=image[:,:,:3]
         (h, w) = image.shape[:2]
         net = cv2.dnn.readNetFromCaffe(face_model_proto_path,face_model_path)
@@ -1041,11 +1040,11 @@ class OpenCvLib(FunctionLibraryBase):
         if words:
             concat_words='Lable: '+','.join(words)
         keywords({'text':[concat_words]})
-        img(input.image)
+        img(input)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def yolo_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def yolo_dnn(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                  detections=(REF, ('GraphElementPin', 0)),
                  ):
         """Takes an image and mask and applied logic and operation"""
@@ -1062,9 +1061,9 @@ class OpenCvLib(FunctionLibraryBase):
         with open(keywords_path, 'r') as f:
             classes = [line.strip() for line in f.readlines()]
 
-        (image_height, image_width) = input.image.shape[:2]
+        (image_height, image_width) = input.shape[:2]
 
-        image = cv2.resize(input.image, (modelSize, modelSize))
+        image = cv2.resize(input, (modelSize, modelSize))
         image=image[:,:,:3]
         (h, w) = image.shape[:2]
         rW = w/ float(modelSize)
@@ -1117,11 +1116,11 @@ class OpenCvLib(FunctionLibraryBase):
                 h = box[3]
                 annotation.append({'box': (x, y, w, h), 'class': classes[class_ids[i]], 'confidence': confidences[i]})
         detections({'detection': annotation})
-        img(input.image)
+        img(input)
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def face_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def face_detection(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                        rects=(REF, ('GraphElementPin', 0)),
                        scaleFactor=('FloatPin', 1.1),
                        minNeighbores=('IntPin', 4)
@@ -1131,14 +1130,14 @@ class OpenCvLib(FunctionLibraryBase):
         face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
                                        "haarcascade_frontalface_default.xml")
         face_cascade = cv2.CascadeClassifier(face_model_path)
-        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
         faces = face_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
         img(gray)
         rects({'rect': [(x, y, w, h) for (x, y, w, h) in faces]})
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def face_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def face_detection_dnn(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                        rects=(REF, ('GraphElementPin', 0)),
                        ):
         """Takes an image and mask and applied logic and operation"""
@@ -1147,9 +1146,9 @@ class OpenCvLib(FunctionLibraryBase):
                                        "face_detect_deploy.prototxt")
         face_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
                                        "res10_300x300_ssd_iter_140000_fp16.caffemodel")
-        (h, w) = input.image.shape[:2]
+        (h, w) = input.shape[:2]
         net = cv2.dnn.readNetFromCaffe(face_model_proto_path,face_model_path)
-        blob = cv2.dnn.blobFromImage(cv2.resize(input.image, (300, 300)), 1.0, (300, 300),
+        blob = cv2.dnn.blobFromImage(cv2.resize(input, (300, 300)), 1.0, (300, 300),
                                      mean=(104.00698793, 116.66876762, 122.67891434),
                                      swapRB=False, crop=False)
         net.setInput(blob)
@@ -1169,13 +1168,13 @@ class OpenCvLib(FunctionLibraryBase):
             box = detections[0, 0, i, 3:7] * np.array([w, h, w, h])
             (startX, startY, endX, endY) = box.astype("int")
             boxs.append((startX,startY,endX-startX,endY-startY))
-        img(input.image)
+        img(input)
 
         rects({'rect': boxs})
         
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def text_detection_dnn(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def text_detection_dnn(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                            rects=(REF, ('GraphElementPin', 0)),
                            ):
         """Takes an image and mask and applied logic and operation"""
@@ -1183,8 +1182,8 @@ class OpenCvLib(FunctionLibraryBase):
         text_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res",
                                        "frozen_east_text_detection.pb")
         modelSize=320
-        (h, w) = input.image.shape[:2]
-        image = cv2.resize(input.image, (modelSize,modelSize))
+        (h, w) = input.shape[:2]
+        image = cv2.resize(input, (modelSize,modelSize))
         rW = w/ float(modelSize)
         rH = h/ float(modelSize)
         net = cv2.dnn.readNet(text_model_path)
@@ -1248,12 +1247,12 @@ class OpenCvLib(FunctionLibraryBase):
                 confidences.append(scoresData[x])
         filtered_boxes = non_max_suppression(np.array(boxes), probs=confidences)
         boxes=[(startX,startY,endX-startX,endY-startY) for startX,startY,endX,endY in filtered_boxes]
-        img(input.image)
+        img(input)
         rects({'rect': boxes})
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def eye_detection(input=('ImagePin', 0), img=(REF, ('ImagePin', 0)),
+    def eye_detection(input=('ImagePin', None), img=(REF, ('ImagePin', None)),
                       rects=(REF, ('GraphElementPin', 0)),
                       scaleFactor=('FloatPin', 1.1),
                       minNeighbores=('IntPin', 4)
@@ -1262,17 +1261,17 @@ class OpenCvLib(FunctionLibraryBase):
 
         eye_model_path = os.path.join(os.path.abspath(os.path.dirname(__file__)), "..", "res", "haarcascade_eye.xml")
         eye_cascade = cv2.CascadeClassifier(eye_model_path)
-        gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+        gray = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
         eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
         img(gray)
         rects({'rect': [(x, y, w, h) for (x, y, w, h) in eyes]})
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def eye_Masking(input=('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
+    def eye_Masking(input=('ImagePin', None, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
                     xSize = ('IntPin',2), 
                     ySize = ('IntPin',1), 
-                    mask=(REF, ('ImagePin', 0, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported})),
+                    mask=(REF, ('ImagePin', None, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported})),
                     scaleFactor=('FloatPin', 1.1),
                     minNeighbores=('IntPin', 4)
                       ):
@@ -1282,9 +1281,9 @@ class OpenCvLib(FunctionLibraryBase):
             maskList = []
             for imagen in input:
 
-                gray = cv2.cvtColor(imagen.image, cv2.COLOR_BGR2GRAY)
+                gray = cv2.cvtColor(imagen, cv2.COLOR_BGR2GRAY)
                 eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
-                tmp=np.zeros(imagen.image.shape,dtype="uint8")
+                tmp=np.zeros(imagen.shape,dtype="uint8")
                 angle = 0
                 if len(eyes) == 2:
                     dirx = eyes[0][0] - eyes[1][0]
@@ -1292,12 +1291,12 @@ class OpenCvLib(FunctionLibraryBase):
                     angle = math.atan2(diry,dirx)*180/math.pi
                 for (x, y, w, h) in eyes:
                     cv2.ellipse(tmp, (int(x+w/2), int(y+h/2)),(xSize,ySize) ,angle, 0.0, 360.0, (255, 255, 255), -1)
-                maskList.append(MyImage(tmp))
+                maskList.append(tmp)
             mask(maskList)
         else:
-            gray = cv2.cvtColor(input.image, cv2.COLOR_BGR2GRAY)
+            gray = cv2.cvtColor(input, cv2.COLOR_BGR2GRAY)
             eyes = eye_cascade.detectMultiScale(gray, scaleFactor, minNeighbores)
-            tmp=np.zeros(input.image.shape,dtype="uint8")
+            tmp=np.zeros(input.shape,dtype="uint8")
             angle = 0
             if len(eyes) == 2:
                 dirx = eyes[0][0] - eyes[1][0]
