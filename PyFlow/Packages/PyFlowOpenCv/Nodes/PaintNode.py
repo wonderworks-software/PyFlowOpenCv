@@ -4,9 +4,9 @@ from PyFlow.Core.Common import *
 from Qt import QtWidgets
 import numpy as np
 
-class PaintNode(NodeBase):
+class PaintMask(NodeBase):
     def __init__(self, name):
-        super(PaintNode, self).__init__(name)
+        super(PaintMask, self).__init__(name)
         #self.inExec = self.createInputPin(DEFAULT_IN_EXEC_NAME, 'ExecPin', None, self.compute)
         #self.clearimg = self.createInputPin("clearImage", 'ExecPin', None, self.clearImage)
 
@@ -14,7 +14,10 @@ class PaintNode(NodeBase):
         self.sizeX = self.createInputPin('sizeX', 'IntPin',512)
         self.sizeY = self.createInputPin('sizeY', 'IntPin',512)
 
+        self.penSize = self.createInputPin('BrushShize', 'FloatPin',10)
+
         self.img = self.createOutputPin('img', 'ImagePin')
+        self.rgbMask = self.createOutputPin('rgbMask', 'ImagePin')
         #self.outExec = self.createOutputPin(DEFAULT_OUT_EXEC_NAME, 'ExecPin')
 
         self.IMAGE = np.zeros((512, 512, 4), np.uint8)
@@ -43,3 +46,4 @@ class PaintNode(NodeBase):
 
     def compute(self, *args, **kwargs):
         self.img.setData(self.IMAGE)
+        self.rgbMask.setData(self.IMAGE[:,:,:3])

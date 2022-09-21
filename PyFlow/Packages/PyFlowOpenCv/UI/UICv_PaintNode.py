@@ -30,10 +30,10 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
         self.Node = Node
         self.previous_pos = None
         self.painter = QtGui.QPainter()
-        self.pen = QtGui.QPen()
-        self.pen.setWidth(10)
-        self.pen.setCapStyle(QtCore.Qt.RoundCap)
-        self.pen.setJoinStyle(QtCore.Qt.RoundJoin)
+        self.DrawingPen = QtGui.QPen(QtCore.Qt.white)
+        self.DrawingPen.setWidth(10)
+        self.DrawingPen.setCapStyle(QtCore.Qt.RoundCap)
+        self.DrawingPen.setJoinStyle(QtCore.Qt.RoundJoin)
         self._manipulationMode = self._MANIP_MODE_NONE
         
         #self.setFlag(QtWidgets.QGraphicsWidget.ItemIsMovable)
@@ -76,14 +76,14 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
             pix = self.pixmap()
             self.painter.begin(pix)
             self.painter.setRenderHints(QtGui.QPainter.Antialiasing, True)
-            self.painter.setPen(self.pen)
+            self.painter.setPen(self.DrawingPen)
             self.painter.drawLine(self.previous_pos, current_pos)
             self.painter.end()
             self.setPixmap(pix)
             if self.useInitImage:
                 self.painter.begin(self.mask_image)
                 self.painter.setRenderHints(QtGui.QPainter.Antialiasing, True)
-                self.painter.setPen(self.pen)
+                self.painter.setPen(self.DrawingPen)
                 self.painter.drawLine(self.previous_pos, current_pos)
                 self.painter.end()              
 
@@ -138,17 +138,20 @@ def join_pixmap(p1, p2, mode=QtGui.QPainter.CompositionMode_SourceOver):
     painter.end()
     return result
 
-class UICv_PaintNode(UIOpenCvBaseNode):
+class UICv_PaintMask(UIOpenCvBaseNode):
     def __init__(self, raw_node):
-        super(UICv_PaintNode, self).__init__(raw_node)
+        super(UICv_PaintMask, self).__init__(raw_node)
         self.sizeXPin = self._rawNode.getPinByName("sizeX")
         self.sizeYPin = self._rawNode.getPinByName("sizeY")
         self.imageRefPin = self._rawNode.getPinByName("imageRef")
         self.imgPin = self._rawNode.getPinByName("img")
 
+        self.burshShizePin = self._rawNode.getPinByName("BrushShize")
+
         self.sizeXPin.dataBeenSet.connect(self.updateCanvasSize)
         self.sizeYPin.dataBeenSet.connect(self.updateCanvasSize)
         self.imageRefPin.dataBeenSet.connect(self.updateCanvasSize)
+        self.burshShizePin.dataBeenSet.connect(self.updateburshShize)
 
         self.Painter = PainterWidget(Node=self)
         self.Painter.setShapeMode(QtWidgets.QGraphicsPixmapItem.BoundingRectShape)
@@ -160,15 +163,18 @@ class UICv_PaintNode(UIOpenCvBaseNode):
 
         self.openProperties = []
 
+    def updateburshShize(self,pin):
+        self.Painter.DrawingPen.setWidth(self.burshShizePin.getData())
+
     def updateCanvasSize(self, pin) :
         if len(self.imageRefPin.affected_by) == 0:
             n_w, n_h = (self.sizeXPin.getData(),self.sizeYPin.getData())
         else:
-            n_h, n_w, _ = get_h_w_c(self.imageRefPin.getData().image)
+            n_h, n_w, _ = get_h_w_c(self.imageRefPin.getData())
         o_h, o_w, _ = get_h_w_c(self._rawNode.IMAGE)
         h = min(o_h-1,max(n_h,1))
         w = min(o_w-1,max(n_w,1))
-        self._rawNode.IMAGE = self._rawNode.IMAGE[0:(h),0:(w),:]#resize_to_fit_rect(self._rawNode.IMAGE,(n_w, n_h))     
+        self._rawNode.IMAGE = self._rawNode.IMAGE[0:(h),0:(w),:]     
         self._rawNode.IMAGE = expand_image_to_fit_rect(self._rawNode.IMAGE,(max(n_w,1), max(n_h,1)))
         pix = QtGui.QPixmap.fromImage(toQImage(self._rawNode.IMAGE))
         self.Painter.setPixmap(pix)
@@ -183,7 +189,7 @@ class UICv_PaintNode(UIOpenCvBaseNode):
         self.openProperties.append(inputsCategory)
         preIndex = inputsCategory.Layout.count()
         if pins:
-            super(UICv_PaintNode, self).createInputWidgets(inputsCategory, inGroup)        
+            super(UICv_PaintMask, self).createInputWidgets(inputsCategory, inGroup)        
 
         instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
         if self.Painter.scene() == None:
@@ -198,21 +204,3 @@ class UICv_PaintNode(UIOpenCvBaseNode):
         #if len(self.openProperties)==0 and self.item.scene():
         instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
         instance.viewer._scene.removeItem(self.Painter)
-"""            
-def on_color_clicked(self):
-
-    color = QtWidgets.QColorDialog.getColor(QtCore.Qt.black, self)
-    if color:
-        self.set_color(color)
-
-def set_color(self, color: QtGui.QColor = QtCore.Qt.black):
-
-    # Create color icon
-    pix_icon = QtGui.QPixmap(32, 32)
-    pix_icon.fill(color)
-
-    self.color_action.setIcon(QtGui.QIcon(pix_icon))
-    self.painter_widget.pen.setColor(color)
-    self.color_action.setText(QtGui.QColor(color).name())
-
-"""

@@ -22,7 +22,7 @@ from PyFlow.Packages.PyFlowOpenCv.FunctionLibraries.ImageBlendingLib import Imag
 
 # Class based nodes
 from PyFlow.Packages.PyFlowOpenCv.Nodes.ViewerNode import ViewerNode
-from PyFlow.Packages.PyFlowOpenCv.Nodes.PaintNode import PaintNode
+from PyFlow.Packages.PyFlowOpenCv.Nodes.PaintNode import PaintMask
 
 # Tools
 from PyFlow.Packages.PyFlowOpenCv.Tools.ImageViewerTool import ImageViewerTool
@@ -47,7 +47,7 @@ _EXPORTERS = OrderedDict()
 
 
 _NODES[ViewerNode.__name__] = ViewerNode
-_NODES[PaintNode.__name__] = PaintNode
+_NODES[PaintMask.__name__] = PaintMask
 
 _PINS[ImagePin.__name__] = ImagePin
 _PINS[VideoPin.__name__] = VideoPin
