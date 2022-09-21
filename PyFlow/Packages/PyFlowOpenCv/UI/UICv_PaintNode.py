@@ -2,6 +2,9 @@ from Qt import QtCore , QtWidgets , QtGui
 from PyFlow.UI.Canvas.UICommon import *
 from PyFlow.Core.Common import push
 from PyFlow.Packages.PyFlowOpenCv.UI.UIOpenCvBaseNode import UIOpenCvBaseNode
+from PyFlow.Packages.PyFlowOpenCv.CV_classes.imageUtils import *
+from PyFlow.Packages.PyFlowOpenCv.UI.pc_ImageCanvasWidget import toQImage
+
 import numpy as np
 
 class SignalEmiter(QtCore.QObject):
@@ -46,7 +49,7 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
         self.useInitImage = True
         self.setPixmap(init_image)
         self.mask_image = QtGui.QPixmap(init_image)
-        self.mask_image.fill(QtCore.Qt.white)
+        self.mask_image.fill(QtCore.Qt.transparent)
 
     def mousePressEvent(self, event):
         """Override from QtWidgets.QWidget
@@ -143,15 +146,32 @@ class UICv_PaintNode(UIOpenCvBaseNode):
         self.imageRefPin = self._rawNode.getPinByName("imageRef")
         self.imgPin = self._rawNode.getPinByName("img")
 
+        self.sizeXPin.dataBeenSet.connect(self.updateCanvasSize)
+        self.sizeYPin.dataBeenSet.connect(self.updateCanvasSize)
+        self.imageRefPin.dataBeenSet.connect(self.updateCanvasSize)
+
         self.Painter = PainterWidget(Node=self)
-        self.Painter.setShapeMode(QtWidgets.QGraphicsPixmapItem.MaskShape)
+        self.Painter.setShapeMode(QtWidgets.QGraphicsPixmapItem.BoundingRectShape)
         self.Painter.SignalEmiter.imagePainted.connect(self.updateimg)
 
         pix = QtGui.QPixmap(self.sizeXPin.getData(),self.sizeYPin.getData())
-        pix.fill(QtCore.Qt.white)
-        self.Painter.setPixmap(pix)       
+        pix.fill(QtCore.Qt.transparent)
+        self.Painter.setPixmap(pix)
 
         self.openProperties = []
+
+    def updateCanvasSize(self, pin) :
+        if len(self.imageRefPin.affected_by) == 0:
+            n_w, n_h = (self.sizeXPin.getData(),self.sizeYPin.getData())
+        else:
+            n_h, n_w, _ = get_h_w_c(self.imageRefPin.getData().image)
+        o_h, o_w, _ = get_h_w_c(self._rawNode.IMAGE)
+        h = min(o_h-1,max(n_h,1))
+        w = min(o_w-1,max(n_w,1))
+        self._rawNode.IMAGE = self._rawNode.IMAGE[0:(h),0:(w),:]#resize_to_fit_rect(self._rawNode.IMAGE,(n_w, n_h))     
+        self._rawNode.IMAGE = expand_image_to_fit_rect(self._rawNode.IMAGE,(max(n_w,1), max(n_h,1)))
+        pix = QtGui.QPixmap.fromImage(toQImage(self._rawNode.IMAGE))
+        self.Painter.setPixmap(pix)
 
     def updateimg(self,pixmap):
         self._rawNode.IMAGE = QPixmapToArray(pixmap)
@@ -168,10 +188,9 @@ class UICv_PaintNode(UIOpenCvBaseNode):
         instance = self.canvasRef().pyFlowInstance.invokeDockToolByName("PyFlowOpenCv","ImageViewerTool")
         if self.Painter.scene() == None:
             instance.viewer._scene.addItem(self.Painter)
-        #self.Painter.show()
 
-        #self.item.rotate(self.anglePin.getData())
-
+        angleWidg = inputsCategory.getWidgetByName("sizeX")
+        xCenterWidg = inputsCategory.getWidgetByName("sizeY")
 
     def removeItemFromViewer(self,obj):
         if obj in self.openProperties:

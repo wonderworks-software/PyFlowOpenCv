@@ -57,10 +57,10 @@ def as_target_channels(img: np.ndarray, target_channels: int) -> np.ndarray:
         return convert_to_BGRA(img, c)
 
     assert False, "Unable to convert image"
-    
-def resize_to_fit(img2resize,ref,interpolation = cv2.INTER_AREA):
+
+def resize_to_fit_rect(img2resize,rect,interpolation = cv2.INTER_AREA):
     i_h, i_w, i_c = get_h_w_c(img2resize)
-    r_h, r_w, r_c = get_h_w_c(ref)
+    r_w, r_h = rect
     aspect = float(i_w)/float(i_h)
     o_w = i_w
     o_h = i_h
@@ -76,12 +76,17 @@ def resize_to_fit(img2resize,ref,interpolation = cv2.INTER_AREA):
     if dim != (i_h,i_w):
         return cv2.resize(img2resize, dim, interpolation = interpolation)
     else:
-        return img2resize
+        return img2resize   
+     
+def resize_to_fit(img2resize,ref,interpolation = cv2.INTER_AREA):
+    r_h, r_w, r_c = get_h_w_c(ref)
+    img2resize = resize_to_fit_rect(img2resize,(r_w,r_h),interpolation=interpolation)
+    return img2resize
 
-def expand_image_to_fit(img2expand,ref,center = True):
+def expand_image_to_fit_rect(img2expand,rect,center = False, copy = False):
     # Pad base image with transparency if necessary to match size with overlay
     b_h, b_w, b_c = get_h_w_c(img2expand)
-    o_h, o_w, _ = get_h_w_c(ref)
+    o_w, o_h = rect
     max_h = max(b_h, o_h)
     max_w = max(b_w, o_w)    
     top = bottom = left = right = 0
@@ -103,6 +108,15 @@ def expand_image_to_fit(img2expand,ref,center = True):
             img2expand, top, bottom, left, right, cv2.BORDER_CONSTANT, value=0
         )
     else:  # Make sure cached image not being worked on regardless
-        img2expand = img2expand.copy()
+        if copy:
+            img2expand = img2expand.copy()
+        else:
+            img2expand = img2expand
 
+    return img2expand
+
+def expand_image_to_fit(img2expand,ref,center = True , copy = True):
+    # Pad base image with transparency if necessary to match size with overlay
+    o_h, o_w, _ = get_h_w_c(ref)
+    img2expand = expand_image_to_fit_rect(img2expand,(o_w, o_h),center,copy)
     return img2expand

@@ -6,7 +6,7 @@ from PyFlow.Core import (
     IMPLEMENT_NODE
 )
 from PyFlow.Core.Common import *
-from PyFlow.Packages.PyFlowOpenCv.CV_classes.blend_modes import blend_images
+from PyFlow.Packages.PyFlowOpenCv.CV_classes.blend_modes import *
 from PyFlow.Packages.PyFlowOpenCv.CV_classes.imageUtils import *
 
 

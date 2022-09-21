@@ -18,7 +18,7 @@ class PaintNode(NodeBase):
         self.img = self.createOutputPin('img', 'ImagePin')
         #self.outExec = self.createOutputPin(DEFAULT_OUT_EXEC_NAME, 'ExecPin')
 
-        self.IMAGE = np.zeros((512, 512, 3), np.uint8)
+        self.IMAGE = np.zeros((512, 512, 4), np.uint8)
 
     @staticmethod
     def pinTypeHints():
