@@ -103,8 +103,6 @@ class OpenCvLib(FunctionLibraryBase):
     def cv_ReadImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
                      gray_scale= ( 'BoolPin', False), img=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
-        print(path)
-        print(os.path.exists(path))
         if gray_scale:
             img(cv2.imread(path, cv2.IMREAD_GRAYSCALE))
         else:
