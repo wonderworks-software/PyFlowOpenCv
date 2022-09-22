@@ -1,6 +1,6 @@
 from Qt import QtCore , QtWidgets , QtGui
 from PyFlow.UI.Canvas.UICommon import *
-from PyFlow.Core.Common import push
+from PyFlow.Core.Common import push,getConnectedPins
 from PyFlow.Packages.PyFlowOpenCv.UI.UIOpenCvBaseNode import UIOpenCvBaseNode
 from PyFlow.Packages.PyFlowOpenCv.CV_classes.imageUtils import *
 from PyFlow.Packages.PyFlowOpenCv.UI.pc_ImageCanvasWidget import toQImage
@@ -21,6 +21,7 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
     """
     _MANIP_MODE_NONE = 0
     _MANIP_MODE_PAINT = 1
+    _MANIP_MODE_ERASE = 2
 
     imagePainted = QtCore.Signal(str)
     def __init__(self, parent=None,Node=None,useInitImage=False):
@@ -58,36 +59,37 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
 
         """
         modifiers = event.modifiers()
-        if event.button() == QtCore.Qt.LeftButton:
+        if event.button() == QtCore.Qt.LeftButton and modifiers in [QtCore.Qt.NoModifier,QtCore.Qt.ShiftModifier]:
             self._manipulationMode = self._MANIP_MODE_PAINT
             self.previous_pos = self.mapToScene(event.pos())
-
+            #self.DrawingPen.setColor(QtCore.Qt.white)
+        elif event.button() == QtCore.Qt.LeftButton and modifiers in [QtCore.Qt.ControlModifier]:
+            self._manipulationMode = self._MANIP_MODE_ERASE
+            #self.DrawingPen.setColor(QtGui.QColor(0,0,0,255))
+            self.previous_pos = self.mapToScene(event.pos())
         super(PainterWidget, self).mousePressEvent( event)
 
     def mouseMoveEvent(self, event):
-        """Override method from QtWidgets.QWidget
-
-        Called when user moves and clicks on the mouse
-
-        """
+        pix = self.pixmap()
+        self.painter.begin(pix)        
         if self._manipulationMode == self._MANIP_MODE_PAINT:
             #print(self.Node.item.scene().parent()._manipulationMode)
             current_pos = self.mapToScene(event.pos())
-            pix = self.pixmap()
-            self.painter.begin(pix)
             self.painter.setRenderHints(QtGui.QPainter.Antialiasing, True)
             self.painter.setPen(self.DrawingPen)
             self.painter.drawLine(self.previous_pos, current_pos)
             self.painter.end()
             self.setPixmap(pix)
-            if self.useInitImage:
-                self.painter.begin(self.mask_image)
-                self.painter.setRenderHints(QtGui.QPainter.Antialiasing, True)
-                self.painter.setPen(self.DrawingPen)
-                self.painter.drawLine(self.previous_pos, current_pos)
-                self.painter.end()              
+   
+        if self._manipulationMode == self._MANIP_MODE_ERASE:
+            r = QtCore.QRect(QtCore.QPoint(), self.DrawingPen.width()*QtCore.QSize())
+            r.moveCenter(self.mapToScene(event.pos()).toPoint())
+            self.painter.setCompositionMode(QtGui.QPainter.CompositionMode_Clear)
+            self.painter.eraseRect(r)
+            self.painter.end()
+            self.setPixmap(pix)
 
-            self.previous_pos = current_pos
+        self.previous_pos = current_pos
             #self.update()
 
         super(PainterWidget, self).mouseMoveEvent( event)
@@ -145,6 +147,7 @@ class UICv_PaintMask(UIOpenCvBaseNode):
         self.sizeYPin = self._rawNode.getPinByName("sizeY")
         self.imageRefPin = self._rawNode.getPinByName("imageRef")
         self.imgPin = self._rawNode.getPinByName("img")
+        self.rgbMaskPin = self._rawNode.getPinByName("rgbMask")
 
         self.burshShizePin = self._rawNode.getPinByName("BrushShize")
 
@@ -182,6 +185,7 @@ class UICv_PaintMask(UIOpenCvBaseNode):
     def updateimg(self,pixmap):
         self._rawNode.IMAGE = QPixmapToArray(pixmap)
         push(self.imgPin)
+        push(self.rgbMaskPin)
 
     def createInputWidgets(self, inputsCategory, inGroup=None, pins=True):
         
@@ -195,8 +199,8 @@ class UICv_PaintMask(UIOpenCvBaseNode):
         if self.Painter.scene() == None:
             instance.viewer._scene.addItem(self.Painter)
 
-        angleWidg = inputsCategory.getWidgetByName("sizeX")
-        xCenterWidg = inputsCategory.getWidgetByName("sizeY")
+        sizeXwidg = inputsCategory.getWidgetByName("sizeX")
+        sizeYwidg = inputsCategory.getWidgetByName("sizeY")
 
     def removeItemFromViewer(self,obj):
         if obj in self.openProperties:

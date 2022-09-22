@@ -8,5 +8,5 @@ def createUINode(raw_instance):
 	if raw_instance.__class__.__name__ == "cv_Transform":
 		return UICv_TransformNode(raw_instance)
 	if raw_instance.__class__.__name__ == "PaintMask":
-		return UICv_PaintPaintMask(raw_instance)		
+		return UICv_PaintMask(raw_instance)		
 	return UIOpenCvBaseNode(raw_instance)
