@@ -15,9 +15,6 @@ class SignalEmiter(QtCore.QObject):
 
 class PainterWidget(QtWidgets.QGraphicsPixmapItem):
     """A widget where user can draw with their mouse
-
-    The user draws on a QtGui.QPixmap which is itself paint from paintEvent()
-
     """
     _MANIP_MODE_NONE = 0
     _MANIP_MODE_PAINT = 1
@@ -53,11 +50,6 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
         self.mask_image.fill(QtCore.Qt.transparent)
 
     def mousePressEvent(self, event):
-        """Override from QtWidgets.QWidget
-
-        Called when user clicks on the mouse
-
-        """
         modifiers = event.modifiers()
         if event.button() == QtCore.Qt.LeftButton and modifiers in [QtCore.Qt.NoModifier,QtCore.Qt.ShiftModifier]:
             self._manipulationMode = self._MANIP_MODE_PAINT
@@ -72,34 +64,27 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
     def mouseMoveEvent(self, event):
         pix = self.pixmap()
         self.painter.begin(pix)        
+        #TODO:: ADD BRUSHES
         if self._manipulationMode == self._MANIP_MODE_PAINT:
-            #print(self.Node.item.scene().parent()._manipulationMode)
             current_pos = self.mapToScene(event.pos())
             self.painter.setRenderHints(QtGui.QPainter.Antialiasing, True)
             self.painter.setPen(self.DrawingPen)
             self.painter.drawLine(self.previous_pos, current_pos)
-            self.painter.end()
-            self.setPixmap(pix)
-   
+
         if self._manipulationMode == self._MANIP_MODE_ERASE:
             r = QtCore.QRect(QtCore.QPoint(), self.DrawingPen.width()*QtCore.QSize())
             r.moveCenter(self.mapToScene(event.pos()).toPoint())
             self.painter.setCompositionMode(QtGui.QPainter.CompositionMode_Clear)
             self.painter.eraseRect(r)
-            self.painter.end()
-            self.setPixmap(pix)
+
+        self.painter.end()
+        self.setPixmap(pix)
 
         self.previous_pos = current_pos
-            #self.update()
 
         super(PainterWidget, self).mouseMoveEvent( event)
 
     def mouseReleaseEvent(self, event):
-        """Override method from QtWidgets.QWidget
-
-        Called when user releases the mouse
-
-        """
         self._manipulationMode = self._MANIP_MODE_NONE
         self.previous_pos = None
         if self.useInitImage:
@@ -110,7 +95,7 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
 
     def clear(self):
         """ Clear the pixmap """
-        self.pixmap.fill(QtCore.Qt.white)
+        self.pixmap.fill(QtCore.Qt.transparent)
         self.update()
 
 def QPixmapToArray(pixmap):
