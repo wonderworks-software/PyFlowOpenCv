@@ -1,7 +1,7 @@
 from PyFlow.Core import NodeBase
 from PyFlow.Core.NodeBase import NodePinsSuggestionsHelper
 from PyFlow.Core.Common import *
-from Qt import QtWidgets
+from qtpy import QtWidgets
 
 class ViewerNode(NodeBase):
     def __init__(self, name):

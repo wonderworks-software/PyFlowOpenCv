@@ -1,5 +1,5 @@
 from nine import str
-from Qt import QtGui
+from qtpy import QtGui
 
 from PyFlow.UI.Tool.Tool import DockTool
 from PyFlow.Packages.PyFlowOpenCv.UI.pc_ImageCanvasWidget import pc_ImageCanvas

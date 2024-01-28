@@ -1,4 +1,4 @@
-from Qt import QtCore, QtGui, QtWidgets
+from qtpy import QtCore, QtGui, QtWidgets
 import numpy as np
 import cv2
 import os
@@ -272,7 +272,7 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
         topLeft = xfo.map(self.rect().topLeft())
         bottomRight = xfo.map(self.rect().bottomRight())
         center = (topLeft + bottomRight) * 0.5
-        zoomFactor = 1.0 + event.delta() * 0.0005
+        zoomFactor = 1.0 + event.angleDelta().y() * 0.0005
 
         self.zoom(zoomFactor)
 
@@ -396,7 +396,6 @@ class pc_ImageCanvas(QtWidgets.QGraphicsView):
 
 if __name__ == '__main__':
     import sys
-    from Qt import QtSvg
     app = QtWidgets.QApplication(sys.argv)
     window = pc_ImageCanvas(None)
     window.setPhoto(QtGui.QPixmap(r"F:/Pedro/Google Drive/AI/EYTHOR.png"))

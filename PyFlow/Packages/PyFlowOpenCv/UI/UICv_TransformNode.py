@@ -1,4 +1,4 @@
-from Qt import QtGui,QtCore,QtWidgets
+from qtpy import QtGui,QtCore,QtWidgets
 from PyFlow.UI.Canvas.UICommon import *
 from PyFlow.Packages.PyFlowOpenCv.UI.UIOpenCvBaseNode import UIOpenCvBaseNode
 import os

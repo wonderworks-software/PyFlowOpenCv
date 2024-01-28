@@ -1,4 +1,4 @@
-from Qt import QtCore , QtWidgets , QtGui
+from qtpy import QtCore , QtWidgets , QtGui
 from PyFlow.UI.Canvas.UICommon import *
 from PyFlow.Core.Common import push,getConnectedPins
 from PyFlow.Packages.PyFlowOpenCv.UI.UIOpenCvBaseNode import UIOpenCvBaseNode

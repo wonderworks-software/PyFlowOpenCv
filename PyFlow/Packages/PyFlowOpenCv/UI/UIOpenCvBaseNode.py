@@ -1,9 +1,9 @@
-from Qt import QtGui,QtCore
+from qtpy import QtGui,QtCore
 from PyFlow.UI import RESOURCES_DIR
 from PyFlow.UI.Canvas.UINodeBase import UINodeBase
 from PyFlow.UI.Canvas.NodeActionButton import NodeActionButtonBase
 from PyFlow.UI.Canvas.UICommon import *
-from Qt.QtWidgets import QLabel
+from qtpy.QtWidgets import QLabel
 import os
 from PyFlow.Packages.PyFlowOpenCv.UI.pc_ImageCanvasWidget import toQImage
 import cv2
