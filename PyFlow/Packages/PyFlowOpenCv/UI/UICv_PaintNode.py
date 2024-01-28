@@ -65,8 +65,9 @@ class PainterWidget(QtWidgets.QGraphicsPixmapItem):
         pix = self.pixmap()
         self.painter.begin(pix)        
         #TODO:: ADD BRUSHES
+        current_pos = self.mapToScene(event.pos())
         if self._manipulationMode == self._MANIP_MODE_PAINT:
-            current_pos = self.mapToScene(event.pos())
+            
             self.painter.setRenderHints(QtGui.QPainter.Antialiasing, True)
             self.painter.setPen(self.DrawingPen)
             self.painter.drawLine(self.previous_pos, current_pos)
