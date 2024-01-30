@@ -42,12 +42,12 @@ class ImageBlendingLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Blending', NodeMeta.KEYWORDS: []})
     def cv_BlendImages( base_image=('ImagePin', None),overlay_image=('ImagePin', None), Mask=('ImagePin', None),
                         blendmode=('StringPin', 0,
-                            {PinSpecifires.VALUE_LIST: ['NORMAL', 'MULTIPLY', 'DARKEN', 'LIGHTEN', 'ADD', 
+                            {PinSpecifiers.VALUE_LIST: ['NORMAL', 'MULTIPLY', 'DARKEN', 'LIGHTEN', 'ADD', 
                             'COLOR_BURN', 'COLOR_DODGE', 'REFLECT', 'GLOW', 'OVERLAY', 'DIFFERENCE', 'NEGATION', 'SCREEN', 'XOR',
                             'SUBTRACT', 'DIVIDE', 'EXCLUSION', 'SOFT_LIGHT']}),
                         img=(REF, ('ImagePin', None)), center=('BoolPin', True,),
                         interpolation=('StringPin', "INTER_CUBIC",
-                            {PinSpecifires.VALUE_LIST: ["INTER_LINEAR","INTER_CUBIC","INTER_AREA","INTER_LANCZOS4",
+                            {PinSpecifiers.VALUE_LIST: ["INTER_LINEAR","INTER_CUBIC","INTER_AREA","INTER_LANCZOS4",
                             "INTER_LINEAR_EXACT","INTER_MAX","WARP_FILL_OUTLIERS","WARP_INVERSE_MAP" ]} )
                         ):    
         inter = {   "INTER_NEAREST": cv2.INTER_NEAREST ,

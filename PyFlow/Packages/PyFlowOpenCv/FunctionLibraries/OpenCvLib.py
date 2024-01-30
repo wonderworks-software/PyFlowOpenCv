@@ -100,7 +100,7 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Reads an Image from a file
-    def cv_ReadImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
+    def cv_ReadImage(path=('StringPin', "", {PinSpecifiers.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
                      gray_scale= ( 'BoolPin', False), img=(REF, ('ImagePin', None))):
         """Return a frame of the loaded image."""
         if gray_scale:
@@ -112,7 +112,7 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, nodeType=NodeTypes.Callable,
                     meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Writes an Image to a file
-    def cv_WriteImage(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
+    def cv_WriteImage(path=('StringPin', "", {PinSpecifiers.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
                       img=('ImagePin', None)):
         """Return a frame of the loaded image."""
         cv2.imwrite(path, img)
@@ -120,7 +120,7 @@ class OpenCvLib(FunctionLibraryBase):
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Inputs', NodeMeta.KEYWORDS: []})
     # Reads an Video from a file
-    def cv_ReadVideo(path=('StringPin', "", {PinSpecifires.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
+    def cv_ReadVideo(path=('StringPin', "", {PinSpecifiers.INPUT_WIDGET_VARIANT: "FilePathWidget"}),
                      video=(REF, ('VideoPin', 0))):
         """Return a frame of the loaded image."""
         video(cv2.VideoCapture(path))
@@ -437,7 +437,7 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Feature', NodeMeta.KEYWORDS: []})
     def Feature_Extraction(input=('ImagePin', None),
                             algorithm=('StringPin', 'SURF',
-                                       {PinSpecifires.VALUE_LIST: ["SURF", "SIFT", 'FAST', 'BRISK','AKAZE','ORB']}),
+                                       {PinSpecifiers.VALUE_LIST: ["SURF", "SIFT", 'FAST', 'BRISK','AKAZE','ORB']}),
                             keypoints=(REF, ('KeyPointsPin', 0)),
                      descriptor=(REF, ('DescriptorPin', 0)),
                      draw_key_points=(REF, ('GraphElementPin', 0)),
@@ -763,7 +763,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def image_crop_multi(img=('ImagePin', None ), croped=(REF, ('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported })),
+    def image_crop_multi(img=('ImagePin', None ), croped=(REF, ('ImagePin', [], {PinSpecifiers.ENABLED_OPTIONS: PinOptions.ArraySupported })),
                        rects=('GraphElementPin', 0)
                        ):
         """Takes an image and mask and applied logic and operation"""
@@ -780,7 +780,7 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Process', NodeMeta.KEYWORDS: []})
-    def image_unCrop_multi(originalImage=('ImagePin', None ),croped=('ImagePin', [], {PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
+    def image_unCrop_multi(originalImage=('ImagePin', None ),croped=('ImagePin', [], {PinSpecifiers.ENABLED_OPTIONS: PinOptions.ArraySupported}),
                          img=(REF, ('ImagePin', None)),
                         rects=('GraphElementPin', 0)
                        ):
@@ -880,8 +880,8 @@ class OpenCvLib(FunctionLibraryBase):
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
     def blob_detector(input=('ImagePin', None),
                       thresholdStep=('IntPin',10),
-                      minThreshold=('IntPin', 50, {PinSpecifires.VALUE_RANGE: (0, 255)}),
-                      maxThreshold=('IntPin', 220 ,{PinSpecifires.VALUE_RANGE: (0, 255)}),
+                      minThreshold=('IntPin', 50, {PinSpecifiers.VALUE_RANGE: (0, 255)}),
+                      maxThreshold=('IntPin', 220 ,{PinSpecifiers.VALUE_RANGE: (0, 255)}),
                       minRepeatability=('IntPin', 2),
                       minDistBetweenBlobs=('FloatPin', 10.0),
                       filterByColor=('BoolPin', True),
@@ -890,14 +890,14 @@ class OpenCvLib(FunctionLibraryBase):
                       minArea=('FloatPin', 25.0),
                       maxArea=('FloatPin', 5000.0),
                       filterByCircularity=('BoolPin', False),
-                      minCircularity=('FloatPin', 0.8, {PinSpecifires.VALUE_RANGE: (0, 1.0)}),
-                      maxCircularity=('FloatPin', 1, {PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      minCircularity=('FloatPin', 0.8, {PinSpecifiers.VALUE_RANGE: (0, 1.0)}),
+                      maxCircularity=('FloatPin', 1, {PinSpecifiers.VALUE_RANGE: (0, 1.0)}),
                       filterByInertia=('BoolPin', True),
-                      minInertiaRatio=('FloatPin', 0.1,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
-                      maxInertiaRatio=('FloatPin', 1,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      minInertiaRatio=('FloatPin', 0.1,{PinSpecifiers.VALUE_RANGE: (0, 1.0)}),
+                      maxInertiaRatio=('FloatPin', 1,{PinSpecifiers.VALUE_RANGE: (0, 1.0)}),
                       filterByConvexity=('BoolPin', False),
-                      minConvexity=('FloatPin', 0.95,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
-                      maxConvexity=('FloatPin', 1,{PinSpecifires.VALUE_RANGE: (0, 1.0)}),
+                      minConvexity=('FloatPin', 0.95,{PinSpecifiers.VALUE_RANGE: (0, 1.0)}),
+                      maxConvexity=('FloatPin', 1,{PinSpecifiers.VALUE_RANGE: (0, 1.0)}),
                       maxTotalKeypoints=('IntPin', 1000),
                       gridRows=('IntPin', 4),
                       gridCols=('IntPin', 4),
@@ -943,7 +943,7 @@ class OpenCvLib(FunctionLibraryBase):
             img=(REF, ('ImagePin', None)),
             psm_mode=('IntPin',6),
             engine= ('StringPin', 'LSTM',
-                     {PinSpecifires.VALUE_LIST: ["Legacy","LSTM",'Legacy+LSTM','Default']}),
+                     {PinSpecifiers.VALUE_LIST: ["Legacy","LSTM",'Legacy+LSTM','Default']}),
             boxes=('GraphElementPin', 0),
             texts=(REF,('GraphElementPin', 0))
                    ):
@@ -1266,10 +1266,10 @@ class OpenCvLib(FunctionLibraryBase):
 
     @staticmethod
     @IMPLEMENT_NODE(returns=None, meta={NodeMeta.CATEGORY: 'Detection and Recognition', NodeMeta.KEYWORDS: []})
-    def eye_Masking(input=('ImagePin', None, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported}),
+    def eye_Masking(input=('ImagePin', None, {PinSpecifiers.STRUCT_CONSTRAINT: '1',PinSpecifiers.ENABLED_OPTIONS: PinOptions.ArraySupported}),
                     xSize = ('IntPin',2), 
                     ySize = ('IntPin',1), 
-                    mask=(REF, ('ImagePin', None, {PinSpecifires.STRUCT_CONSTRAINT: '1',PinSpecifires.ENABLED_OPTIONS: PinOptions.ArraySupported})),
+                    mask=(REF, ('ImagePin', None, {PinSpecifiers.STRUCT_CONSTRAINT: '1',PinSpecifiers.ENABLED_OPTIONS: PinOptions.ArraySupported})),
                     scaleFactor=('FloatPin', 1.1),
                     minNeighbores=('IntPin', 4)
                       ):
